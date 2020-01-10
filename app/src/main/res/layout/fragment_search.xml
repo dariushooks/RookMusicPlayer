@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:layout_marginBottom="67dp">
+
+    <TextView
+        android:id="@+id/searchHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:text="@string/search"/>
+
+    <SearchView
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_margin="5dp"
+        android:layout_below="@id/searchHeader"
+        android:searchIcon="@drawable/ic_search"
+        android:iconifiedByDefault="false"
+        android:queryBackground="@drawable/dialog_corners"
+        android:queryHint="Search Library Songs"
+        android:searchHintIcon="@null"
+        android:layout_centerInParent="true">
+    </SearchView>
+
+    <RelativeLayout
+        android:id="@+id/contentSelector"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/search"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/search_corners"
+        android:backgroundTint="@color/darkGray"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+
+        <View
+            android:id="@+id/contentSelected"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/search_corners"/>
+
+        <Button
+            android:id="@+id/contentSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="5dp"
+            android:text="@string/songs"/>
+
+        <Button
+            android:id="@+id/contentArtists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:layout_marginBottom="3dp"
+            android:text="@string/artists"/>
+
+        <Button
+            android:id="@+id/contentAlbums"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:text="@string/albums"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/searchContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/contentSelector"
+        android:layout_marginTop="10dp"/>
+
+</RelativeLayout>

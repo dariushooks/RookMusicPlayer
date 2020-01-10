@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/albumSections"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/indexDivider"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="30dp">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/indexDivider"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#D9000000">
+
+            <TextView
+                android:id="@+id/indexLetter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="#"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+    <include layout="@layout/index_scroller"
+        android:id="@+id/indexScroller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_gravity="end|center_vertical"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

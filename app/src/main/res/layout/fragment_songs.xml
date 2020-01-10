@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <RelativeLayout
+                android:id="@+id/libraryControl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                app:layout_collapseMode="none">
+
+                <Button
+                    android:id="@+id/playSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/dialog_corners"
+                    android:backgroundTint="@color/darkGray"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:layout_marginStart="30dp"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="40dp"
+                    android:text="@string/play"
+                    android:textColor="@color/colorAccent"
+                    android:drawableStart="@drawable/ic_play"
+                    android:drawableTint="@color/colorAccent"/>
+
+                <RelativeLayout
+                    android:id="@+id/indexCoordinates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_toEndOf="@id/playSongs"
+                    android:layout_toStartOf="@id/shuffleSongs"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/x"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="X: "
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"/>
+
+                    <TextView
+                        android:id="@+id/x_axis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/x"
+                        android:layout_alignParentTop="true"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Y: "
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"/>
+
+                    <TextView
+                        android:id="@+id/y_axis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/y"
+                        android:layout_alignParentBottom="true"
+                        android:textColor="@color/white"/>
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/shuffleSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/dialog_corners"
+                    android:backgroundTint="@color/darkGray"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:layout_marginEnd="30dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="30dp"
+                    android:text="@string/shuffle"
+                    android:textColor="@color/colorAccent"
+                    android:drawableStart="@drawable/ic_shuffle"
+                    android:drawableTint="@color/colorAccent"/>
+
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/songsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_below="@id/indexDivider"
+            android:layout_marginEnd="30dp">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:background="@color/darkGray"/>
+
+        <RelativeLayout
+            android:id="@+id/indexDivider"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#D9000000">
+
+            <TextView
+                android:id="@+id/indexLetter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="#"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <include layout="@layout/index_scroller"
+        android:id="@+id/indexScroller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_gravity="end|center_vertical"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Rook Music Player</string>
+
+    <string name="deleteSongFromLibrary">Delete Song From Library</string>
+    <string name="deleteArtistFromLibrary">Delete Artist From Library</string>
+    <string name="deleteAlbumFromLibrary">Delete Album From Library</string>
+    <string name="deletePlaylist">Delete Playlist</string>
+    <string name="deleteSongFromPlaylist">Delete Song From Playlist</string>
+    <string name="deleteFromLibrary">Delete From Library</string>
+    <string name="addToPlaylist">Add To A Playlist</string>
+    <string name="playNext">Play Next</string>
+    <string name="playLast">Play Last</string>
+    <string name="mediaName">Media Name</string>
+    <string name="mediaArtist">Media Artist</string>
+    <string name="mediaType">Media</string>
+    <string name="gotoArtist">Go To Artist</string>
+    <string name="gotoAlbum">Go To Album</string>
+    <string name="notPlaying">Not Playing</string>
+    <string name="upNext">Up Next</string>
+    <string name="play">PLAY</string>
+    <string name="shuffle">SHUFFLE</string>
+    <string name="repeat">REPEAT</string>
+    <string name="duration">0:00</string>
+    <string name="library">Library</string>
+    <string name="playlists">PLAYLISTS</string>
+    <string name="createPlaylist">CREATE PLAYLIST</string>
+    <string name="createNewPlaylist">CREATE NEW PLAYLIST</string>
+    <string name="recentlyAdded">RECENTLY ADDED</string>
+    <string name="newPlaylist">NEW PLAYLIST</string>
+    <string name="playlistName">Playlist Name</string>
+    <string name="playlistDescription">Playlist Description</string>
+    <string name="search">Search</string>
+    <string name="songs">SONGS</string>
+    <string name="artists">ARTISTS</string>
+    <string name="albums">ALBUMS</string>
+
+</resources>

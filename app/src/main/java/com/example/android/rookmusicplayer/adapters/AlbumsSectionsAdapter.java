@@ -1,0 +1,114 @@
+package com.example.android.rookmusicplayer.adapters;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.android.rookmusicplayer.AlbumsSections;
+import com.example.android.rookmusicplayer.R;
+
+import java.util.ArrayList;
+
+import static com.example.android.rookmusicplayer.App.lettersAlbums;
+import static com.example.android.rookmusicplayer.App.sectionsAlbums;
+
+public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAdapter.AlbumsSectionsViewHolder>
+{
+    private final String TAG = AlbumsSectionsAdapter.class.getSimpleName();
+    private ArrayList<AlbumsSections> albumsSections;
+    private Context context;
+    private AlbumsAdapter.ListItemClickListener listener;
+
+    public AlbumsSectionsAdapter(ArrayList<AlbumsSections> albumsSections, AlbumsAdapter.ListItemClickListener listener)
+    {
+        this.albumsSections = albumsSections;
+        this.listener = listener;
+        int letter = 65;
+        lettersAlbums.clear(); sectionsAlbums.clear();
+        for(int i = 0; i < albumsSections.size(); i++)
+        {
+            if(i > 0)
+            {
+                if (!albumsSections.get(i).getSectionedAlbums().isEmpty())
+                {
+                    lettersAlbums.add((char)(letter) + "");
+                    sectionsAlbums.add(i);
+                }
+
+                else
+                {
+                    lettersAlbums.add("!");
+                    sectionsAlbums.add(-1);
+                }
+
+                letter++;
+            }
+
+            else if(i == 0)
+            {
+                if(!albumsSections.get(i).getSectionedAlbums().isEmpty())
+                {
+                    lettersAlbums.add("#");
+                    sectionsAlbums.add(i);
+                }
+
+                else
+                {
+                    lettersAlbums.add("!");
+                    sectionsAlbums.add(-1);
+                }
+            }
+
+            Log.i(TAG, "Letter: " + lettersAlbums.get(i) + "\tPosition: " + sectionsAlbums.get(i));
+        }
+    }
+
+
+    @NonNull
+    @Override
+    public AlbumsSectionsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
+        context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.albums_sections, parent, false);
+        AlbumsSectionsViewHolder viewHolder = new AlbumsSectionsViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull AlbumsSectionsViewHolder holder, int position)
+    {
+        holder.bind(position);
+    }
+
+
+
+    @Override
+    public int getItemCount() { return albumsSections.size(); }
+
+    class AlbumsSectionsViewHolder extends RecyclerView.ViewHolder
+    {
+        RecyclerView recyclerView;
+
+        public AlbumsSectionsViewHolder(@NonNull View itemView)
+        {
+            super(itemView);
+            recyclerView = itemView.findViewById(R.id.sectionsList);
+        }
+
+        public void bind(int position)
+        {
+            GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
+            AlbumsAdapter albumsAdapter = new AlbumsAdapter(albumsSections.get(position).getSectionedAlbums(), listener);
+            albumsSections.get(position).setAlbumsAdapter(albumsAdapter);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(albumsAdapter);
+        }
+    }
+}
