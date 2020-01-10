@@ -58,6 +58,7 @@ import static com.example.android.rookmusicplayer.App.ADD_SONG;
 import static com.example.android.rookmusicplayer.App.CLEAR;
 import static com.example.android.rookmusicplayer.App.GET_CURRENT_POSITION;
 import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUM;
+import static com.example.android.rookmusicplayer.App.GET_PLAYBACKSTATE;
 import static com.example.android.rookmusicplayer.App.GET_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.INITIALIZE_QUEUE_CHANGE;
 import static com.example.android.rookmusicplayer.App.QUEUE_CLICK;
@@ -65,6 +66,7 @@ import static com.example.android.rookmusicplayer.App.QUEUE_END;
 import static com.example.android.rookmusicplayer.App.QUEUE_NEXT;
 import static com.example.android.rookmusicplayer.App.RECEIVE_ARTIST_ALBUM;
 import static com.example.android.rookmusicplayer.App.RECEIVE_CURRENT_POSITION;
+import static com.example.android.rookmusicplayer.App.RECEIVE_PLAYBACKSTATE;
 import static com.example.android.rookmusicplayer.App.RECEIVE_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.RESTORE_SAVED_QUEUE;
 import static com.example.android.rookmusicplayer.App.SAVE_QUEUE;
@@ -216,6 +218,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                         mediaControllerCompat.getTransportControls().sendCustomAction(RESTORE_SAVED_QUEUE, null);
                         if(currentState != PlaybackStateCompat.STATE_PLAYING)
                         {
+
                             mediaControllerCompat.getTransportControls().sendCustomAction(SET_ELAPSED_TIME, elapsedTime);
                             seekBar.setMax(currentDuration);
                             String duration = calculateTime(currentDuration);
@@ -241,7 +244,6 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 {
                     // The Service has refused our connection
                 }
-
 
             };
 
@@ -307,6 +309,10 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                                 stateViewModel.update(details);
                             }
                             mediaControllerCompat.getTransportControls().sendCustomAction(SAVE_QUEUE, null);
+                            break;
+
+                        case RECEIVE_PLAYBACKSTATE:
+                            int state = resultData.getInt("currentState");
                             break;
                     }
                 }

@@ -49,6 +49,7 @@ import static com.example.android.rookmusicplayer.App.FROM_ALBUM;
 import static com.example.android.rookmusicplayer.App.FROM_PLAYLIST;
 import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUM;
 import static com.example.android.rookmusicplayer.App.GET_CURRENT_POSITION;
+import static com.example.android.rookmusicplayer.App.GET_PLAYBACKSTATE;
 import static com.example.android.rookmusicplayer.App.GET_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.INITIALIZE_QUEUE_CHANGE;
 import static com.example.android.rookmusicplayer.App.QUEUE_CLICK;
@@ -56,6 +57,7 @@ import static com.example.android.rookmusicplayer.App.QUEUE_END;
 import static com.example.android.rookmusicplayer.App.QUEUE_NEXT;
 import static com.example.android.rookmusicplayer.App.RECEIVE_ARTIST_ALBUM;
 import static com.example.android.rookmusicplayer.App.RECEIVE_CURRENT_POSITION;
+import static com.example.android.rookmusicplayer.App.RECEIVE_PLAYBACKSTATE;
 import static com.example.android.rookmusicplayer.App.RECEIVE_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.RECENTLY_ADDED;
 import static com.example.android.rookmusicplayer.App.RESTORE_SAVED_QUEUE;
@@ -290,6 +292,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                             queuePosition.putInt("queuePosition", position);
                             queuePosition.putInt("currentElapsed", mediaPlayer.getCurrentPosition());
                             cb.send(RECEIVE_QUEUE_POSITION, queuePosition);
+                            break;
+
+                        case GET_PLAYBACKSTATE:
+                            Bundle playbackState = new Bundle();
+                            playbackState.putInt("currentState", currentState);
+                            cb.send(RECEIVE_PLAYBACKSTATE, playbackState);
                             break;
                     }
                 }
@@ -734,7 +742,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     {
         if(currentState == PlaybackStateCompat.STATE_PLAYING)
             mediaPlayer.start();
-        else if(currentState == PlaybackStateCompat.STATE_NONE)
+        else
             mediaPlayer.seekTo(elapsed);
     }
 

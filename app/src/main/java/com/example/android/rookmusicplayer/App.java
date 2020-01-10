@@ -97,6 +97,8 @@ public class App extends Application
     public static final int RECEIVE_ARTIST_ALBUM = 2;
     public static final String GET_QUEUE_POSITION = "3";
     public static final int RECEIVE_QUEUE_POSITION = 3;
+    public static final String GET_PLAYBACKSTATE = "4";
+    public static final int RECEIVE_PLAYBACKSTATE = 4;
 
     //CUSTOM ACTIONS
     public static final String ADD_SONG = "1";
