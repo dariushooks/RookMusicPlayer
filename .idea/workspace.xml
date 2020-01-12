@@ -20,10 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89654424-037b-4993-8816-e7a56d226df5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MediaPlaybackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MediaPlaybackService.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,8 +45,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6048">
-              <caret line="250" column="12" lean-forward="true" selection-start-line="250" selection-start-column="12" selection-end-line="250" selection-end-column="12" />
+            <state relative-caret-position="364">
+              <caret line="263" lean-forward="true" selection-start-line="263" selection-end-line="263" />
               <folding>
                 <element signature="e#11538#12147#0" expanded="true" />
                 <element signature="e#12146#12147#0" expanded="true" />
@@ -60,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MediaPlaybackService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="794">
-              <caret line="628" column="18" selection-start-line="628" selection-start-column="18" selection-end-line="628" selection-end-column="18" />
+            <state relative-caret-position="822">
+              <caret line="641" column="13" selection-start-line="641" selection-start-column="13" selection-end-line="641" selection-end-column="13" />
               <folding>
                 <element signature="e#30222#30521#0" expanded="true" />
                 <element signature="e#30520#30521#0" expanded="true" />
@@ -88,8 +86,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/App.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/RestartReceiver.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MediaPlaybackService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelper.java" />
       </list>
     </option>
   </component>
@@ -237,7 +235,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="88" width="2400" height="1424" extended-state="0" />
+    <frame x="0" y="88" width="2400" height="1424" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.1656678" />
@@ -251,7 +249,7 @@
       <window_info anchor="bottom" id="Run" order="0" />
       <window_info anchor="bottom" id="Logcat" order="1" weight="0.32996893" />
       <window_info anchor="bottom" id="TODO" order="2" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32919255" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.32919255" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="5" />
       <window_info anchor="bottom" id="Build" order="6" weight="0.32919255" />
@@ -311,8 +309,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MediaPlaybackService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="794">
-          <caret line="628" column="18" selection-start-line="628" selection-start-column="18" selection-end-line="628" selection-end-column="18" />
+        <state relative-caret-position="822">
+          <caret line="641" column="13" selection-start-line="641" selection-start-column="13" selection-end-line="641" selection-end-column="13" />
           <folding>
             <element signature="e#30222#30521#0" expanded="true" />
             <element signature="e#30520#30521#0" expanded="true" />
@@ -322,8 +320,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6048">
-          <caret line="250" column="12" lean-forward="true" selection-start-line="250" selection-start-column="12" selection-end-line="250" selection-end-column="12" />
+        <state relative-caret-position="364">
+          <caret line="263" lean-forward="true" selection-start-line="263" selection-end-line="263" />
           <folding>
             <element signature="e#11538#12147#0" expanded="true" />
             <element signature="e#12146#12147#0" expanded="true" />
