@@ -267,8 +267,17 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         @Override
         public void run()
         {
-            mediaControllerCompat.sendCommand(GET_CURRENT_POSITION, null, resultReceiver);
-            myHandler.postDelayed(this, 1000);
+            if(currentState == PlaybackStateCompat.STATE_PLAYING)
+            {
+                mediaControllerCompat.sendCommand(GET_CURRENT_POSITION, null, resultReceiver);
+                myHandler.postDelayed(this, 1000);
+            }
+
+            else
+            {
+                myHandler.removeCallbacks(this);
+            }
+
         }
     };
 
