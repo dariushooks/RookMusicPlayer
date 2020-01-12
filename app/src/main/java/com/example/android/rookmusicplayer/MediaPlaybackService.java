@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.android.rookmusicplayer.App.ACTIVITY_RESTORE;
 import static com.example.android.rookmusicplayer.App.ADD_ALBUM_ARTIST_PLAYLIST;
@@ -176,7 +177,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     super.onPlay();
                     if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
                     {
-                        startService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
+                        startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
                         mediaSession.setActive(true);
                         mediaPlayer.start();
 
@@ -221,7 +222,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     Log.i(TAG, "Playing from media id: " + mediaId);
                     if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
                     {
-                        startService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
+                        startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
                         mediaSession.setActive(true);
                         playSong(mediaId);
                         buildMetadata(queue.get(position));
@@ -632,7 +633,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         {
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
             {
-                Log.i(TAG, "Time Updating to " + mediaPlayer.getCurrentPosition());
+                Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
                 builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 handler.postDelayed(this, 1000);
@@ -640,11 +641,25 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
             else
             {
-                Log.i(TAG, "Time Paused at " + mediaPlayer.getCurrentPosition());
+                Log.i(TAG, "Time Paused at " + calculateTime(mediaPlayer.getCurrentPosition()));
+                builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 handler.removeCallbacks(this);
             }
         }
     };
+
+    private String calculateTime(int time)
+    {
+        String calculated;
+        int minutes = time / 1000 / 60;
+        int seconds = time/ 1000 % 60;
+        if(seconds > 9)
+            calculated = String.format(Locale.US, "%d:%d", minutes, seconds);
+        else
+            calculated = String.format(Locale.US, "%d:%d%d", minutes, 0, seconds);
+        return calculated;
+    }
 
     private int getCurrentPosition(){ return mediaPlayer.getCurrentPosition(); }
 

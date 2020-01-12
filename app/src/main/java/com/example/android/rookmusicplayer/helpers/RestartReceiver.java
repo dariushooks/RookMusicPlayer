@@ -18,7 +18,7 @@ public class RestartReceiver extends BroadcastReceiver
         String action = intent.getAction();
         if(action.equals("keepServiceRunning"))
         {
-            context.startService(new Intent(context, MediaPlaybackService.class));
+            context.startForegroundService(new Intent(context, MediaPlaybackService.class));
         }
     }
 }
