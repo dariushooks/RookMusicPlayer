@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 public void onChanged(List<Songs> songs)
                 {
                     savedSongs = (ArrayList<Songs>) songs;
-                    Log.i(TAG, "Retrieved saved queue");
+                    Log.i(TAG, "RETRIEVED SAVED QUEUE");
                 }
             });
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 public void onChanged(List<SavedStateDetails> savedStateDetails)
                 {
                     savedState = (ArrayList<SavedStateDetails>) savedStateDetails;
-                    Log.i(TAG, "Retrieved saved details");
+                    Log.i(TAG, "RETRIEVED SAVED STATE");
                 }
             });
 
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         super.onStop();
         Log.i(TAG, "SAVING UI STATE");
         mediaBrowserHelper.onStop();
+        Log.i(TAG, "UI STATE SAVED");
     }
 
     @Override

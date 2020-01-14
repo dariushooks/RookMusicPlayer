@@ -156,7 +156,6 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
 
     public void onStop()
     {
-        myHandler.removeCallbacks(updateTime);
         mediaControllerCompat.sendCommand(GET_QUEUE_POSITION, null, resultReceiver);
     }
 

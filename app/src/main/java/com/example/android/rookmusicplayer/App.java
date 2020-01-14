@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.transition.ChangeBounds;
@@ -125,10 +126,15 @@ public class App extends Application
     {
         super.onCreate();
         createNotificationChannels();
-        //getContentResolver().delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, null, null);
-        getSongs(); getArtists(); getAlbums(); getPlaylists();
-        sectionContent = new SectionContent(albums, albumsSections);
-        sectionContent.sectionAlbums();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run()
+            {
+                getSongs(); getArtists(); getAlbums(); getPlaylists();
+                sectionContent = new SectionContent(albums, albumsSections);
+                sectionContent.sectionAlbums();
+            }
+        });
     }
 
     private void createNotificationChannels()
