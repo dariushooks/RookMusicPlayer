@@ -14,8 +14,6 @@ import com.example.android.rookmusicplayer.Songs;
 
 import java.util.ArrayList;
 
-import static com.example.android.rookmusicplayer.App.restore;
-
 public class GetMedia
 {
     Context context;
@@ -120,53 +118,6 @@ public class GetMedia
         }
 
         return new ArrayList<>();
-    }
-
-    public ArrayList<Songs> getSavedSongs()
-    {
-        ArrayList<Songs> songs = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
-        Uri savedUri = MediaStore.Audio.Playlists.Members.getContentUri("external", Long.parseLong(restore.getId()));
-        Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
-        Cursor cursor = contentResolver.query(savedUri, null, null, null, null);
-        if(cursor != null && cursor.moveToFirst())
-        {
-            int id = cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.AUDIO_ID);
-            Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-            String selection = MediaStore.Audio.Media._ID + "=?";
-
-            do
-            {
-                String currentID = cursor.getString(id);
-                Cursor c = contentResolver.query(songUri, null, selection, new String[]{currentID}, null);
-                if(c != null && c.moveToFirst())
-                {
-                    int path = c.getColumnIndex(MediaStore.Audio.Media.DATA);
-                    int title = c.getColumnIndex(MediaStore.Audio.Media.TITLE);
-                    int album = c.getColumnIndex(MediaStore.Audio.Media.ALBUM);
-                    int albumId = c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
-                    int albumKey = c.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY);
-                    int artist = c.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-                    int artistKey = c.getColumnIndex(MediaStore.Audio.Media.ARTIST_KEY);
-                    int duration = c.getColumnIndex(MediaStore.Audio.Media.DURATION);
-
-                    String currentTitle = c.getString(title);
-                    String currentAlbum = c.getString(album);
-                    long currentAlbumId = c.getLong(albumId);
-                    String currentArt = ContentUris.withAppendedId(albumArtUri, currentAlbumId).toString();
-                    String currentAlbumKey = c.getString(albumKey);
-                    String currentArtist = c.getString(artist);
-                    String currentArtistKey = c.getString(artistKey);
-                    String currentPath = c.getString(path);
-                    long currentDuration = c.getLong(duration);
-                    songs.add(new Songs(currentID, currentTitle, currentAlbum, currentAlbumKey, currentArt, currentArtist, currentArtistKey, currentDuration, currentPath, -1));
-                    c.close();
-                }
-            }while(cursor.moveToNext());
-            cursor.close();
-        }
-
-        return songs;
     }
 
     public ArrayList<Songs> getPlaylistSongs(Playlists current)

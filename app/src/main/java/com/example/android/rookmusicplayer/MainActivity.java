@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -74,7 +75,11 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null)
+            actionBar.hide();
+
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
         else
@@ -115,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         super.onStart();
         mediaBrowserHelper.onStart();
     }
-
 
     @Override
     protected void onStop()
@@ -164,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 Toast.makeText(this, "PERMISSIONS NOT GRANTED", Toast.LENGTH_LONG).show();
                 break;
         }
-
     }
 
     @Override

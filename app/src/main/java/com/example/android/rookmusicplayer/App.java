@@ -35,11 +35,6 @@ public class App extends Application
     private SectionContent sectionContent;
 
     public static final String CHANNEL_1 = "channel_1";
-
-    public static Runtime runtime;
-    public static long usedMemInMB;
-    public static long maxHeapSizeInMB;
-    public static long availHeapSizeInMB;
     public static MediaBrowserHelper mediaBrowserHelper;
 
     //LIBRARY
@@ -60,7 +55,6 @@ public class App extends Application
     //SAVING AND RESTORING UI STATE
     public static ArrayList<Songs> savedSongs;
     public static ArrayList<SavedStateDetails> savedState;
-    public static Playlists restore;
 
     //UP NEXT
     public static ArrayList<Songs> queueDisplay = new ArrayList<>();
@@ -325,7 +319,8 @@ public class App extends Application
         }
     }
 
-   public static ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+   public static ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback()
+   {
         @Override
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder)
         {
@@ -358,10 +353,4 @@ public class App extends Application
             return super.isItemViewSwipeEnabled();
         }
     });
-
-    public interface ItemTouchHelperAdapter
-    {
-        boolean onItemMove(int fromPosition, int toPosition);
-        void onItemDismiss(int position);
-    }
 }

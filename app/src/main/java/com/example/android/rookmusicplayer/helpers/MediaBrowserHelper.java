@@ -763,6 +763,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 switch (newState)
                 {
                     case BottomSheetBehavior.STATE_EXPANDED:
+                        view.setBackground(context.getDrawable(R.drawable.bottomsheet_rounded_corners));
                         if(currentState == PlaybackStateCompat.STATE_PLAYING)
                         {
                             nowPlayingArtHolder.animate().scaleX(6.75f);
@@ -781,6 +782,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                         break;
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
+                        view.setBackground(context.getDrawable(R.drawable.bottomsheet_corners));
                         nowPlayingArtHolder.animate().scaleX(1);
                         nowPlayingArtHolder.animate().scaleY(1);
                         nowPlayingArtHolder.setCardElevation(0f);

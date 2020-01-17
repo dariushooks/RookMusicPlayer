@@ -8,7 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {SavedQueue.class, SavedDetails.class}, version = 1)
+@Database(entities = {SavedQueue.class, SavedDetails.class}, version = 1, exportSchema = false)
 public abstract class StateDatabase extends RoomDatabase
 {
     private static StateDatabase instance;
@@ -33,7 +33,6 @@ public abstract class StateDatabase extends RoomDatabase
         public void onCreate(@NonNull SupportSQLiteDatabase db)
         {
             super.onCreate(db);
-
         }
 
         @Override

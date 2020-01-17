@@ -12,12 +12,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.rookmusicplayer.App;
 import com.example.android.rookmusicplayer.R;
 
 import static com.example.android.rookmusicplayer.App.queueDisplay;
 
-public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHolder> implements App.ItemTouchHelperAdapter
+public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHolder>
 {
     private QueueAdapter.ListItemClickListener listener;
     private QueueChange queueChange;
@@ -72,14 +71,12 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
     @Override
     public int getItemCount() { return queueDisplay.size(); }
 
-    @Override
     public boolean onItemMove(int fromPosition, int toPosition)
     {
         queueChange.updateQueueOrder(fromPosition, toPosition);
         return true;
     }
 
-    @Override
     public void onItemDismiss(int position) { queueChange.updateQueueDismiss(position); }
 
     class QueueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
