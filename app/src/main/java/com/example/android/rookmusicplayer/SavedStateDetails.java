@@ -8,9 +8,10 @@ public class SavedStateDetails
     private int repeat;
     private int state;
     private int elapsed;
+    private int duration;
     private String now_playing_from;
 
-    public SavedStateDetails(int id, int position, int shuffle, int repeat, int state, int elapsed, String now_playing_from)
+    public SavedStateDetails(int id, int position, int shuffle, int repeat, int state, int elapsed, int duration, String now_playing_from)
     {
         this.id = id;
         this.position = position;
@@ -18,6 +19,7 @@ public class SavedStateDetails
         this.repeat = repeat;
         this.state = state;
         this.elapsed = elapsed;
+        this.duration = duration;
         this.now_playing_from = now_playing_from;
     }
 
@@ -44,6 +46,10 @@ public class SavedStateDetails
     public int getElapsed() { return elapsed; }
 
     public void setElapsed(int elapsed) { this.elapsed = elapsed; }
+
+    public int getDuration() { return duration; }
+
+    public void setDuration(int duration) { this.duration = duration; }
 
     public String getNow_playing_from() { return now_playing_from; }
 

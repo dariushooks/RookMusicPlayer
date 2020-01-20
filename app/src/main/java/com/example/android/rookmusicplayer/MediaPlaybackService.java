@@ -116,6 +116,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     //SYNC UI STATE
     private int syncPosition;
     private int syncElapsed;
+    private int syncDuration;
     private int syncShuffle;
     private int syncRepeat;
     private int syncPlayState;
@@ -494,8 +495,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         syncRepeat = repeat;
         syncPlayState = currentState;
         syncElapsed = mediaPlayer.getCurrentPosition();
+        syncDuration = mediaPlayer.getDuration();
         syncNowPlayingFrom = nowPlayingFrom;
-        SavedDetails details = new SavedDetails(syncPosition, syncShuffle, syncRepeat, syncPlayState, syncElapsed, syncNowPlayingFrom);
+        SavedDetails details = new SavedDetails(syncPosition, syncShuffle, syncRepeat, syncPlayState, syncElapsed, syncDuration, syncNowPlayingFrom);
         if(savedState.isEmpty())
             stateViewModel.insert(details);
         else

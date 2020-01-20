@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -58,7 +59,6 @@ import static com.example.android.rookmusicplayer.App.ADD_SONG;
 import static com.example.android.rookmusicplayer.App.CLEAR;
 import static com.example.android.rookmusicplayer.App.GET_CURRENT_POSITION;
 import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUM;
-import static com.example.android.rookmusicplayer.App.GET_PLAYBACKSTATE;
 import static com.example.android.rookmusicplayer.App.GET_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.INITIALIZE_QUEUE_CHANGE;
 import static com.example.android.rookmusicplayer.App.QUEUE_CLICK;
@@ -120,6 +120,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
     private ImageButton nowPlayingBackExpanded;
     private ImageButton nowPlayingForwardExpanded;
     private ImageButton nowPlayingSlideDown;
+    private ProgressBar progressBar;
     private SeekBar seekBar;
     private SeekBar volumeBar;
     private Button shuffleExpanded;
@@ -129,6 +130,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
     //SAVING UI STATE
     private int savedPosition;
     private int savedElapsed;
+    private int savedDuration;
     private int savedShuffle;
     private int savedRepeat;
     private int savedPlayState;
@@ -203,7 +205,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                     {
                         savedPosition = savedState.get(0).getPosition();
                         savedElapsed = savedState.get(0).getElapsed();
-                        currentDuration = savedSongs.get(savedPosition).getDuration().intValue();
+                        savedDuration = savedState.get(0).getDuration();
                         shuffle = savedState.get(0).getShuffle();
                         mediaControllerCompat.getTransportControls().setShuffleMode(shuffle);
                         repeat = savedState.get(0).getRepeat();
@@ -219,9 +221,11 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                         {
 
                             mediaControllerCompat.getTransportControls().sendCustomAction(SET_ELAPSED_TIME, elapsedTime);
-                            seekBar.setMax(currentDuration);
-                            String duration = calculateTime(currentDuration);
+                            progressBar.setMax(savedDuration);
+                            seekBar.setMax(savedDuration);
+                            String duration = calculateTime(savedDuration);
                             nowPlayingDurationExpanded.setText(duration);
+                            progressBar.setProgress(savedElapsed);
                             seekBar.setProgress(savedElapsed);
                             String elapsed = calculateTime(savedElapsed);
                             nowPlayingElapsedExpanded.setText(elapsed);
@@ -291,6 +295,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                     {
                         case RECEIVE_CURRENT_POSITION:
                             currentElapsed = resultData.getInt("currentPosition");
+                            progressBar.setProgress(currentElapsed);
                             seekBar.setProgress(currentElapsed);
                             String elapsedTime = calculateTime(currentElapsed);
                             nowPlayingElapsedExpanded.setText(elapsedTime);
@@ -307,8 +312,9 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                             savedRepeat = repeat;
                             savedPlayState = currentState;
                             savedElapsed = resultData.getInt("currentElapsed");
+                            savedDuration = currentDuration;
                             savedNowPlayingFrom = nowPlayingFrom;
-                            SavedDetails details = new SavedDetails(savedPosition, savedShuffle, savedRepeat, savedPlayState, savedElapsed, savedNowPlayingFrom);
+                            SavedDetails details = new SavedDetails(savedPosition, savedShuffle, savedRepeat, savedPlayState, savedElapsed, savedDuration, savedNowPlayingFrom);
                             if(savedState.isEmpty())
                                 stateViewModel.insert(details);
                             else
@@ -408,6 +414,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                     nowPlayingArtistAlbumExpanded.setSelected(true);
 
                     currentDuration = (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+                    progressBar.setMax(currentDuration);
                     seekBar.setMax(currentDuration);
                     String d = calculateTime(currentDuration);
                     nowPlayingDurationExpanded.setText(d);
@@ -929,6 +936,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
             }
         });
 
+        progressBar = rootView.findViewById(R.id.collapsedSeekBar);
         seekBar = rootView.findViewById(R.id.currentSeekBottomSheet);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

@@ -109,6 +109,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     }
 
     @Override
+    public int getItemViewType(int position)
+    {
+        return Integer.parseInt(songs.get(position).getId());
+    }
+
+    @Override
     public int getItemCount()
     {
         return songs.size();
