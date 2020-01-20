@@ -194,251 +194,275 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         }
     }
 
-    private MediaSessionCompat.Callback mediaCallbacks =
-            new MediaSessionCompat.Callback()
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+                                       SESSION CALLBACKS
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
+
+    private MediaSessionCompat.Callback mediaCallbacks = new MediaSessionCompat.Callback()
+    {
+        @Override
+        public void onPlay()
+        {
+            super.onPlay();
+            if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
             {
-                @Override
-                public void onPlay()
+                startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
+                mediaSession.setActive(true);
+                mediaPlayer.start();
+
+                //SET PLAYBACK STATE
+                currentState = PlaybackStateCompat.STATE_PLAYING;
+                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 0);
+                stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+                mediaSession.setPlaybackState(stateBuilder.build());
+
+                //SHOW PLAY NOTIFICATION
+                buildNotification(MediaPlaybackService.this, queue.get(position));
+            }
+        }
+
+
+        @Override
+        public void onStop()
+        {
+            super.onStop();
+            abandonAudioFocus();
+            stopService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
+            mediaSession.setActive(false);
+            mediaPlayer.stop();
+        }
+
+        @Override
+        public void onPlayFromMediaId(String mediaId, Bundle extras)
+        {
+            super.onPlayFromMediaId(mediaId, extras);
+            Log.i(TAG, "Playing from media id: " + mediaId);
+            if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+            {
+                startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
+                mediaSession.setActive(true);
+                playSong(mediaId);
+                buildMetadata(queue.get(position));
+
+                //SET PLAYBACK STATE
+                currentState = PlaybackStateCompat.STATE_PLAYING;
+                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+                stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+                mediaSession.setPlaybackState(stateBuilder.build());
+
+                //SHOW PLAY NOTIFICATION
+                buildNotification(MediaPlaybackService.this, queue.get(position));
+            }
+        }
+
+        @Override
+        public void onPause()
+        {
+            super.onPause();
+            if(mediaPlayer.isPlaying())
+            {
+                mediaPlayer.pause();
+
+                //SET PLAYBACK STATE
+                currentState = PlaybackStateCompat.STATE_PAUSED;
+                stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+                stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                mediaSession.setPlaybackState(stateBuilder.build());
+
+                //SHOW PAUSE NOTIFICATION
+                buildNotification(MediaPlaybackService.this, queue.get(position));
+            }
+        }
+
+        @Override
+        public void onCommand(String command, Bundle extras, ResultReceiver cb)
+        {
+            super.onCommand(command, extras, cb);
+            switch (command)
+            {
+                case GET_CURRENT_POSITION:
+                    Bundle currentPosition = new Bundle();
+                    currentPosition.putInt("currentPosition", getCurrentPosition());
+                    cb.send(RECEIVE_CURRENT_POSITION, currentPosition);
+                    break;
+
+                case GET_ARTIST_ALBUM:
+                    Bundle currentArtistAlbum = new Bundle();
+                    currentArtistAlbum.putParcelable("currentArtistAlbum", getCurrentArtistAlbum());
+                    cb.send(RECEIVE_ARTIST_ALBUM, currentArtistAlbum);
+                    break;
+
+                case GET_QUEUE_POSITION:
+                    Bundle queuePosition = new Bundle();
+                    queuePosition.putInt("queuePosition", position);
+                    queuePosition.putInt("currentElapsed", mediaPlayer.getCurrentPosition());
+                    cb.send(RECEIVE_QUEUE_POSITION, queuePosition);
+                    break;
+
+                case GET_PLAYBACKSTATE:
+                    Bundle playbackState = new Bundle();
+                    playbackState.putInt("currentState", currentState);
+                    cb.send(RECEIVE_PLAYBACKSTATE, playbackState);
+                    break;
+            }
+        }
+
+        @Override
+        public void onCustomAction(String action, Bundle extras)
+        {
+            super.onCustomAction(action, extras);
+            switch (action)
+            {
+                case ADD_SONG: addSongToQueue(extras.getParcelable("ADD_SONG"), extras.getInt("QUEUE_POSITION")); break;
+                case ADD_ALBUM_ARTIST_PLAYLIST: addAlbumOrArtistToQueue(extras.getInt("QUEUE_POSITION")); break;
+                case SET_POSITION: setPosition(extras.getInt("CURRENT_QUEUE_POSITION")); break;
+                case CLEAR: queue.clear(); break;
+                case ACTIVITY_RESTORE: activityRestore(); break;
+                case SET_QUEUE_LIBRARY: queue.addAll(songs); break;
+                case SET_QUEUE_LIBRARY_SONGS: queue.addAll(librarySongs); break;
+                case SET_QUEUE_ARTIST: queue.addAll(artistSongs); break;
+                case SET_QUEUE_ALBUM: queue.addAll(albumSongs); break;
+                case SET_QUEUE_SEARCH: queue.addAll(searchSong); break;
+                case SET_QUEUE_PLAYLIST: queue.addAll(playlistSongs); break;
+                case SET_UP_NEXT: setQueueDisplay(); break;
+                case QUEUE_CLICK: queueClick(extras.getInt("clickedIndex")); break;
+                case SHUFFLE_QUEUE: mediaSession.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL); from = extras.getInt("FROM"); break;
+                case SAVE_QUEUE: saveQueue(); break;
+                case RESTORE_SAVED_QUEUE: queue.addAll(savedSongs); break;
+                case INITIALIZE_QUEUE_CHANGE: queueAdapter.initializeQueueChange(MediaPlaybackService.this); break;
+                case SET_ELAPSED_TIME: elapsed = extras.getInt("CURRENT_ELAPSED_TIME"); setSong(queue.get(position).getPath()); break;
+            }
+        }
+
+        @Override
+        public void onSkipToPrevious()
+        {
+            super.onSkipToPrevious();
+            if(!queue.isEmpty())
+            {
+                String mediaId;
+                if(mediaPlayer.getCurrentPosition() < 5000 && position > 0)
                 {
-                    super.onPlay();
-                    if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
-                    {
-                        startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
-                        mediaSession.setActive(true);
-                        mediaPlayer.start();
-
-                        //SET PLAYBACK STATE
-                        currentState = PlaybackStateCompat.STATE_PLAYING;
-                        stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 0);
-                        stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
-                        mediaSession.setPlaybackState(stateBuilder.build());
-
-                        //SHOW PLAY NOTIFICATION
-                        buildNotification(MediaPlaybackService.this, queue.get(position));
-                    }
+                    stateBuilder.setState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+                    mediaSession.setPlaybackState(stateBuilder.build());
+                    updateQueueDisplay(SKIP_PREVIOUS);
+                    position--;
                 }
+                mediaId = queue.get(position).getPath();
+                if(currentState == PlaybackStateCompat.STATE_PLAYING)
+                    playSong(mediaId);
+                else
+                    setSong(mediaId);
+                buildMetadata(queue.get(position));
+                buildNotification(MediaPlaybackService.this, queue.get(position));
+            }
+        }
 
+        @Override
+        public void onSkipToNext()
+        {
+            super.onSkipToNext();
+            if(repeatAll && position == queue.size() - 1)
+            {
+                position = 0;
+                setQueueDisplay();
+                position = -1;
+            }
 
-                @Override
-                public void onStop()
-                {
-                    super.onStop();
-                    abandonAudioFocus();
-                    stopService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
-                    mediaSession.setActive(false);
-                    mediaPlayer.stop();
-                }
+            if(!queue.isEmpty() && position < queue.size() - 1)
+            {
+                stateBuilder.setState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+                mediaSession.setPlaybackState(stateBuilder.build());
+                position++;
+                String mediaId = queue.get(position).getPath();
+                if(currentState == PlaybackStateCompat.STATE_PLAYING)
+                    playSong(mediaId);
+                else
+                    setSong(mediaId);
+                buildMetadata(queue.get(position));
+                updateQueueDisplay(SKIP_NEXT);
+                buildNotification(MediaPlaybackService.this, queue.get(position));
+            }
+        }
 
-                @Override
-                public void onPlayFromMediaId(String mediaId, Bundle extras)
-                {
-                    super.onPlayFromMediaId(mediaId, extras);
-                    Log.i(TAG, "Playing from media id: " + mediaId);
-                    if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
-                    {
-                        startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
-                        mediaSession.setActive(true);
-                        playSong(mediaId);
-                        buildMetadata(queue.get(position));
+        @Override
+        public void onSeekTo(long pos)
+        {
+            super.onSeekTo(pos);
+            mediaPlayer.seekTo((int)pos);
+        }
 
-                        //SET PLAYBACK STATE
-                        currentState = PlaybackStateCompat.STATE_PLAYING;
-                        stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-                        stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
-                        mediaSession.setPlaybackState(stateBuilder.build());
+        @Override
+        public void onSetRepeatMode(int repeatMode)
+        {
+            super.onSetRepeatMode(repeatMode);
+            mediaSession.setRepeatMode(repeatMode);
+            repeat = repeatMode;
+            switch (repeatMode)
+            {
+                case PlaybackStateCompat.REPEAT_MODE_ALL: repeatAll = true; break;
+                case PlaybackStateCompat.REPEAT_MODE_ONE: repeatAll = false; repeatOne = true; break;
+                case PlaybackStateCompat.REPEAT_MODE_NONE: repeatAll = false; repeatOne = false; break;
+            }
+        }
 
-                        //SHOW PLAY NOTIFICATION
-                        buildNotification(MediaPlaybackService.this, queue.get(position));
-                    }
-                }
+        @Override
+        public void onSetShuffleMode(int shuffleMode)
+        {
+            super.onSetShuffleMode(shuffleMode);
+            mediaSession.setShuffleMode(shuffleMode);
+            shuffle = shuffleMode;
+            Songs current;
+            switch (shuffleMode)
+            {
+                case PlaybackStateCompat.SHUFFLE_MODE_ALL:
+                    current = queue.get(position);
+                    queue.remove(position);
+                    Collections.shuffle(queue);
+                    queue.add(0, current); position = 0;
+                    setQueueDisplay();
+                    break;
 
-                @Override
-                public void onPause()
-                {
-                    super.onPause();
-                    if(mediaPlayer.isPlaying())
-                    {
-                        mediaPlayer.pause();
-
-                        //SET PLAYBACK STATE
-                        currentState = PlaybackStateCompat.STATE_PAUSED;
-                        stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-                        stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
-                        mediaSession.setPlaybackState(stateBuilder.build());
-
-                        //SHOW PAUSE NOTIFICATION
-                        buildNotification(MediaPlaybackService.this, queue.get(position));
-                    }
-                }
-
-                @Override
-                public void onCommand(String command, Bundle extras, ResultReceiver cb)
-                {
-                    super.onCommand(command, extras, cb);
-                    switch (command)
-                    {
-                        case GET_CURRENT_POSITION:
-                            Bundle currentPosition = new Bundle();
-                            currentPosition.putInt("currentPosition", getCurrentPosition());
-                            cb.send(RECEIVE_CURRENT_POSITION, currentPosition);
-                            break;
-
-                        case GET_ARTIST_ALBUM:
-                            Bundle currentArtistAlbum = new Bundle();
-                            currentArtistAlbum.putParcelable("currentArtistAlbum", getCurrentArtistAlbum());
-                            cb.send(RECEIVE_ARTIST_ALBUM, currentArtistAlbum);
-                            break;
-
-                        case GET_QUEUE_POSITION:
-                            Bundle queuePosition = new Bundle();
-                            queuePosition.putInt("queuePosition", position);
-                            queuePosition.putInt("currentElapsed", mediaPlayer.getCurrentPosition());
-                            cb.send(RECEIVE_QUEUE_POSITION, queuePosition);
-                            break;
-
-                        case GET_PLAYBACKSTATE:
-                            Bundle playbackState = new Bundle();
-                            playbackState.putInt("currentState", currentState);
-                            cb.send(RECEIVE_PLAYBACKSTATE, playbackState);
-                            break;
-                    }
-                }
-
-                @Override
-                public void onCustomAction(String action, Bundle extras)
-                {
-                    super.onCustomAction(action, extras);
-                    switch (action)
-                    {
-                        case ADD_SONG: addSongToQueue(extras.getParcelable("ADD_SONG"), extras.getInt("QUEUE_POSITION")); break;
-                        case ADD_ALBUM_ARTIST_PLAYLIST: addAlbumOrArtistToQueue(extras.getInt("QUEUE_POSITION")); break;
-                        case SET_POSITION: setPosition(extras.getInt("CURRENT_QUEUE_POSITION")); break;
-                        case CLEAR: queue.clear(); break;
-                        case ACTIVITY_RESTORE: activityRestore(); break;
-                        case SET_QUEUE_LIBRARY: queue.addAll(songs); break;
-                        case SET_QUEUE_LIBRARY_SONGS: queue.addAll(librarySongs); break;
-                        case SET_QUEUE_ARTIST: queue.addAll(artistSongs); break;
-                        case SET_QUEUE_ALBUM: queue.addAll(albumSongs); break;
-                        case SET_QUEUE_SEARCH: queue.addAll(searchSong); break;
-                        case SET_QUEUE_PLAYLIST: queue.addAll(playlistSongs); break;
-                        case SET_UP_NEXT: setQueueDisplay(); break;
-                        case QUEUE_CLICK: queueClick(extras.getInt("clickedIndex")); break;
-                        case SHUFFLE_QUEUE: mediaSession.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL); from = extras.getInt("FROM"); break;
-                        case SAVE_QUEUE: saveQueue(); break;
-                        case RESTORE_SAVED_QUEUE: queue.addAll(savedSongs); break;
-                        case INITIALIZE_QUEUE_CHANGE: queueAdapter.initializeQueueChange(MediaPlaybackService.this); break;
-                        case SET_ELAPSED_TIME: elapsed = extras.getInt("CURRENT_ELAPSED_TIME"); setSong(queue.get(position).getPath()); break;
-                    }
-                }
-
-                @Override
-                public void onSkipToPrevious()
-                {
-                    super.onSkipToPrevious();
+                case PlaybackStateCompat.SHUFFLE_MODE_NONE:
                     if(!queue.isEmpty())
                     {
-                        String mediaId;
-                        if(mediaPlayer.getCurrentPosition() < 5000 && position > 0)
-                        {
-                            stateBuilder.setState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-                            mediaSession.setPlaybackState(stateBuilder.build());
-                            updateQueueDisplay(SKIP_PREVIOUS);
-                            position--;
-                        }
-                        mediaId = queue.get(position).getPath();
-                        if(currentState == PlaybackStateCompat.STATE_PLAYING)
-                            playSong(mediaId);
+                        current = queue.get(position);
+                        if(from == FROM_ALBUM || from == FROM_PLAYLIST)
+                            Collections.sort(queue, Comparator.comparing(Songs::getTrack));
+                        else if(from == RECENTLY_ADDED)
+                            Collections.sort(queue, Comparator.comparing(Songs::getTrack).reversed());
                         else
-                            setSong(mediaId);
-                        buildMetadata(queue.get(position));
-                        buildNotification(MediaPlaybackService.this, queue.get(position));
-                    }
-                }
-
-                @Override
-                public void onSkipToNext()
-                {
-                    super.onSkipToNext();
-                    if(repeatAll && position == queue.size() - 1)
-                    {
-                        position = 0;
+                            Collections.sort(queue, Comparator.comparing(Songs::getTitle));
+                        position = queue.indexOf(current);
                         setQueueDisplay();
-                        position = -1;
                     }
+                    break;
+            }
+        }
+    };
 
-                    if(!queue.isEmpty() && position < queue.size() - 1)
-                    {
-                        stateBuilder.setState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-                        mediaSession.setPlaybackState(stateBuilder.build());
-                        position++;
-                        String mediaId = queue.get(position).getPath();
-                        if(currentState == PlaybackStateCompat.STATE_PLAYING)
-                            playSong(mediaId);
-                        else
-                            setSong(mediaId);
-                        buildMetadata(queue.get(position));
-                        updateQueueDisplay(SKIP_NEXT);
-                        buildNotification(MediaPlaybackService.this, queue.get(position));
-                    }
-                }
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
 
-                @Override
-                public void onSeekTo(long pos)
-                {
-                    super.onSeekTo(pos);
-                    mediaPlayer.seekTo((int)pos);
-                }
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
 
-                @Override
-                public void onSetRepeatMode(int repeatMode)
-                {
-                    super.onSetRepeatMode(repeatMode);
-                    mediaSession.setRepeatMode(repeatMode);
-                    repeat = repeatMode;
-                    switch (repeatMode)
-                    {
-                        case PlaybackStateCompat.REPEAT_MODE_ALL: repeatAll = true; break;
-                        case PlaybackStateCompat.REPEAT_MODE_ONE: repeatAll = false; repeatOne = true; break;
-                        case PlaybackStateCompat.REPEAT_MODE_NONE: repeatAll = false; repeatOne = false; break;
-                    }
-                }
 
-                @Override
-                public void onSetShuffleMode(int shuffleMode)
-                {
-                    super.onSetShuffleMode(shuffleMode);
-                    mediaSession.setShuffleMode(shuffleMode);
-                    shuffle = shuffleMode;
-                    Songs current;
-                    switch (shuffleMode)
-                    {
-                        case PlaybackStateCompat.SHUFFLE_MODE_ALL:
-                            current = queue.get(position);
-                            queue.remove(position);
-                            Collections.shuffle(queue);
-                            queue.add(0, current); position = 0;
-                            setQueueDisplay();
-                            break;
-
-                        case PlaybackStateCompat.SHUFFLE_MODE_NONE:
-                            if(!queue.isEmpty())
-                            {
-                                current = queue.get(position);
-                                if(from == FROM_ALBUM || from == FROM_PLAYLIST)
-                                    Collections.sort(queue, Comparator.comparing(Songs::getTrack));
-                                else if(from == RECENTLY_ADDED)
-                                    Collections.sort(queue, Comparator.comparing(Songs::getTrack).reversed());
-                                else
-                                    Collections.sort(queue, Comparator.comparing(Songs::getTitle));
-                                position = queue.indexOf(current);
-                                setQueueDisplay();
-                            }
-                            break;
-                    }
-                }
-            };
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+                                 METHODS FOR SAVING UI STATE
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
 
     private void saveQueue()
     {
@@ -483,6 +507,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         Log.i(TAG, "SAVED STATE UPDATED");
     }
 
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
+
     private void activityRestore()
     {
         if(currentState == PlaybackStateCompat.STATE_PLAYING)
@@ -513,16 +545,23 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         mediaSession.setMetadata(metadata.build());
     }
 
-    private BroadcastReceiver broadcastReceiver =
-            new BroadcastReceiver()
-            {
-                @Override
-                public void onReceive(Context context, Intent intent)
-                {
-                    if(mediaPlayer != null && mediaPlayer.isPlaying())
-                        mediaPlayer.pause();
-                }
-            };
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if(mediaPlayer != null && mediaPlayer.isPlaying())
+                mediaPlayer.pause();
+        }
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+                                  METHODS FOR AUDIO FOCUS
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
 
     private int successfullyRetrievedAudioFocus()
     {
@@ -562,6 +601,50 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         if(audioManager != null)
             audioManager.abandonAudioFocus(this);
     }
+
+    @Override
+    public void onAudioFocusChange(int focusChange)
+    {
+        switch (focusChange)
+        {
+            case AudioManager.AUDIOFOCUS_LOSS:
+            {
+                if(mediaPlayer.isPlaying())
+                    mediaPlayer.stop();
+                break;
+            }
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            {
+                mediaPlayer.pause();
+                break;
+            }
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+            {
+                if( mediaPlayer != null )
+                    mediaPlayer.setVolume(0.3f, 0.3f);
+                break;
+            }
+            case AudioManager.AUDIOFOCUS_GAIN:
+            {
+                if( mediaPlayer != null )
+                {
+                    if( !mediaPlayer.isPlaying() )
+                        mediaPlayer.start();
+                    mediaPlayer.setVolume(1.0f, 1.0f);
+                }
+                break;
+            }
+        }
+    }
+
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
+
 
     /*/////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -665,6 +748,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             calculated = String.format(Locale.US, "%d:%d%d", minutes, 0, seconds);
         return calculated;
     }
+
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
 
     private int getCurrentPosition(){ return mediaPlayer.getCurrentPosition(); }
 
@@ -777,6 +868,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     /*/////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
+
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
                                    METHODS FOR MEDIA PLAYER
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -849,40 +948,13 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         return false;
     }
 
-    @Override
-    public void onAudioFocusChange(int focusChange)
-    {
-        switch (focusChange)
-        {
-            case AudioManager.AUDIOFOCUS_LOSS:
-            {
-                if(mediaPlayer.isPlaying())
-                    mediaPlayer.stop();
-                break;
-            }
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-            {
-                mediaPlayer.pause();
-                break;
-            }
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-            {
-                if( mediaPlayer != null )
-                    mediaPlayer.setVolume(0.3f, 0.3f);
-                break;
-            }
-            case AudioManager.AUDIOFOCUS_GAIN:
-            {
-                if( mediaPlayer != null )
-                {
-                    if( !mediaPlayer.isPlaying() )
-                        mediaPlayer.start();
-                    mediaPlayer.setVolume(1.0f, 1.0f);
-                }
-                break;
-            }
-        }
-    }
+    /*/////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////*/
 
     @Nullable
     @Override

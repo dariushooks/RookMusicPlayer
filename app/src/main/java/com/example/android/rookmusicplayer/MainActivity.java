@@ -144,11 +144,13 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             mediaBrowserHelper.setVolumeBar();
             return false;
         }
+
         else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
         {
             mediaBrowserHelper.setVolumeBar();
             return false;
         }
+
         return super.onKeyDown(keyCode, event);
     }
 

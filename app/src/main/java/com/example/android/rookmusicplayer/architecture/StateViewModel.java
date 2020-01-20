@@ -16,6 +16,8 @@ public class StateViewModel extends AndroidViewModel
     private StateRepository stateRepository;
     private LiveData<List<Songs>> savedQueue;
     private LiveData<List<SavedStateDetails>> savedStateDetails;
+
+
     public StateViewModel(@NonNull Application application)
     {
         super(application);

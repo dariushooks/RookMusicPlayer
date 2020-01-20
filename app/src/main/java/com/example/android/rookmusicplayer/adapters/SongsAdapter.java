@@ -109,12 +109,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
-        return Integer.parseInt(songs.get(position).getId());
-    }
-
-    @Override
     public int getItemCount()
     {
         return songs.size();
@@ -140,10 +134,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
-            //albumArt.setImageBitmap(BitmapFactory.decodeFile(songs.get(position).getPath()));
-            /////////////////////////////////////////////////////////////////////////
-            ///////////////////This is making scrolling lag//////////////////////////
-            /////////////////////////////////////////////////////////////////////////
+
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(songs.get(position).getPath());
             byte[] cover = retriever.getEmbeddedPicture();
@@ -159,9 +150,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             else
                 albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
             retriever.release();
-            /////////////////////////////////////////////////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
 
             songName.setText(songs.get(position).getTitle());
             songArtist.setText(songs.get(position).getArtist());
