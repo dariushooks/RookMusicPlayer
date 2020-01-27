@@ -36,7 +36,6 @@ import com.example.android.rookmusicplayer.architecture.SavedDetails;
 import com.example.android.rookmusicplayer.architecture.SavedQueue;
 import com.example.android.rookmusicplayer.architecture.StateViewModel;
 import com.example.android.rookmusicplayer.helpers.ControlReceiver;
-import com.example.android.rookmusicplayer.helpers.RestartReceiver;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -178,21 +177,11 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     {
         super.onDestroy();
         Log.i(TAG, "SERVICE BEING DESTROYED");
-        if(currentState == PlaybackStateCompat.STATE_PLAYING)
-        {
-            Intent broadcastIntent = new Intent(this, RestartReceiver.class);
-            broadcastIntent.setAction("keepServiceRunning");
-            sendBroadcast(broadcastIntent);
-        }
-
-        else
-        {
-            abandonAudioFocus();
-            unregisterReceiver(broadcastReceiver);
-            mediaPlayer.release();
-            mediaSession.release();
-            NotificationManagerCompat.from(this).cancel(1);
-        }
+        abandonAudioFocus();
+        unregisterReceiver(broadcastReceiver);
+        mediaPlayer.release();
+        mediaSession.release();
+        NotificationManagerCompat.from(this).cancel(1);
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////
@@ -666,7 +655,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
         builder.addAction(R.drawable.ic_fast_forward, "Forward",
                 MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-        builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+        //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
         handler.post(updateTime);
         return builder.build();
     }
@@ -681,7 +670,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
         builder.addAction(R.drawable.ic_fast_forward, "Forward",
                 MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-        builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+        //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
         return builder.build();
     }
 
@@ -706,7 +695,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
         builder.setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
         if(currentState == PlaybackStateCompat.STATE_PLAYING)
             startForeground(1, buildPlayNotification(builder));
         else
@@ -722,7 +712,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             {
                 Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
                 builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-                startForeground(1, builder.build());
+                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
                 handler.postDelayed(this, 1000);
             }
