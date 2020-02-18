@@ -18,7 +18,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/placerholder"
+            android:id="@+id/placeholder"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
@@ -27,31 +27,31 @@
 
         <TextView
             android:id="@+id/currentNameCollapsed"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
-            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/notPlaying"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/placerholder"
+            app:layout_constraintStart_toEndOf="@id/placeholder"
+            app:layout_constraintEnd_toStartOf="@id/currentPlay"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/currentArtistCollapsed"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="17sp"
-            app:layout_constraintStart_toEndOf="@id/placerholder"
+            app:layout_constraintStart_toEndOf="@id/placeholder"
+            app:layout_constraintEnd_toStartOf="@id/currentPlay"
             app:layout_constraintTop_toBottomOf="@id/currentNameCollapsed"/>
 
         <ImageButton
@@ -90,7 +90,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/placerholderArt"
+            android:id="@+id/placeholderArt"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="80dp"
@@ -123,13 +123,15 @@
 
         <SeekBar
             android:id="@+id/currentSeekBottomSheet"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="20dp"
             android:progressBackgroundTint="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/placerholderArt" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/placeholderArt" />
 
         <TextView
             android:id="@+id/currentTimeBottomSheet"
@@ -229,22 +231,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
+            android:layout_marginStart="20dp"
             android:src="@drawable/ic_volume_mute"
             android:tint="@color/white"
-            app:layout_constraintEnd_toStartOf="@id/volumeControlSeek"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/currentPlayBottomSheet" />
 
         <SeekBar
             android:id="@+id/volumeControlSeek"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="50dp"
             android:progressBackgroundTint="@color/white"
             android:thumb="@drawable/seekbar_thumb"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/volumeDown"
+            app:layout_constraintEnd_toStartOf="@id/volumeUp"
             app:layout_constraintTop_toBottomOf="@id/currentPlayBottomSheet" />
 
         <ImageView
@@ -252,9 +253,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/ic_volume_up"
             android:tint="@color/white"
-            app:layout_constraintStart_toEndOf="@id/volumeControlSeek"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/currentPlayBottomSheet" />
 
         <View
