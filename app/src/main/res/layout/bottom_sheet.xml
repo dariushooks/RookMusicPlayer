@@ -148,6 +148,7 @@
                     android:layout_alignParentEnd="true"
                     android:textColor="@color/white"
                     android:text="@string/duration"/>
+
             </RelativeLayout>
 
             <LinearLayout
@@ -258,6 +259,7 @@
                     android:src="@drawable/ic_volume_up"
                     android:tint="@color/white"
                     android:layout_alignParentEnd="true"/>
+
             </RelativeLayout>
 
         </RelativeLayout>

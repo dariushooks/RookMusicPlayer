@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -108,7 +109,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
     private TextView nowPlayingArtist;
     private ImageButton nowPlayingButton;
     private ImageButton nowPlayingForward;
-    private RelativeLayout currentlyPlaying;
+    private ConstraintLayout currentlyPlaying;
     private RelativeLayout currentBottomSheet;
 
     private TextView nowPlayingNameExpanded;
@@ -349,7 +350,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                     else
                         nowPlayingArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
                     retriever.release();
-                    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED && currentState == PlaybackStateCompat.STATE_PLAYING)
+                    if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED && currentState == PlaybackStateCompat.STATE_PLAYING)
                         nowPlayingArtHolder.setCardElevation(30);
                     nowPlayingName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
                     nowPlayingArtist.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
@@ -771,18 +772,21 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 {
                     case BottomSheetBehavior.STATE_EXPANDED:
                         view.setBackground(context.getDrawable(R.drawable.bottomsheet_rounded_corners));
+
                         if(currentState == PlaybackStateCompat.STATE_PLAYING)
                         {
                             nowPlayingArtHolder.animate().scaleX(6.75f);
                             nowPlayingArtHolder.animate().scaleY(6.75f);
                             nowPlayingArtHolder.setCardElevation(30f);
                         }
+
                         else
                         {
                             nowPlayingArtHolder.animate().scaleX(5);
                             nowPlayingArtHolder.animate().scaleY(5);
                             nowPlayingArtHolder.setCardElevation(0f);
                         }
+
                         nowPlayingArtHolder.animate().translationY(575);
                         nowPlayingArtHolder.animate().translationX(600);
                         recyclerView.setFocusable(true);
@@ -804,8 +808,20 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset)
             {
-                currentlyPlaying.setAlpha(1f - slideOffset);
-                currentBottomSheet.setAlpha(slideOffset);
+                //currentlyPlaying.setAlpha(1f - slideOffset);
+                //currentBottomSheet.setAlpha(slideOffset);
+                nowPlayingButton.setAlpha(1f - slideOffset);
+                nowPlayingForward.setAlpha(1f - slideOffset);
+                nowPlayingName.setAlpha(1f - slideOffset);
+                nowPlayingArtist.setAlpha(1f - slideOffset);
+
+                seekBar.setAlpha(slideOffset);
+                volumeBar.setAlpha(slideOffset);
+                nowPlayingNameExpanded.setAlpha(slideOffset);
+                nowPlayingArtistAlbumExpanded.setAlpha(slideOffset);
+                nowPlayingButtonExpanded.setAlpha(slideOffset);
+                nowPlayingBackExpanded.setAlpha(slideOffset);
+                nowPlayingForwardExpanded.setAlpha(slideOffset);
                 nowPlayingSlideDown.setAlpha(slideOffset);
             }
         });
@@ -840,6 +856,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                         nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
                         nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                     }
+
                     else
                     {
                         mediaControllerCompat.getTransportControls().play();
@@ -895,20 +912,16 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                     {
                         mediaControllerCompat.getTransportControls().pause();
                         nowPlayingArtHolder.setCardElevation(0f);
-                        nowPlayingArtHolder.animate().scaleX(5);
-                        nowPlayingArtHolder.animate().scaleY(5);
                         nowPlayingNameExpanded.setSelected(false);
                         nowPlayingArtistAlbumExpanded.setSelected(false);
                         nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
                         nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                     }
+
                     else
                     {
                         mediaControllerCompat.getTransportControls().play();
                         nowPlayingArtHolder.setCardElevation(30f);
-                        nowPlayingArtHolder.animate().scaleX(6.75f);
-                        nowPlayingArtHolder.animate().scaleY(6.75f);
-
                         nowPlayingNameExpanded.setSelected(true);
                         nowPlayingArtistAlbumExpanded.setSelected(true);
                         nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_pause));
@@ -995,6 +1008,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 {
                     mediaControllerCompat.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
                 }
+
                 else if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
                 {
                     mediaControllerCompat.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
@@ -1012,10 +1026,12 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 {
                     mediaControllerCompat.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
                 }
+
                 else if(repeat == PlaybackStateCompat.REPEAT_MODE_ALL)
                 {
                     mediaControllerCompat.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
                 }
+
                 else if(repeat == PlaybackStateCompat.REPEAT_MODE_ONE)
                 {
                     mediaControllerCompat.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetStart="@+id/start"
+        motion:constraintSetEnd="@+id/end"
+        motion:duration="300"
+        motion:motionInterpolator="linear">
+
+        <OnSwipe
+            motion:touchAnchorId="@+id/nowPlayingAnimation"
+            motion:touchAnchorSide="top"
+            motion:dragDirection="dragUp"/>
+
+        <KeyFrameSet>
+
+        </KeyFrameSet>
+
+    </Transition>
+
+    <ConstraintSet
+        android:id="@+id/start">
+
+        <Constraint
+            android:id="@+id/nowPlayingAnimation"
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"/>
+
+        <Constraint
+            android:id="@+id/currentArtAnimationHolder"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            motion:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"
+            motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"/>
+
+        <Constraint android:id="@+id/currentNameCollapsed">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentArtistCollapsed">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentPlay">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentNext">
+            <PropertySet
+                android:alpha="1"
+                android:visibility="gone"/>
+        </Constraint>
+
+    </ConstraintSet>
+
+    <ConstraintSet
+        android:id="@+id/end">
+
+        <Constraint
+            android:id="@+id/nowPlayingAnimation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"/>
+
+        <Constraint
+            android:id="@+id/currentArtAnimationHolder"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="80dp"
+            motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
+            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"/>
+
+        <Constraint android:id="@+id/currentNameCollapsed">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentArtistCollapsed">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentPlay">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentNext">
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
+        </Constraint>
+
+    </ConstraintSet>
+
+</MotionScene>
