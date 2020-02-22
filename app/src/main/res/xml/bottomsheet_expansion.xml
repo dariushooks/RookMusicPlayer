@@ -6,8 +6,8 @@
     <Transition
         motion:constraintSetStart="@+id/start"
         motion:constraintSetEnd="@+id/end"
-        motion:duration="300"
-        motion:motionInterpolator="linear">
+        motion:duration="500"
+        motion:motionInterpolator="bounce">
 
         <OnSwipe
             motion:touchAnchorId="@+id/nowPlayingAnimation"

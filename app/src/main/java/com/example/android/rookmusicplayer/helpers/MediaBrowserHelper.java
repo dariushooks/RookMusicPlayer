@@ -34,9 +34,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionManager;
 
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
@@ -762,9 +764,22 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        currentlyPlaying = rootView.findViewById(R.id.currentPlaying);
+        ConstraintSet constraintSetCollapsed = new ConstraintSet();
+        ConstraintSet constraintSetExpanded = new ConstraintSet();
+        constraintSetCollapsed.clone(currentlyPlaying);
+        constraintSetExpanded.clone(context, R.layout.bottomsheet_expanded);
+        currentlyPlaying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
         View view = rootView.findViewById(R.id.nowPlaying);
         bottomSheetBehavior = BottomSheetBehavior.from(view);
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState)
             {
@@ -787,6 +802,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                             nowPlayingArtHolder.setCardElevation(0f);
                         }
 
+
                         nowPlayingArtHolder.animate().translationY(575);
                         nowPlayingArtHolder.animate().translationX(600);
                         recyclerView.setFocusable(true);
@@ -808,8 +824,18 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset)
             {
-                //currentlyPlaying.setAlpha(1f - slideOffset);
-                //currentBottomSheet.setAlpha(slideOffset);
+                /*if(slideOffset == 1)
+                {
+                    TransitionManager.beginDelayedTransition(currentlyPlaying);
+                    constraintSetExpanded.applyTo(currentlyPlaying);
+                }
+
+                else if(slideOffset == 0)
+                {
+                    TransitionManager.beginDelayedTransition(currentlyPlaying);
+                    constraintSetCollapsed.applyTo(currentlyPlaying);
+                }*/
+
                 nowPlayingButton.setAlpha(1f - slideOffset);
                 nowPlayingForward.setAlpha(1f - slideOffset);
                 nowPlayingName.setAlpha(1f - slideOffset);
@@ -831,15 +857,6 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         nowPlayingName = rootView.findViewById(R.id.currentNameCollapsed);
         nowPlayingArtist = rootView.findViewById(R.id.currentArtistCollapsed);
         currentBottomSheet = rootView.findViewById(R.id.currentBottomSheet);
-
-        currentlyPlaying = rootView.findViewById(R.id.currentPlaying);
-        currentlyPlaying.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
 
         nowPlayingButton = rootView.findViewById(R.id.currentPlay);
         nowPlayingButton.setOnClickListener(new View.OnClickListener() {
