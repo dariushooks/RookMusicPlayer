@@ -110,6 +110,7 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
         albumArtist.setText(artist);
 
         albumArt = rootView.findViewById(R.id.albumDetailArt);
+
         try
         {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(art));
