@@ -10,9 +10,12 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.TransitionManager;
 
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
@@ -43,7 +46,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     private Button contentSongs;
     private Button contentArtists;
     private Button contentAlbums;
-    private View contentSelected;
+    private ConstraintLayout constraintLayout;
+    private ConstraintSet constraintSet = new ConstraintSet();
     private boolean contentEmpty = true;
 
     public SearchFragment(ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<Albums> albums)
@@ -58,9 +62,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search_constraint, container, false);
 
-        contentSelected = rootView.findViewById(R.id.contentSelected);
+        constraintLayout = rootView.findViewById(R.id.searchLayout);
+        constraintSet.clone(constraintLayout);
         contentSongs = rootView.findViewById(R.id.contentSongs);
         contentSongs.setOnClickListener(this);
         contentArtists = rootView.findViewById(R.id.contentArtists);
@@ -100,7 +105,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             case R.id.contentSongs:
                 selected = CONTENT_SONGS;
                 searchView.setQueryHint("Search Library Songs");
-                contentSelected.animate().translationX(0f);
+                constraintSet.connect(R.id.contentSelected, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(R.id.contentSelected, ConstraintSet.END, R.id.contentArtists, ConstraintSet.START);
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.applyTo(constraintLayout);
                 contentSongs.setTextColor(getContext().getColor(R.color.colorAccent));
                 contentArtists.setTextColor(getContext().getColor(R.color.white));
                 contentAlbums.setTextColor(getContext().getColor(R.color.white));
@@ -113,7 +121,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             case R.id.contentArtists:
                 selected = CONTENT_ARTISTS;
                 searchView.setQueryHint("Search Library Artists");
-                contentSelected.animate().translationX(525f);
+                constraintSet.connect(R.id.contentSelected, ConstraintSet.START, R.id.contentSongs, ConstraintSet.END);
+                constraintSet.connect(R.id.contentSelected, ConstraintSet.END, R.id.contentAlbums, ConstraintSet.START);
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.applyTo(constraintLayout);
                 contentSongs.setTextColor(getContext().getColor(R.color.white));
                 contentArtists.setTextColor(getContext().getColor(R.color.colorAccent));
                 contentAlbums.setTextColor(getContext().getColor(R.color.white));
@@ -126,7 +137,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             case R.id.contentAlbums:
                 selected = CONTENT_ALBUMS;
                 searchView.setQueryHint("Search Library Albums");
-                contentSelected.animate().translationX(1050f);
+                constraintSet.connect(R.id.contentSelected, ConstraintSet.START, R.id.contentArtists, ConstraintSet.END);
+                constraintSet.connect(R.id.contentSelected, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.applyTo(constraintLayout);
                 contentSongs.setTextColor(getContext().getColor(R.color.white));
                 contentArtists.setTextColor(getContext().getColor(R.color.white));
                 contentAlbums.setTextColor(getContext().getColor(R.color.colorAccent));
