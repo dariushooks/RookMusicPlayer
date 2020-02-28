@@ -28,7 +28,7 @@
         android:layout_margin="5dp"
         android:searchIcon="@drawable/ic_search"
         android:iconifiedByDefault="false"
-        android:queryBackground="@drawable/dialog_corners"
+        android:queryBackground="@drawable/searchview_corners"
         android:queryHint="Search Library Songs"
         android:searchHintIcon="@null"
         app:layout_constraintTop_toBottomOf="@id/searchHeader"
@@ -62,7 +62,7 @@
     <Button
         android:id="@+id/contentSongs"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@android:color/transparent"
         android:textColor="@color/colorAccent"
         android:textSize="15sp"
@@ -75,7 +75,7 @@
     <Button
         android:id="@+id/contentArtists"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@android:color/transparent"
         android:textColor="@color/white"
         android:textSize="15sp"
@@ -88,7 +88,7 @@
     <Button
         android:id="@+id/contentAlbums"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@android:color/transparent"
         android:textColor="@color/white"
         android:textSize="15sp"
