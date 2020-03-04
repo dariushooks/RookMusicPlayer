@@ -6,6 +6,6 @@
     android:layout_marginBottom="67dp"
     android:background="@color/black">
 
-    <include layout="@layout/album_details"/>
+    <include layout="@layout/album_detail"/>
 
 </RelativeLayout>

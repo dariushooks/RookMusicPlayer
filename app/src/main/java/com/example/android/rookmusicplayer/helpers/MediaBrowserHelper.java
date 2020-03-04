@@ -112,6 +112,10 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
     private ImageButton nowPlayingButton;
     private ImageButton nowPlayingForward;
     private ConstraintLayout currentlyPlaying;
+    private boolean bottomsheetIsExpanded;
+    private ConstraintSet constraintSetCollapsed = new ConstraintSet();
+    private ConstraintSet constraintSetExpandedNotPlaying = new ConstraintSet();
+    private ConstraintSet constraintSetExpandedPlaying = new ConstraintSet();
     private RelativeLayout currentBottomSheet;
 
     private TextView nowPlayingNameExpanded;
@@ -352,7 +356,8 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                     else
                         nowPlayingArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
                     retriever.release();
-                    if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED && currentState == PlaybackStateCompat.STATE_PLAYING)
+                    //if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED && currentState == PlaybackStateCompat.STATE_PLAYING)
+                    if(bottomsheetIsExpanded && currentState == PlaybackStateCompat.STATE_PLAYING)
                         nowPlayingArtHolder.setCardElevation(30);
                     nowPlayingName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
                     nowPlayingArtist.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
@@ -493,12 +498,18 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                             nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
                             nowPlayingForward.setVisibility(View.VISIBLE);
                             nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
-                            if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                            if(bottomsheetIsExpanded)
+                            {
+                                TransitionManager.beginDelayedTransition(currentlyPlaying);
+                                constraintSetExpandedPlaying.applyTo(currentlyPlaying);
+                                nowPlayingArtHolder.setCardElevation(30f);
+                            }
+                            /*if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                             {
                                 nowPlayingArtHolder.setCardElevation(30f);
                                 nowPlayingArtHolder.animate().scaleX(6.75f);
                                 nowPlayingArtHolder.animate().scaleY(6.75f);
-                            }
+                            }*/
                             break;
 
                         case PlaybackStateCompat.STATE_PAUSED:
@@ -507,12 +518,18 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                             nowPlayingArtistAlbumExpanded.setSelected(false);
                             nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
                             nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
-                            if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                            if(bottomsheetIsExpanded)
+                            {
+                                TransitionManager.beginDelayedTransition(currentlyPlaying);
+                                constraintSetExpandedNotPlaying.applyTo(currentlyPlaying);
+                                nowPlayingArtHolder.setCardElevation(0f);
+                            }
+                            /*if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                             {
                                 nowPlayingArtHolder.setCardElevation(0f);
                                 nowPlayingArtHolder.animate().scaleX(5f);
                                 nowPlayingArtHolder.animate().scaleY(5f);
-                            }
+                            }*/
                             break;
                     }
                 }
@@ -765,10 +782,9 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         currentlyPlaying = rootView.findViewById(R.id.currentPlaying);
-        ConstraintSet constraintSetCollapsed = new ConstraintSet();
-        ConstraintSet constraintSetExpanded = new ConstraintSet();
         constraintSetCollapsed.clone(currentlyPlaying);
-        constraintSetExpanded.clone(context, R.layout.bottomsheet_expanded);
+        constraintSetExpandedNotPlaying.clone(context, R.layout.bottomsheet_expanded_not_playing);
+        constraintSetExpandedPlaying.clone(context, R.layout.bottomsheet_expanded_playing);
         currentlyPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -790,31 +806,40 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
 
                         if(currentState == PlaybackStateCompat.STATE_PLAYING)
                         {
-                            nowPlayingArtHolder.animate().scaleX(6.75f);
-                            nowPlayingArtHolder.animate().scaleY(6.75f);
+                            //nowPlayingArtHolder.animate().scaleX(6.75f);
+                            //nowPlayingArtHolder.animate().scaleY(6.75f);
+                            TransitionManager.beginDelayedTransition(currentlyPlaying);
+                            constraintSetExpandedPlaying.applyTo(currentlyPlaying);
                             nowPlayingArtHolder.setCardElevation(30f);
                         }
 
                         else
                         {
-                            nowPlayingArtHolder.animate().scaleX(5);
-                            nowPlayingArtHolder.animate().scaleY(5);
+                            //nowPlayingArtHolder.animate().scaleX(5);
+                            //nowPlayingArtHolder.animate().scaleY(5);
+                            TransitionManager.beginDelayedTransition(currentlyPlaying);
+                            constraintSetExpandedNotPlaying.applyTo(currentlyPlaying);
                             nowPlayingArtHolder.setCardElevation(0f);
                         }
 
-
-                        nowPlayingArtHolder.animate().translationY(575);
-                        nowPlayingArtHolder.animate().translationX(600);
+                        bottomsheetIsExpanded = true;
+                        //nowPlayingArtHolder.animate().translationY(575);
+                        //nowPlayingArtHolder.animate().translationX(600);
                         recyclerView.setFocusable(true);
                         break;
 
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         view.setBackground(context.getDrawable(R.drawable.bottomsheet_corners));
-                        nowPlayingArtHolder.animate().scaleX(1);
-                        nowPlayingArtHolder.animate().scaleY(1);
+                        //nowPlayingArtHolder.animate().scaleX(1);
+                        //nowPlayingArtHolder.animate().scaleY(1);
                         nowPlayingArtHolder.setCardElevation(0f);
-                        nowPlayingArtHolder.animate().translationY(0);
-                        nowPlayingArtHolder.animate().translationX(0);
+
+                        TransitionManager.beginDelayedTransition(currentlyPlaying);
+                        constraintSetCollapsed.applyTo(currentlyPlaying);
+
+                        bottomsheetIsExpanded = false;
+                        //nowPlayingArtHolder.animate().translationY(0);
+                        //nowPlayingArtHolder.animate().translationX(0);
                         view.scrollTo(0,0);
                         recyclerView.setFocusable(false);
                         break;
