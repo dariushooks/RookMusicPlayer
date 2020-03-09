@@ -2,34 +2,11 @@
 <androidx.constraintlayout.motion.widget.MotionLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    app:layoutDescription="@xml/bottomsheet_expansion">
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </FrameLayout>
-
-    <ProgressBar
-        android:id="@+id/collapsedSeekBar"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:indeterminate="false"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:progressBackgroundTint="#99212121"
-        android:progressBackgroundTintMode="add"
-        android:progressTint="@color/colorAccent"
-        android:thumb="@color/colorAccent"
-        android:layout_marginBottom="66dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    tools:context=".MainActivity">
 
     <include layout="@layout/bottomsheet_animation"/>
 

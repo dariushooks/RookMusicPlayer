@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.rookmusicplayer.adapters.QueueAdapter;
 import com.example.android.rookmusicplayer.helpers.MediaBrowserHelper;
+import com.example.android.rookmusicplayer.helpers.MediaBrowserHelperAlt;
 import com.example.android.rookmusicplayer.helpers.SectionContent;
 
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class App extends Application
     private SectionContent sectionContent;
 
     public static final String CHANNEL_1 = "channel_1";
-    public static MediaBrowserHelper mediaBrowserHelper;
+    //public static MediaBrowserHelper mediaBrowserHelper;
+    public static MediaBrowserHelperAlt mediaBrowserHelper;
 
     //LIBRARY
     public static ArrayList<Songs> songs = new ArrayList<>();

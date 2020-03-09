@@ -33,6 +33,7 @@ import com.example.android.rookmusicplayer.fragments.SearchFragment;
 import com.example.android.rookmusicplayer.fragments.SongsFragment;
 import com.example.android.rookmusicplayer.helpers.GoToDialog;
 import com.example.android.rookmusicplayer.helpers.MediaBrowserHelper;
+import com.example.android.rookmusicplayer.helpers.MediaBrowserHelperAlt;
 import com.example.android.rookmusicplayer.helpers.MediaControlDialog;
 
 import java.util.ArrayList;
@@ -74,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_alt);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
@@ -109,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             });
 
             View rootView = findViewById(R.id.fragment_container).getRootView();
-            mediaBrowserHelper = new MediaBrowserHelper(this, rootView, stateViewModel);
+            //mediaBrowserHelper = new MediaBrowserHelper(this, rootView, stateViewModel);
+            mediaBrowserHelper = new MediaBrowserHelperAlt(this, rootView, stateViewModel);
             mediaBrowserHelper.onCreate();
         }
     }

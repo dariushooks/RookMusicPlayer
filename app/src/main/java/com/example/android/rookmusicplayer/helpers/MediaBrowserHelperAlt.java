@@ -84,9 +84,9 @@ import static com.example.android.rookmusicplayer.App.queueDisplay;
 import static com.example.android.rookmusicplayer.App.savedSongs;
 import static com.example.android.rookmusicplayer.App.savedState;
 
-public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
+public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
 {
-    private final String TAG = MediaBrowserHelper.class.getSimpleName();
+    private final String TAG = MediaBrowserHelperAlt.class.getSimpleName();
 
     private Context context;
     private MediaBrowserCompat mediaBrowserCompat;
@@ -130,7 +130,12 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
     private SeekBar seekBar;
     private SeekBar volumeBar;
     private Button shuffleExpanded;
+    private View shuffleBackground;
     private Button repeatExpanded;
+    private View repeatBackground;
+    private Button upNextQueue;
+    private View upNextBackground;
+    private boolean upNextIsShowing;
     private BottomSheetBehavior bottomSheetBehavior;
 
     //SAVING UI STATE
@@ -143,7 +148,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
     private String savedNowPlayingFrom;
     private StateViewModel stateViewModel;
 
-    public MediaBrowserHelper(Context context, View rootView, StateViewModel stateViewModel)
+    public MediaBrowserHelperAlt(Context context, View rootView, StateViewModel stateViewModel)
     {
         this.context = context;
         this.rootView = rootView;
@@ -372,43 +377,8 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                         nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
                     }
 
-                    if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
-                    {
-                        shuffleExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                        shuffleExpanded.setTextColor(context.getColor(R.color.darkGray));
-                        shuffleExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.darkGray));
-                    }
-
-                    else if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_NONE)
-                    {
-                        shuffleExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
-                        shuffleExpanded.setTextColor(context.getColor(R.color.colorAccent));
-                        shuffleExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.colorAccent));
-                    }
-
-                    if(repeat == PlaybackStateCompat.REPEAT_MODE_NONE)
-                    {
-                        repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
-                        repeatExpanded.setTextColor(context.getColor(R.color.colorAccent));
-                        repeatExpanded.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_repeat), null, null, null);
-                        repeatExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.colorAccent));
-                    }
-
-                    else if(repeat == PlaybackStateCompat.REPEAT_MODE_ALL)
-                    {
-                        repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                        repeatExpanded.setTextColor(context.getColor(R.color.darkGray));
-                        repeatExpanded.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_repeat), null, null, null);
-                        repeatExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.darkGray));
-                    }
-
-                    else if(repeat == PlaybackStateCompat.REPEAT_MODE_ONE)
-                    {
-                        repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                        repeatExpanded.setTextColor(context.getColor(R.color.darkGray));
-                        repeatExpanded.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_repeat_one), null, null, null);
-                        repeatExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.darkGray));
-                    }
+                    setShuffle(shuffle);
+                    setRepeat(repeat);
 
                     nowPlayingNameExpanded.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
                     nowPlayingNameExpanded.setSelected(true);
@@ -430,54 +400,16 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 public void onRepeatModeChanged(int repeatMode)
                 {
                     super.onRepeatModeChanged(repeatMode);
-                    switch (repeatMode)
-                    {
-                        case PlaybackStateCompat.REPEAT_MODE_ALL:
-                            repeat = PlaybackStateCompat.REPEAT_MODE_ALL;
-                            repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                            repeatExpanded.setTextColor(context.getColor(R.color.darkGray));
-                            repeatExpanded.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_repeat), null, null, null);
-                            repeatExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.darkGray));
-                            break;
-
-                        case PlaybackStateCompat.REPEAT_MODE_ONE:
-                            repeat = PlaybackStateCompat.REPEAT_MODE_ONE;
-                            repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                            repeatExpanded.setTextColor(context.getColor(R.color.darkGray));
-                            repeatExpanded.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_repeat_one), null, null, null);
-                            repeatExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.darkGray));
-                            break;
-
-                        case PlaybackStateCompat.REPEAT_MODE_NONE:
-                            repeat = PlaybackStateCompat.REPEAT_MODE_NONE;
-                            repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
-                            repeatExpanded.setTextColor(context.getColor(R.color.colorAccent));
-                            repeatExpanded.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_repeat), null, null, null);
-                            repeatExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.colorAccent));
-                            break;
-                    }
+                    repeat = repeatMode;
+                    setRepeat(repeatMode);
                 }
 
                 @Override
                 public void onShuffleModeChanged(int shuffleMode)
                 {
                     super.onShuffleModeChanged(shuffleMode);
-                    switch (shuffleMode)
-                    {
-                        case PlaybackStateCompat.SHUFFLE_MODE_ALL:
-                            shuffle = PlaybackStateCompat.SHUFFLE_MODE_ALL;
-                            shuffleExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                            shuffleExpanded.setTextColor(context.getColor(R.color.darkGray));
-                            shuffleExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.darkGray));
-                            break;
-
-                        case PlaybackStateCompat.SHUFFLE_MODE_NONE:
-                            shuffle = PlaybackStateCompat.SHUFFLE_MODE_NONE;
-                            shuffleExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
-                            shuffleExpanded.setTextColor(context.getColor(R.color.colorAccent));
-                            shuffleExpanded.getCompoundDrawables()[0].setTint(context.getColor(R.color.colorAccent));
-                            break;
-                    }
+                    shuffle = shuffleMode;
+                    setShuffle(shuffleMode);
                 }
 
                 @Override
@@ -560,6 +492,46 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         itemTouchHelper.attachToRecyclerView(recyclerView);
         mediaControllerCompat.getTransportControls().sendCustomAction(INITIALIZE_QUEUE_CHANGE, null);
         nowPlayingFromExpanded.setText(nowPlayingFrom);
+    }
+
+    private void setRepeat(int state)
+    {
+        switch(state)
+        {
+            case PlaybackStateCompat.REPEAT_MODE_ALL:
+                repeatBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                repeatExpanded.setBackground(context.getDrawable(R.drawable.ic_repeat));
+                repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
+                break;
+
+            case PlaybackStateCompat.REPEAT_MODE_ONE:
+                repeatBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                repeatExpanded.setBackground(context.getDrawable(R.drawable.ic_repeat_one));
+                repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
+                break;
+
+            case PlaybackStateCompat.REPEAT_MODE_NONE:
+                repeatBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
+                repeatExpanded.setBackground(context.getDrawable(R.drawable.ic_repeat));
+                repeatExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                break;
+        }
+    }
+
+    private void setShuffle(int state)
+    {
+        switch(state)
+        {
+            case PlaybackStateCompat.SHUFFLE_MODE_ALL:
+                shuffleBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                shuffleExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
+                break;
+
+            case PlaybackStateCompat.SHUFFLE_MODE_NONE:
+                shuffleBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
+                shuffleExpanded.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                break;
+        }
     }
 
     public void addNext(Songs song)
@@ -767,7 +739,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        currentlyPlaying = rootView.findViewById(R.id.currentPlaying);
+        /*currentlyPlaying = rootView.findViewById(R.id.currentPlaying);
         constraintSetCollapsed.clone(currentlyPlaying);
         constraintSetExpandedNotPlaying.clone(context, R.layout.bottomsheet_expanded_not_playing);
         constraintSetExpandedPlaying.clone(context, R.layout.bottomsheet_expanded_playing);
@@ -839,7 +811,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 nowPlayingForwardExpanded.setAlpha(slideOffset);
                 nowPlayingSlideDown.setAlpha(slideOffset);
             }
-        });
+        });*/
 
         nowPlayingArt = rootView.findViewById(R.id.currentArtBottomSheet);
         nowPlayingArtHolder = rootView.findViewById(R.id.currentArtBottomSheetHolder);
@@ -1005,6 +977,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         });
 
         shuffleExpanded = rootView.findViewById(R.id.currentBottomSheetShuffle);
+        shuffleBackground = rootView.findViewById(R.id.shuffleBackground);
         shuffleExpanded.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -1023,6 +996,7 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
         });
 
         repeatExpanded = rootView.findViewById(R.id.currentBottomSheetRepeat);
+        repeatBackground = rootView.findViewById(R.id.repeatBackground);
         repeatExpanded.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -1043,6 +1017,28 @@ public class MediaBrowserHelper implements QueueAdapter.ListItemClickListener
                 }
             }
         });
+
+        /*upNextQueue = rootView.findViewById(R.id.upNextButton);
+        upNextBackground = rootView.findViewById(R.id.upNextBackground);
+        upNextQueue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(upNextIsShowing)
+                {
+                    upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
+                    upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                    upNextIsShowing = false;
+                }
+
+                else
+                {
+                    upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                    upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
+                    upNextIsShowing = true;
+                }
+            }
+        });*/
 
         //////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////

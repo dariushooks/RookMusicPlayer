@@ -29,6 +29,4 @@
 
     <include layout="@layout/bottomsheet"/>
 
-    <!--<include layout="@layout/bottomsheet_animation"/>-->
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

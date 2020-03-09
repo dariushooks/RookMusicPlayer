@@ -7,26 +7,38 @@
     android:background="@color/black"
     app:layoutDescription="@xml/bottomsheet_expansion">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/nowPlayingAnimation"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:background="@color/darkGray"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+    </FrameLayout>
 
     <ProgressBar
         android:id="@+id/collapsedSeekBar"
         android:layout_width="match_parent"
         android:layout_height="5dp"
+        android:layout_marginBottom="66dp"
         android:indeterminate="false"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:progressBackgroundTint="#99212121"
         android:progressBackgroundTintMode="add"
         android:progressTint="@color/colorAccent"
         android:thumb="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@id/nowPlayingAnimation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nowPlayingAnimation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/darkGray"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -63,6 +75,17 @@
         app:layout_constraintTop_toBottomOf="@id/currentNameCollapsed" />
 
     <ImageButton
+        android:id="@+id/slideDownBottomSheet"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:alpha="0"
+        android:background="@drawable/ic_slide_down"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
+        app:layout_constraintTop_toTopOf="@id/nowPlayingAnimation" />
+
+    <ImageButton
         android:id="@+id/currentPlay"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -86,10 +109,11 @@
         app:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"/>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/currentArtAnimationHolder"
+        android:id="@+id/currentArtBottomSheetHolder"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="3dp"
         app:cardElevation="0dp"
@@ -97,7 +121,7 @@
         app:layout_constraintTop_toTopOf="@id/nowPlayingAnimation">
 
         <ImageView
-            android:id="@+id/currentArtAnimation"
+            android:id="@+id/currentArtBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
@@ -108,13 +132,15 @@
 
     <SeekBar
         android:id="@+id/currentSeekBottomSheet"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:progressBackgroundTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/currentArtAnimationHolder" />
+        app:layout_constraintTop_toBottomOf="@id/currentArtBottomSheetHolder"
+        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"/>
 
     <TextView
         android:id="@+id/currentTimeBottomSheet"
@@ -144,14 +170,14 @@
         android:id="@+id/currentNameBottomSheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:text="@string/notPlaying"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="23sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
@@ -166,11 +192,129 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
         android:singleLine="true"
+        android:text="Artist-Album"
         android:textColor="@color/colorAccent"
-        android:textSize="25sp"
+        android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
         app:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upNextQueue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/darkGray"
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
+        app:layout_constraintTop_toBottomOf="@id/currentArtistAlbumBottomSheet"
+        app:layout_constraintBottom_toTopOf="@id/currentPlayBottomSheet"/>
+
+    <View
+        android:id="@+id/dividerQueueTop"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="@id/upNextQueue"
+        app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintTop_toTopOf="@id/upNextQueue"/>
+
+    <View
+        android:id="@+id/shuffleBackground"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/album_detail_circle"
+        android:backgroundTint="@color/darkGray"
+        app:layout_constraintTop_toTopOf="@id/currentBottomSheetShuffle"
+        app:layout_constraintBottom_toBottomOf="@id/currentBottomSheetShuffle"
+        app:layout_constraintStart_toStartOf="@id/currentBottomSheetShuffle"
+        app:layout_constraintEnd_toEndOf="@id/currentBottomSheetShuffle"/>
+
+    <View
+        android:id="@+id/repeatBackground"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/album_detail_circle"
+        android:backgroundTint="@color/darkGray"
+        app:layout_constraintTop_toTopOf="@id/currentBottomSheetRepeat"
+        app:layout_constraintBottom_toBottomOf="@id/currentBottomSheetRepeat"
+        app:layout_constraintStart_toStartOf="@id/currentBottomSheetRepeat"
+        app:layout_constraintEnd_toEndOf="@id/currentBottomSheetRepeat"/>
+
+    <Button
+        android:id="@+id/currentBottomSheetShuffle"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="40dp"
+        android:background="@drawable/ic_shuffle"
+        android:backgroundTint="@color/colorAccent"
+        android:elevation="0dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@id/currentBottomSheetRepeat"
+        app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintTop_toBottomOf="@id/dividerQueueTop"
+        app:layout_constraintBottom_toBottomOf="@id/upNextQueue"/>
+
+    <Button
+        android:id="@+id/currentBottomSheetRepeat"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/ic_repeat"
+        android:backgroundTint="@color/colorAccent"
+        android:elevation="0dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintEnd_toEndOf="@id/upNextQueue"
+        app:layout_constraintTop_toBottomOf="@id/dividerQueueTop"
+        app:layout_constraintBottom_toBottomOf="@id/upNextQueue"/>
+
+    <TextView
+        android:id="@+id/upNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/upNext"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintTop_toTopOf="@id/upNextQueue"
+        app:layout_constraintBottom_toTopOf="@id/playingFrom"/>
+
+    <TextView
+        android:id="@+id/playingFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintTop_toBottomOf="@id/upNext"
+        app:layout_constraintEnd_toStartOf="@id/currentBottomSheetShuffle"
+        app:layout_constraintBottom_toTopOf="@id/dividerQueueBottom"/>
+
+    <View
+        android:id="@+id/dividerQueueBottom"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="@id/upNextQueue"
+        app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintTop_toBottomOf="@id/currentBottomSheetShuffle"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/currentBottomSheetQueue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintEnd_toEndOf="@id/upNextQueue"
+        app:layout_constraintTop_toBottomOf="@id/dividerQueueBottom"
+        app:layout_constraintBottom_toBottomOf="@id/upNextQueue"/>
 
     <ImageButton
         android:id="@+id/currentBackBottomSheet"
@@ -209,7 +353,7 @@
         android:id="@+id/volumeDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:src="@drawable/ic_volume_mute"
         android:tint="@color/white"
         app:layout_constraintEnd_toStartOf="@id/volumeControlSeek"
@@ -220,7 +364,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
         android:progressBackgroundTint="@color/white"
         android:thumb="@drawable/seekbar_thumb"
@@ -232,110 +376,32 @@
         android:id="@+id/volumeUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:src="@drawable/ic_volume_up"
         android:tint="@color/white"
         app:layout_constraintStart_toEndOf="@id/volumeControlSeek"
         app:layout_constraintTop_toBottomOf="@id/currentPlayBottomSheet" />
 
     <View
-        android:id="@+id/dividerTop"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="160dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/volumeControlSeek" />
-
-    <View
-        android:id="@+id/dividerBottom"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="90dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/dividerTop" />
+        android:id="@+id/upNextBackground"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/album_detail_circle"
+        android:backgroundTint="@color/darkGray"
+        app:layout_constraintTop_toTopOf="@id/upNextButton"
+        app:layout_constraintBottom_toBottomOf="@id/upNextButton"
+        app:layout_constraintStart_toStartOf="@id/upNextButton"
+        app:layout_constraintEnd_toEndOf="@id/upNextButton"/>
 
     <Button
-        android:id="@+id/currentBottomSheetShuffle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/dialog_corners"
-        android:backgroundTint="@color/darkGray"
-        android:drawableStart="@drawable/ic_shuffle"
-        android:drawableTint="@color/colorAccent"
-        android:elevation="5dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="20dp"
-        android:text="@string/shuffle"
-        android:textColor="@color/colorAccent"
+        android:id="@+id/upNextButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/ic_queue_music"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintTop_toBottomOf="@id/volumeControlSeek"
+        app:layout_constraintBottom_toBottomOf="@id/nowPlayingAnimation"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/dividerTop" />
-
-    <Button
-        android:id="@+id/currentBottomSheetRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/dialog_corners"
-        android:backgroundTint="@color/darkGray"
-        android:drawableStart="@drawable/ic_repeat"
-        android:drawableTint="@color/colorAccent"
-        android:elevation="5dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="20dp"
-        android:text="@string/repeat"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/dividerTop" />
-
-    <TextView
-        android:id="@+id/upNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/upNext"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/dividerBottom" />
-
-    <TextView
-        android:id="@+id/playingFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="10dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/colorAccent"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/upNext" />
-
-    <View
-        android:id="@+id/dividerNext"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/playingFrom" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/currentBottomSheetQueue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/dividerNext"/>
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
