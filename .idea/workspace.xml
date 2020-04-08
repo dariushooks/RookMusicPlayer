@@ -19,9 +19,7 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelperAlt.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelperAlt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/bottomsheet_animation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/bottomsheet_animation.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/bottomsheet_expansion.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/bottomsheet_expansion.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

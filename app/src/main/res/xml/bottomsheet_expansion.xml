@@ -29,7 +29,8 @@
         motion:motionInterpolator="linear">
 
         <OnSwipe
-            motion:touchAnchorId="@+id/nowPlayingAnimation"/>
+            motion:touchAnchorId="@+id/currentArtBottomSheetHolder"
+            motion:dragDirection="dragDown"/>
 
     </Transition>
 
@@ -323,20 +324,6 @@
             motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"
             motion:layout_constraintBottom_toBottomOf="@id/currentArtBottomSheetHolder"/>
-
-        <Constraint
-            android:id="@+id/upNextButton">
-            <CustomAttribute
-                motion:attributeName="colorFilter"
-                motion:customColorValue="@color/white"/>
-        </Constraint>
-
-        <Constraint
-            android:id="@+id/upNextBackground">
-            <CustomAttribute
-                motion:attributeName="colorFilter"
-                motion:customColorValue="@color/colorAccent"/>
-        </Constraint>
 
         <Constraint android:id="@+id/currentNameCollapsed">
             <PropertySet android:alpha="0"/>
