@@ -146,22 +146,23 @@
             android:id="@id/currentPlayBottomSheet"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_marginTop="20dp"
             motion:layout_constraintEnd_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintTop_toBottomOf="@id/currentArtistAlbumBottomSheet"/>
 
         <Constraint
             android:id="@+id/currentNameBottomSheet"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet"/>
 
         <Constraint
             android:id="@+id/currentArtistAlbumBottomSheet"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
@@ -211,11 +212,27 @@
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetShuffle">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetRepeat">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/shuffleBackground">
+            <PropertySet
+                android:alpha="0"
+                android:visibility="visible"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/repeatBackground">
+            <PropertySet
+                android:alpha="0"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/upNext">
@@ -247,7 +264,7 @@
         motion:constraintSetStart="@id/end"
         motion:constraintSetEnd="@id/endQueue"
         motion:duration="500"
-        motion:motionInterpolator="linear">
+        motion:motionInterpolator="easeInOut">
 
         <OnClick
             motion:targetId="@+id/upNextButton"
@@ -270,10 +287,10 @@
 
         <Constraint
             android:id="@+id/currentArtBottomSheetHolder"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             motion:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"/>
 
@@ -288,20 +305,24 @@
 
         <Constraint
             android:id="@+id/currentNameBottomSheet"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             motion:layout_constraintStart_toEndOf="@id/currentArtBottomSheetHolder"
-            motion:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"/>
+            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintTop_toTopOf="@id/currentArtBottomSheetHolder"/>
 
         <Constraint
             android:id="@+id/currentArtistAlbumBottomSheet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             motion:layout_constraintStart_toEndOf="@id/currentArtBottomSheetHolder"
-            motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"/>
+            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"
+            motion:layout_constraintBottom_toBottomOf="@id/currentArtBottomSheetHolder"/>
 
         <Constraint
             android:id="@+id/upNextButton">
@@ -338,11 +359,27 @@
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetShuffle">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetRepeat">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/shuffleBackground">
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/repeatBackground">
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/upNext">
