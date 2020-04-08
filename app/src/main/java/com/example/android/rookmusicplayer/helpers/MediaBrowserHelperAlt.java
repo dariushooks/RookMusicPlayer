@@ -740,7 +740,7 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
             @Override
             public void onTransitionStarted(MotionLayout motionLayout, int i, int i1)
             {
-                if(motionLayout.getCurrentState() == R.id.end)
+                if(motionLayout.getStartState() == R.id.end && upNextIsShowing)
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
@@ -751,7 +751,7 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
                     upNextIsShowing = false;
                 }
 
-                else if(motionLayout.getCurrentState() == R.id.endQueue)
+                else if(motionLayout.getEndState() == R.id.endQueue && !upNextIsShowing)
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
