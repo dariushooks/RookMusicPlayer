@@ -26,13 +26,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -111,6 +111,7 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
     private TextView nowPlayingArtist;
     private ImageButton nowPlayingButton;
     private ImageButton nowPlayingForward;
+    private MotionLayout motionLayout;
     private ConstraintLayout currentlyPlaying;
     private boolean bottomsheetIsExpanded;
     private ConstraintSet constraintSetCollapsed = new ConstraintSet();
@@ -428,10 +429,10 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
                             nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
                             nowPlayingForward.setVisibility(View.VISIBLE);
                             nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
-                            if(bottomsheetIsExpanded)
+                            if(motionLayout.getCurrentState() == R.id.end)
                             {
-                                TransitionManager.beginDelayedTransition(currentlyPlaying);
-                                constraintSetExpandedPlaying.applyTo(currentlyPlaying);
+                                nowPlayingArtHolder.animate().scaleX(1.3f);
+                                nowPlayingArtHolder.animate().scaleY(1.3f);
                                 nowPlayingArtHolder.setCardElevation(30f);
                             }
                             break;
@@ -442,10 +443,10 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
                             nowPlayingArtistAlbumExpanded.setSelected(false);
                             nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
                             nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
-                            if(bottomsheetIsExpanded)
+                            if(motionLayout.getCurrentState() == R.id.end)
                             {
-                                TransitionManager.beginDelayedTransition(currentlyPlaying);
-                                constraintSetExpandedNotPlaying.applyTo(currentlyPlaying);
+                                nowPlayingArtHolder.animate().scaleX(1f);
+                                nowPlayingArtHolder.animate().scaleY(1f);
                                 nowPlayingArtHolder.setCardElevation(0f);
                             }
                             break;
@@ -483,7 +484,7 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
 
     public MediaControllerCompat getMediaController() { return mediaControllerCompat; }
 
-    public void CollapseBottomSheet() { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); }
+    public void CollapseBottomSheet() { motionLayout.transitionToState(R.id.start); }
 
     public void setBottomSheetQueue()
     {
@@ -738,6 +739,55 @@ public class MediaBrowserHelperAlt implements QueueAdapter.ListItemClickListener
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+
+        motionLayout = rootView.findViewById(R.id.bottomSheetPlaying);
+        motionLayout.setTransitionListener(new MotionLayout.TransitionListener() {
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1)
+            {
+
+            }
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v)
+            {
+
+            }
+
+            @Override
+            public void onTransitionCompleted(MotionLayout motionLayout, int i)
+            {
+                if(motionLayout.getCurrentState() == R.id.start || motionLayout.getCurrentState() == R.id.endQueue)
+                {
+                    nowPlayingArtHolder.animate().scaleX(1f);
+                    nowPlayingArtHolder.animate().scaleY(1f);
+                    nowPlayingArtHolder.setCardElevation(0f);
+                }
+
+                else
+                {
+                    if(currentState == PlaybackStateCompat.STATE_PLAYING)
+                    {
+                        nowPlayingArtHolder.animate().scaleX(1.3f);
+                        nowPlayingArtHolder.animate().scaleY(1.3f);
+                        nowPlayingArtHolder.setCardElevation(30f);
+                    }
+
+                    else
+                    {
+                        nowPlayingArtHolder.animate().scaleX(1f);
+                        nowPlayingArtHolder.animate().scaleY(1f);
+                        nowPlayingArtHolder.setCardElevation(0f);
+                    }
+                }
+            }
+
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v)
+            {
+
+            }
+        });
 
         /*currentlyPlaying = rootView.findViewById(R.id.currentPlaying);
         constraintSetCollapsed.clone(currentlyPlaying);

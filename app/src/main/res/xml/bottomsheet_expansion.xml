@@ -10,30 +10,31 @@
     <!--                                                                                            -->
 
     <Transition
+        android:id="@+id/bottomSheetSlideUp"
         motion:constraintSetStart="@+id/start"
         motion:constraintSetEnd="@+id/end"
         motion:duration="500"
         motion:motionInterpolator="linear">
 
         <OnSwipe
-            motion:touchAnchorId="@+id/nowPlayingAnimation"
-            motion:dragDirection="dragUp"/>
+            motion:touchAnchorId="@+id/nowPlayingAnimation"/>
 
     </Transition>
 
     <Transition
+        android:id="@+id/bottomSheetSlideDown"
         motion:constraintSetStart="@+id/end"
         motion:constraintSetEnd="@+id/start"
         motion:duration="500"
         motion:motionInterpolator="linear">
 
         <OnSwipe
-            motion:touchAnchorId="@+id/nowPlayingAnimation"
-            motion:dragDirection="dragDown"/>
+            motion:touchAnchorId="@+id/nowPlayingAnimation"/>
 
     </Transition>
 
     <Transition
+        android:id="@+id/bottomSheetSlideDownArrow"
         motion:constraintSetStart="@id/end"
         motion:constraintSetEnd="@id/start"
         motion:duration="500"
@@ -242,6 +243,7 @@
     <!--                                                                                            -->
 
     <Transition
+        android:id="@+id/bottomSheetRevealQueue"
         motion:constraintSetStart="@id/end"
         motion:constraintSetEnd="@id/endQueue"
         motion:duration="500"
@@ -249,19 +251,7 @@
 
         <OnClick
             motion:targetId="@+id/upNextButton"
-            motion:clickAction="transitionToEnd"/>
-
-    </Transition>
-
-    <Transition
-        motion:constraintSetStart="@id/endQueue"
-        motion:constraintSetEnd="@id/end"
-        motion:duration="500"
-        motion:motionInterpolator="linear">
-
-        <OnClick
-            motion:targetId="@+id/upNextButton"
-            motion:clickAction="transitionToEnd"/>
+            motion:clickAction="toggle"/>
 
     </Transition>
 
