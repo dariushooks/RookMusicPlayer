@@ -389,7 +389,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
                 x = motionEvent.getX(); y = motionEvent.getY();
                 if(y > index.getY() && y < indexA.getY() && !flags.get(0) && letters.contains("#"))
                 {
-                    Log.i(TAG, "Index # at " + y);
+                    //Log.i(TAG, "Index # at " + y);
                     indexLetter.setText("#");
                     layoutManager.scrollToPosition(sections.get(0));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -398,7 +398,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexA.getY() && y < indexB.getY() && !flags.get(1) && letters.contains("A"))
                 {
-                    Log.i(TAG, "Index A at " + y);
+                    //Log.i(TAG, "Index A at " + y);
                     indexLetter.setText("A");
                     layoutManager.scrollToPosition(sections.get(1));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -407,7 +407,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexB.getY() && y < indexC.getY() && !flags.get(2) && letters.contains("B"))
                 {
-                    Log.i(TAG, "Index B at " + y);
+                    //Log.i(TAG, "Index B at " + y);
                     indexLetter.setText("B");
                     layoutManager.scrollToPosition(sections.get(2));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -416,7 +416,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexC.getY() && y < indexD.getY() && !flags.get(3) && letters.contains("C"))
                 {
-                    Log.i(TAG, "Index C at " + y);
+                    //Log.i(TAG, "Index C at " + y);
                     indexLetter.setText("C");
                     layoutManager.scrollToPosition(sections.get(3));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -425,7 +425,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexD.getY() && y < indexE.getY() && !flags.get(4) && letters.contains("D"))
                 {
-                    Log.i(TAG, "Index D at " + y);
+                    //Log.i(TAG, "Index D at " + y);
                     indexLetter.setText("D");
                     layoutManager.scrollToPosition(sections.get(4));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -434,7 +434,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexE.getY() && y < indexF.getY() && !flags.get(5) && letters.contains("E"))
                 {
-                    Log.i(TAG, "Index E at " + y);
+                    //Log.i(TAG, "Index E at " + y);
                     indexLetter.setText("E");
                     layoutManager.scrollToPosition(sections.get(5));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -443,7 +443,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexF.getY() && y < indexG.getY() && !flags.get(6) && letters.contains("F"))
                 {
-                    Log.i(TAG, "Index F at " + y);
+                    //Log.i(TAG, "Index F at " + y);
                     indexLetter.setText("F");
                     layoutManager.scrollToPosition(sections.get(6));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -452,7 +452,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexG.getY() && y < indexH.getY() && !flags.get(7) && letters.contains("G"))
                 {
-                    Log.i(TAG, "Index G at " + y);
+                    //Log.i(TAG, "Index G at " + y);
                     indexLetter.setText("G");
                     layoutManager.scrollToPosition(sections.get(7));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -461,7 +461,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexH.getY() && y < indexI.getY() && !flags.get(8) && letters.contains("H"))
                 {
-                    Log.i(TAG, "Index H at " + y);
+                    //Log.i(TAG, "Index H at " + y);
                     indexLetter.setText("H");
                     layoutManager.scrollToPosition(sections.get(8));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -470,7 +470,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexI.getY() && y < indexJ.getY() && !flags.get(9) && letters.contains("I"))
                 {
-                    Log.i(TAG, "Index I at " + y);
+                    //Log.i(TAG, "Index I at " + y);
                     indexLetter.setText("I");
                     layoutManager.scrollToPosition(sections.get(9));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -479,7 +479,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexJ.getY() && y < indexK.getY() && !flags.get(10) && letters.contains("J"))
                 {
-                    Log.i(TAG, "Index J at " + y);
+                    //Log.i(TAG, "Index J at " + y);
                     indexLetter.setText("J");
                     layoutManager.scrollToPosition(sections.get(10));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -488,7 +488,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexK.getY() && y < indexL.getY() && !flags.get(11) && letters.contains("K"))
                 {
-                    Log.i(TAG, "Index K at " + y);
+                    //Log.i(TAG, "Index K at " + y);
                     indexLetter.setText("K");
                     layoutManager.scrollToPosition(sections.get(11));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -497,7 +497,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexL.getY() && y < indexM.getY() && !flags.get(12) && letters.contains("L"))
                 {
-                    Log.i(TAG, "Index L at " + y);
+                    //Log.i(TAG, "Index L at " + y);
                     indexLetter.setText("L");
                     layoutManager.scrollToPosition(sections.get(12));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -506,7 +506,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexM.getY() && y < indexN.getY() && !flags.get(13) && letters.contains("M"))
                 {
-                    Log.i(TAG, "Index M at " + y);
+                    //Log.i(TAG, "Index M at " + y);
                     indexLetter.setText("M");
                     layoutManager.scrollToPosition(sections.get(13));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -515,7 +515,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexN.getY() && y < indexO.getY() && !flags.get(14) && letters.contains("N"))
                 {
-                    Log.i(TAG, "Index N at " + y);
+                    //Log.i(TAG, "Index N at " + y);
                     indexLetter.setText("N");
                     layoutManager.scrollToPosition(sections.get(14));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -524,7 +524,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexO.getY() && y < indexP.getY() && !flags.get(15) && letters.contains("O"))
                 {
-                    Log.i(TAG, "Index O at " + y);
+                    //Log.i(TAG, "Index O at " + y);
                     indexLetter.setText("O");
                     layoutManager.scrollToPosition(sections.get(15));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -533,7 +533,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexP.getY() && y < indexQ.getY() && !flags.get(16) && letters.contains("P"))
                 {
-                    Log.i(TAG, "Index P at " + y);
+                    //Log.i(TAG, "Index P at " + y);
                     indexLetter.setText("P");
                     layoutManager.scrollToPosition(sections.get(16));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -542,7 +542,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexQ.getY() && y < indexR.getY() && !flags.get(17) && letters.contains("Q"))
                 {
-                    Log.i(TAG, "Index Q at " + y);
+                    //Log.i(TAG, "Index Q at " + y);
                     indexLetter.setText("Q");
                     layoutManager.scrollToPosition(sections.get(17));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -551,7 +551,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexR.getY() && y < indexS.getY() && !flags.get(18) && letters.contains("R"))
                 {
-                    Log.i(TAG, "Index R at " + y);
+                    //Log.i(TAG, "Index R at " + y);
                     indexLetter.setText("R");
                     layoutManager.scrollToPosition(sections.get(18));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -560,7 +560,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexS.getY() && y < indexT.getY() && !flags.get(19) && letters.contains("S"))
                 {
-                    Log.i(TAG, "Index S at " + y);
+                    //Log.i(TAG, "Index S at " + y);
                     indexLetter.setText("S");
                     layoutManager.scrollToPosition(sections.get(19));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -569,7 +569,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexT.getY() && y < indexU.getY() && !flags.get(20) && letters.contains("T"))
                 {
-                    Log.i(TAG, "Index T at " + y);
+                    //Log.i(TAG, "Index T at " + y);
                     indexLetter.setText("T");
                     layoutManager.scrollToPosition(sections.get(20));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -578,7 +578,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexU.getY() && y < indexV.getY() && !flags.get(21) && letters.contains("U"))
                 {
-                    Log.i(TAG, "Index U at " + y);
+                    //Log.i(TAG, "Index U at " + y);
                     indexLetter.setText("U");
                     layoutManager.scrollToPosition(sections.get(21));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -587,7 +587,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexV.getY() && y < indexW.getY() && !flags.get(22) && letters.contains("V"))
                 {
-                    Log.i(TAG, "Index V at " + y);
+                    //Log.i(TAG, "Index V at " + y);
                     indexLetter.setText("V");
                     layoutManager.scrollToPosition(sections.get(22));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -596,7 +596,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexW.getY() && y < indexX.getY() && !flags.get(23) && letters.contains("W"))
                 {
-                    Log.i(TAG, "Index W at " + y);
+                    //Log.i(TAG, "Index W at " + y);
                     indexLetter.setText("W");
                     layoutManager.scrollToPosition(sections.get(23));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -605,7 +605,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexX.getY() && y < indexY.getY() && !flags.get(24) && letters.contains("X"))
                 {
-                    Log.i(TAG, "Index X at " + y);
+                    //Log.i(TAG, "Index X at " + y);
                     indexLetter.setText("X");
                     layoutManager.scrollToPosition(sections.get(24));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -614,7 +614,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexY.getY() && y < indexZ.getY() && !flags.get(25) && letters.contains("Y"))
                 {
-                    Log.i(TAG, "Index Y at " + y);
+                    //Log.i(TAG, "Index Y at " + y);
                     indexLetter.setText("Y");
                     layoutManager.scrollToPosition(sections.get(25));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -623,7 +623,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
 
                 if(y > indexZ.getY() && y < indexContainer.getHeight() && !flags.get(26) && letters.contains("Z"))
                 {
-                    Log.i(TAG, "Index Z at " + y);
+                    //Log.i(TAG, "Index Z at " + y);
                     indexLetter.setText("Z");
                     layoutManager.scrollToPosition(sections.get(26));
                     indexContainer.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);

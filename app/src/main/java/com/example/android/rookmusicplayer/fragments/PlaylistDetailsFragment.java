@@ -103,7 +103,7 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(playlistSongsAdapter);
 
-        Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
+        //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
 

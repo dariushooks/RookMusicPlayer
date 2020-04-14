@@ -148,7 +148,7 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(albumDetailsAdapter);
 
-        Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
+        //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
 

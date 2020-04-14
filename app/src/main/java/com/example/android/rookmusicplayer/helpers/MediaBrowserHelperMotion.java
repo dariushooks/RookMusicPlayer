@@ -202,7 +202,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                         // Save the controller
                         MediaControllerCompat.setMediaController((Activity) context, mediaControllerCompat);
 
-                    } catch (RemoteException e) { Log.e(MainActivity.class.getSimpleName(), "Error creating controller", e); }
+                    } catch (RemoteException e) { /*Log.e(MainActivity.class.getSimpleName(), "Error creating controller", e);*/ }
 
                     // Finish building the UI
                     buildTransportControls();
@@ -693,7 +693,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
         contentResolver.bulkInsert(playlistSongsUri, values);
 
-        Log.i(TAG, song.getTitle().toUpperCase() + " ADDED TO PLAYLIST " + playlist.getPlaylist().toUpperCase());
+        //Log.i(TAG, song.getTitle().toUpperCase() + " ADDED TO PLAYLIST " + playlist.getPlaylist().toUpperCase());
 
     }
 

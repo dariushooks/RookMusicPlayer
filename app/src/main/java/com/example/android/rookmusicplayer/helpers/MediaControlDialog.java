@@ -257,19 +257,19 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
         switch (code)
         {
             case FROM_LIBRARY:
-                Log.i(TAG, "DIALOG FROM LIBRARY");
+                //Log.i(TAG, "DIALOG FROM LIBRARY");
                 break;
 
             case FROM_ARTIST:
-                Log.i(TAG, "DIALOG FROM ARTIST");
+                //Log.i(TAG, "DIALOG FROM ARTIST");
                 break;
 
             case FROM_ALBUM:
-                Log.i(TAG, "DIALOG FROM ALBUM");
+                //Log.i(TAG, "DIALOG FROM ALBUM");
                 break;
 
             case FROM_PLAYLIST:
-                Log.i(TAG, "DIALOG FROM PLAYLIST");
+                //Log.i(TAG, "DIALOG FROM PLAYLIST");
                 break;
         }
 
@@ -369,19 +369,19 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
             case ARTIST:
                 mediaBrowserHelper.addToPlaylist(playlist, artist);
                 Toast.makeText(context, artist.getArtist().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase(), Toast.LENGTH_SHORT).show();
-                Log.i(TAG, artist.getArtist().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase());
+                //Log.i(TAG, artist.getArtist().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase());
                 break;
 
             case ALBUM:
                 mediaBrowserHelper.addToPlaylist(playlist, album);
                 Toast.makeText(context, album.getAlbum().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase(), Toast.LENGTH_SHORT).show();
-                Log.i(TAG, album.getAlbum().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase());
+                //Log.i(TAG, album.getAlbum().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase());
                 break;
 
             case PLAYLIST:
                 mediaBrowserHelper.addToPlaylist(playlist, this.playlist);
                 Toast.makeText(context, this.playlist.getPlaylist().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase(), Toast.LENGTH_SHORT).show();
-                Log.i(TAG, this.playlist.getPlaylist().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase());
+                //Log.i(TAG, this.playlist.getPlaylist().toUpperCase() + " ADDED TO " + playlist.getPlaylist().toUpperCase());
                 break;
         }
         alertDialogPlaylist.dismiss();
@@ -418,7 +418,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                         contentResolver.delete(songUri, selectionSong, selectionArgsSong);
 
                         Toast.makeText(context, song.getTitle() + " DELETED", Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, song.getTitle().toUpperCase() + " DELETED FROM LIBRARY");
+                        //Log.i(TAG, song.getTitle().toUpperCase() + " DELETED FROM LIBRARY");
                         break;
 
                     case ALBUM:
@@ -456,7 +456,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                         contentResolver.delete(albumUri, selectionAlbum, selectionArgsAlbum);*/
 
                         Toast.makeText(context, albumName + " DELETED", Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, albumName.toUpperCase() + " DELETED FROM LIBRARY");
+                        //Log.i(TAG, albumName.toUpperCase() + " DELETED FROM LIBRARY");
                         break;
 
                     case ARTIST:
@@ -491,7 +491,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                         contentResolver.delete(artistUri, selectionArtist, selectionArgsArtist);*/
 
                         Toast.makeText(context, artist.getArtist() + " DELETED", Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, artist.getArtist().toUpperCase() + " DELETED FROM LIBRARY");
+                        //Log.i(TAG, artist.getArtist().toUpperCase() + " DELETED FROM LIBRARY");
                         break;
 
                     case PLAYLIST:
@@ -510,7 +510,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                         contentResolver.delete(playlistSongsUri, null, null);
 
                         Toast.makeText(context, playlist.getPlaylist() + " DELETED", Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, playlist.getPlaylist().toUpperCase() + " DELETED FROM PLAYLISTS");
+                        //Log.i(TAG, playlist.getPlaylist().toUpperCase() + " DELETED FROM PLAYLISTS");
                         break;
 
                     case PLAYLIST_SONG:
@@ -526,7 +526,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                         updatePlaylist.updatePlaylistCount();
 
                         Toast.makeText(context, playlistSong.getTitle() + " DELETED", Toast.LENGTH_SHORT).show();
-                        Log.i(TAG, playlistSong.getTitle().toUpperCase() + " DELETED FROM PLAYLIST");
+                        //Log.i(TAG, playlistSong.getTitle().toUpperCase() + " DELETED FROM PLAYLIST");
                         break;
                 }
             }
@@ -633,7 +633,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                             String playlistDescription = parts[1];
                             String playlistID = cursor.getString(id);
 
-                            Log.i(TAG, "PLAYLIST " + playlistName.toUpperCase() + " CREATED WITH ID " + playlistID);
+                            //Log.i(TAG, "PLAYLIST " + playlistName.toUpperCase() + " CREATED WITH ID " + playlistID);
                             playlists.add(new Playlists(playlistName, playlistID, playlistDescription));
                             cursor.close();
                         }

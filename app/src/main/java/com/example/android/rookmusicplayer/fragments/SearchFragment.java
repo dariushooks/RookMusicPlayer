@@ -88,7 +88,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             public boolean onQueryTextChange(String s) { return false; }
         });
 
-        Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
+        //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
 

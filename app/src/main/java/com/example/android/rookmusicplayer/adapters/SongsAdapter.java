@@ -75,7 +75,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         new SectionIndexFixer().fixIndex(lettersSongs, sectionsSongs);
         for(int i = 0; i < 27; i++)
         {
-            Log.i(TAG, "Letter " + lettersSongs.get(i) + "\tSection " + sectionsSongs.get(i));
+            //Log.i(TAG, "Letter " + lettersSongs.get(i) + "\tSection " + sectionsSongs.get(i));
         }
     }
 
@@ -147,11 +147,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             if(cover != null)
             {
                 albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
-                Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                //Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);
                 options.inJustDecodeBounds = false;
                 albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
-                Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                //Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
             }
             else
                 albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));

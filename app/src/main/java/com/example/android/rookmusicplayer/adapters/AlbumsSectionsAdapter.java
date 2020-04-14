@@ -65,7 +65,7 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
                 }
             }
 
-            Log.i(TAG, "Letter: " + lettersAlbums.get(i) + "\tPosition: " + sectionsAlbums.get(i));
+            //Log.i(TAG, "Letter: " + lettersAlbums.get(i) + "\tPosition: " + sectionsAlbums.get(i));
         }
     }
 

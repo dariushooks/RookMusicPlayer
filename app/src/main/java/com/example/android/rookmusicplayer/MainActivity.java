@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main_motion);
 
         ActionBar actionBar = getSupportActionBar();
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 public void onChanged(List<Songs> songs)
                 {
                     savedSongs = (ArrayList<Songs>) songs;
-                    Log.i(TAG, "RETRIEVED SAVED QUEUE");
+                    //Log.i(TAG, "RETRIEVED SAVED QUEUE");
                 }
             });
 
@@ -105,12 +104,11 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 public void onChanged(List<SavedStateDetails> savedStateDetails)
                 {
                     savedState = (ArrayList<SavedStateDetails>) savedStateDetails;
-                    Log.i(TAG, "RETRIEVED SAVED STATE");
+                    //Log.i(TAG, "RETRIEVED SAVED STATE");
                 }
             });
 
             View rootView = findViewById(R.id.fragment_container).getRootView();
-            //mediaBrowserHelper = new MediaBrowserHelper(this, rootView, stateViewModel);
             mediaBrowserHelper = new MediaBrowserHelperMotion(this, rootView, stateViewModel);
             mediaBrowserHelper.onCreate();
         }
@@ -127,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     protected void onStop()
     {
         super.onStop();
-        Log.i(TAG, "SAVING UI STATE");
+        //Log.i(TAG, "SAVING UI STATE");
         mediaBrowserHelper.onStop();
-        Log.i(TAG, "UI STATE SAVED");
+        //Log.i(TAG, "UI STATE SAVED");
     }
 
     @Override
@@ -243,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.addSharedElement(sharedArt, ViewCompat.getTransitionName(sharedArt)).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
-        Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+        //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 
     @Override
@@ -253,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.addSharedElement(sharedArtist, ViewCompat.getTransitionName(sharedArtist)).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
-        Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+        //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 
     @Override
@@ -263,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment).addToBackStack("").commit();
-        Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+        //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 
     @Override
@@ -291,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                         break;
                 }
 
-                Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+                //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
             }
         }, 800);
     }
@@ -303,6 +301,6 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment).addToBackStack("").commit();
-        Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+        //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 }

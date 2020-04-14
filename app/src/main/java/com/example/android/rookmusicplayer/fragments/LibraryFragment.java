@@ -72,7 +72,7 @@ public class LibraryFragment extends Fragment
             public void onClick(View view) { query.search(); }
         });
 
-        Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
+        //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
 

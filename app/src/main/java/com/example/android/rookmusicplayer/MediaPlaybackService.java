@@ -718,7 +718,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         {
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
             {
-                Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
+                //Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
                 builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
@@ -727,7 +727,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
             else
             {
-                Log.i(TAG, "Time Paused at " + calculateTime(mediaPlayer.getCurrentPosition()));
+                //Log.i(TAG, "Time Paused at " + calculateTime(mediaPlayer.getCurrentPosition()));
                 builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
                 stopForeground(true);
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());

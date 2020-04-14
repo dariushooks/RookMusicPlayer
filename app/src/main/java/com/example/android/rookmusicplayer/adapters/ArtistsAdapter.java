@@ -68,10 +68,10 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
         }
 
         new SectionIndexFixer().fixIndex(lettersArtists, sectionsArtists);
-        for(int i = 0; i < 27; i++)
+        /*for(int i = 0; i < 27; i++)
         {
             Log.i(TAG, "Letter " + lettersArtists.get(i) + "\tSection " + sectionsArtists.get(i));
-        }
+        }*/
     }
 
     ArtistsAdapter(ArrayList<Artists> artists, ArtistsAdapter.ListItemClickListener listener, String query)

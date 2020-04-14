@@ -85,7 +85,7 @@ public class ArtistDetailsFragment extends Fragment
         artistName = rootView.findViewById(R.id.artistDetailArtist);
         artistName.setText(artist);
 
-        Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
+        //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
 

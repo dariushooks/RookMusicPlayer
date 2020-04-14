@@ -116,11 +116,11 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
             if(cover != null)
             {
                 albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
-                Log.i(TAG, queueDisplay.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                //Log.i(TAG, queueDisplay.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);
                 options.inJustDecodeBounds = false;
                 albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
-                Log.i(TAG, queueDisplay.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                //Log.i(TAG, queueDisplay.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
             }
             else
                 albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));

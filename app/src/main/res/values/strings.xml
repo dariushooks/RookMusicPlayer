@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rook Music Player</string>
+    <string name="app_name">Rookie Music Player</string>
 
     <string name="deleteSongFromLibrary">Delete Song From Library</string>
     <string name="deleteArtistFromLibrary">Delete Artist From Library</string>

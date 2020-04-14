@@ -35,7 +35,6 @@ public class App extends Application
     private SectionContent sectionContent;
 
     public static final String CHANNEL_1 = "channel_1";
-    //public static MediaBrowserHelperBottomsheet mediaBrowserHelper;
     public static MediaBrowserHelperMotion mediaBrowserHelper;
 
     //LIBRARY
