@@ -112,7 +112,10 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(CLEAR, null);
         Bundle queue = new Bundle();
         queue.putInt("CURRENT_QUEUE_POSITION", position);
-        queue.putInt("FROM", FROM_PLAYLIST);
+        if(currentPlaylist.getPlaylist().equals("Recently Added"))
+            queue.putInt("FROM", RECENTLY_ADDED);
+        else
+            queue.putInt("FROM", FROM_PLAYLIST);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_PLAYLIST, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(playlistSongs.get(position).getPath(), null);
