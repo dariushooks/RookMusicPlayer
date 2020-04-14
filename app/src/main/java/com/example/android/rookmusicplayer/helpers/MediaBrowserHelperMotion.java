@@ -71,6 +71,7 @@ import static com.example.android.rookmusicplayer.App.RECEIVE_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.RESTORE_SAVED_QUEUE;
 import static com.example.android.rookmusicplayer.App.SAVE_QUEUE;
 import static com.example.android.rookmusicplayer.App.SET_ELAPSED_TIME;
+import static com.example.android.rookmusicplayer.App.SET_FROM;
 import static com.example.android.rookmusicplayer.App.SET_POSITION;
 import static com.example.android.rookmusicplayer.App.SET_UP_NEXT;
 import static com.example.android.rookmusicplayer.App.addToQueue;
@@ -138,6 +139,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private int savedRepeat;
     private int savedPlayState;
     private String savedNowPlayingFrom;
+    private int savedFrom;
     private StateViewModel stateViewModel;
 
     public MediaBrowserHelperMotion(Context context, View rootView, StateViewModel stateViewModel)
@@ -151,9 +153,10 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     public void onCreate()
     {
         mediaBrowserCompat = new MediaBrowserCompat(context, new ComponentName(context, MediaPlaybackService.class), connectionCallbacks, null);
+        mediaBrowserCompat.connect();
     }
 
-    public void onStart()
+    public void onRestart()
     {
         if(!mediaBrowserCompat.isConnected())
             mediaBrowserCompat.connect();
@@ -209,6 +212,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                         savedPosition = savedState.get(0).getPosition();
                         savedElapsed = savedState.get(0).getElapsed();
                         savedDuration = savedState.get(0).getDuration();
+                        savedFrom = savedState.get(0).getFrom();
                         shuffle = savedState.get(0).getShuffle();
                         mediaControllerCompat.getTransportControls().setShuffleMode(shuffle);
                         repeat = savedState.get(0).getRepeat();
@@ -218,7 +222,9 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                         mediaControllerCompat.getTransportControls().sendCustomAction(CLEAR, null);
                         Bundle queuePosition = new Bundle(); queuePosition.putInt("CURRENT_QUEUE_POSITION", savedPosition);
                         Bundle elapsedTime = new Bundle(); elapsedTime.putInt("CURRENT_ELAPSED_TIME", savedElapsed);
+                        Bundle from = new Bundle(); from.putInt("CURRENT_FROM", savedFrom);
                         mediaControllerCompat.getTransportControls().sendCustomAction(SET_POSITION, queuePosition);
+                        mediaControllerCompat.getTransportControls().sendCustomAction(SET_FROM, from);
                         mediaControllerCompat.getTransportControls().sendCustomAction(RESTORE_SAVED_QUEUE, null);
                         if(currentState != PlaybackStateCompat.STATE_PLAYING)
                         {
@@ -317,7 +323,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                             savedElapsed = resultData.getInt("currentElapsed");
                             savedDuration = currentDuration;
                             savedNowPlayingFrom = nowPlayingFrom;
-                            SavedDetails details = new SavedDetails(savedPosition, savedShuffle, savedRepeat, savedPlayState, savedElapsed, savedDuration, savedNowPlayingFrom);
+                            savedFrom = resultData.getInt("currentFrom");
+                            SavedDetails details = new SavedDetails(savedPosition, savedShuffle, savedRepeat, savedPlayState, savedElapsed, savedDuration, savedNowPlayingFrom, savedFrom);
                             if(savedState.isEmpty())
                                 stateViewModel.insert(details);
                             else

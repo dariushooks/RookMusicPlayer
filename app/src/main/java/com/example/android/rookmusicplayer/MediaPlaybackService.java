@@ -67,6 +67,7 @@ import static com.example.android.rookmusicplayer.App.RECENTLY_ADDED;
 import static com.example.android.rookmusicplayer.App.RESTORE_SAVED_QUEUE;
 import static com.example.android.rookmusicplayer.App.SAVE_QUEUE;
 import static com.example.android.rookmusicplayer.App.SET_ELAPSED_TIME;
+import static com.example.android.rookmusicplayer.App.SET_FROM;
 import static com.example.android.rookmusicplayer.App.SET_POSITION;
 import static com.example.android.rookmusicplayer.App.SET_QUEUE_ALBUM;
 import static com.example.android.rookmusicplayer.App.SET_QUEUE_ARTIST;
@@ -120,6 +121,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     private int syncRepeat;
     private int syncPlayState;
     private String syncNowPlayingFrom;
+    private int syncFrom;
 
     @Override
     public void onCreate()
@@ -292,6 +294,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     Bundle queuePosition = new Bundle();
                     queuePosition.putInt("queuePosition", position);
                     queuePosition.putInt("currentElapsed", mediaPlayer.getCurrentPosition());
+                    queuePosition.putInt("currentFrom", from);
                     cb.send(RECEIVE_QUEUE_POSITION, queuePosition);
                     break;
 
@@ -327,6 +330,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 case RESTORE_SAVED_QUEUE: queue.addAll(savedSongs); break;
                 case INITIALIZE_QUEUE_CHANGE: queueAdapter.initializeQueueChange(MediaPlaybackService.this); break;
                 case SET_ELAPSED_TIME: elapsed = extras.getInt("CURRENT_ELAPSED_TIME"); setSong(queue.get(position).getPath()); break;
+                case SET_FROM: from = extras.getInt("CURRENT_FROM"); break;
             }
         }
 
@@ -412,11 +416,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             switch (shuffleMode)
             {
                 case PlaybackStateCompat.SHUFFLE_MODE_ALL:
-                    current = queue.get(position);
-                    queue.remove(position);
-                    Collections.shuffle(queue);
-                    queue.add(0, current); position = 0;
-                    setQueueDisplay();
+                    if(!queue.isEmpty())
+                    {
+                        current = queue.get(position);
+                        queue.remove(position);
+                        Collections.shuffle(queue);
+                        queue.add(0, current); position = 0;
+                        setQueueDisplay();
+                    }
                     break;
 
                 case PlaybackStateCompat.SHUFFLE_MODE_NONE:
@@ -486,7 +493,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         syncElapsed = mediaPlayer.getCurrentPosition();
         syncDuration = mediaPlayer.getDuration();
         syncNowPlayingFrom = nowPlayingFrom;
-        SavedDetails details = new SavedDetails(syncPosition, syncShuffle, syncRepeat, syncPlayState, syncElapsed, syncDuration, syncNowPlayingFrom);
+        syncFrom = from;
+        SavedDetails details = new SavedDetails(syncPosition, syncShuffle, syncRepeat, syncPlayState, syncElapsed, syncDuration, syncNowPlayingFrom, syncFrom);
         if(savedState.isEmpty())
             stateViewModel.insert(details);
         else

@@ -117,10 +117,10 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     }
 
     @Override
-    protected void onStart()
+    protected void onRestart()
     {
-        super.onStart();
-        mediaBrowserHelper.onStart();
+        super.onRestart();
+        mediaBrowserHelper.onRestart();
     }
 
     @Override

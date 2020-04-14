@@ -16,8 +16,9 @@ public class SavedDetails
     private int elapsed;
     private int duration;
     private String now_playing_from;
+    private int from;
 
-    public SavedDetails(int position, int shuffle, int repeat, int state, int elapsed, int duration, String now_playing_from)
+    public SavedDetails(int position, int shuffle, int repeat, int state, int elapsed, int duration, String now_playing_from, int from)
     {
         this.position = position;
         this.shuffle = shuffle;
@@ -26,6 +27,7 @@ public class SavedDetails
         this.elapsed = elapsed;
         this.duration = duration;
         this.now_playing_from = now_playing_from;
+        this.from = from;
     }
 
     public void setId(int id) { this.id = id; }
@@ -59,4 +61,8 @@ public class SavedDetails
     public String getNow_playing_from() { return now_playing_from; }
 
     public void setNow_playing_from(String now_playing_from) { this.now_playing_from = now_playing_from; }
+
+    public int getFrom() { return from; }
+
+    public void setFrom(int from) { this.from = from; }
 }

@@ -140,6 +140,7 @@ public class MediaBrowserHelperBottomsheet implements QueueAdapter.ListItemClick
     private int savedRepeat;
     private int savedPlayState;
     private String savedNowPlayingFrom;
+    private int savedFrom;
     private StateViewModel stateViewModel;
 
     public MediaBrowserHelperBottomsheet(Context context, View rootView, StateViewModel stateViewModel)
@@ -319,7 +320,8 @@ public class MediaBrowserHelperBottomsheet implements QueueAdapter.ListItemClick
                             savedElapsed = resultData.getInt("currentElapsed");
                             savedDuration = currentDuration;
                             savedNowPlayingFrom = nowPlayingFrom;
-                            SavedDetails details = new SavedDetails(savedPosition, savedShuffle, savedRepeat, savedPlayState, savedElapsed, savedDuration, savedNowPlayingFrom);
+                            savedFrom = resultData.getInt("currentFrom");
+                            SavedDetails details = new SavedDetails(savedPosition, savedShuffle, savedRepeat, savedPlayState, savedElapsed, savedDuration, savedNowPlayingFrom, savedFrom);
                             if(savedState.isEmpty())
                                 stateViewModel.insert(details);
                             else
