@@ -171,16 +171,10 @@
 
         <Constraint
             android:id="@+id/upNextButton">
-            <CustomAttribute
-                motion:attributeName="colorFilter"
-                motion:customColorValue="@color/colorAccent"/>
         </Constraint>
 
         <Constraint
             android:id="@+id/upNextBackground">
-            <CustomAttribute
-                motion:attributeName="colorFilter"
-                motion:customColorValue="@color/darkGray"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentNameCollapsed">
@@ -205,11 +199,15 @@
         </Constraint>
 
         <Constraint android:id="@+id/upNextQueue">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/dividerQueueTop">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetShuffle">
@@ -227,29 +225,35 @@
         <Constraint android:id="@+id/shuffleBackground">
             <PropertySet
                 android:alpha="0"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/repeatBackground">
             <PropertySet
                 android:alpha="0"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/upNext">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/playingFrom">
-            <PropertySet android:alpha="0"/>
+            <PropertySet android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/dividerQueueBottom">
-            <PropertySet android:alpha="0"/>
+            <PropertySet android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetQueue">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
     </ConstraintSet>
@@ -341,8 +345,16 @@
             <PropertySet android:alpha="0"/>
         </Constraint>
 
+        <Constraint android:id="@+id/upNextQueue">
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
+        </Constraint>
+
         <Constraint android:id="@+id/dividerQueueTop">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetShuffle">
@@ -370,23 +382,27 @@
         </Constraint>
 
         <Constraint android:id="@+id/upNext">
-            <PropertySet android:alpha="1"/>
-        </Constraint>
-
-        <Constraint android:id="@+id/upNextQueue">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/playingFrom">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/dividerQueueBottom">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetQueue">
-            <PropertySet android:alpha="1"/>
+            <PropertySet
+                android:alpha="1"
+                android:visibility="visible"/>
         </Constraint>
 
     </ConstraintSet>

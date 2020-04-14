@@ -115,6 +115,7 @@ public class SongsFragment extends Fragment implements SongsAdapter.ListItemClic
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(CLEAR, null);
         Bundle queue = new Bundle();
         queue.putInt("CURRENT_QUEUE_POSITION", position);
+        queue.putInt("FROM", from);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_LIBRARY_SONGS, null);
         mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(songs.get(position).getPath(), null);
@@ -141,6 +142,8 @@ public class SongsFragment extends Fragment implements SongsAdapter.ListItemClic
             case R.id.shuffleSongs:
                 Collections.shuffle(songs);
                 librarySongs = songs;
+                //Bundle bundle = new Bundle();
+                //bundle.putInt("FROM", from);
                 mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SHUFFLE_QUEUE, null);
                 setQueue(0);
                 break;

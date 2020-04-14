@@ -52,7 +52,6 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
     private RecyclerView recyclerView;
     private TextView playlistName;
     private TextView playlistCount;
-    private LinearLayout descriptionContainer;
     private TextView playlistDescription;
     private Button playAlbum;
     private Button shuffleAlbum;
@@ -86,10 +85,10 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
 
         rootView.findViewById(R.id.albumDetailArtist).setVisibility(View.GONE);
 
-        descriptionContainer = rootView.findViewById(R.id.playlistDescriptionContainer);
-        descriptionContainer.setVisibility(View.VISIBLE);
         playlistDescription = rootView.findViewById(R.id.playlistDescription);
         playlistDescription.setText(currentPlaylist.getDescription());
+        if(!playlistDescription.getText().equals(""))
+            playlistDescription.setVisibility(View.VISIBLE);
 
         playAlbum = rootView.findViewById(R.id.playAlbum);
         playAlbum.setOnClickListener(this);
@@ -113,8 +112,9 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(CLEAR, null);
         Bundle queue = new Bundle();
         queue.putInt("CURRENT_QUEUE_POSITION", position);
+        queue.putInt("FROM", FROM_PLAYLIST);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
-        mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_PLAYLIST, null);
+        mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_PLAYLIST, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(playlistSongs.get(position).getPath(), null);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
         nowPlayingFrom = "Now playing from " + currentPlaylist.getPlaylist();

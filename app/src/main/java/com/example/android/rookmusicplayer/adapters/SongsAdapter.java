@@ -32,12 +32,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     private ListItemClickListener listener;
     private Context context;
 
-    private RelativeLayout container;
-    private ImageView albumArt;
-    private TextView songName;
-    private TextView songArtist;
-    private TextView songDuration;
-
     public interface ListItemClickListener
     {
         void onListItemClick(int position);
@@ -122,6 +116,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
     class SongViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
     {
+
+        private RelativeLayout container;
+        private ImageView albumArt;
+        private TextView songName;
+        private TextView songArtist;
+        private TextView songDuration;
 
         public SongViewHolder(@NonNull View itemView)
         {

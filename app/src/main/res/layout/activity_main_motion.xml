@@ -8,6 +8,6 @@
     android:background="@color/black"
     tools:context=".MainActivity">
 
-    <include layout="@layout/bottomsheet_animation"/>
+    <include layout="@layout/bottomsheet_motion"/>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

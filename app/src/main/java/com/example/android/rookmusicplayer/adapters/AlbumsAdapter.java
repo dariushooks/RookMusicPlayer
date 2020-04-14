@@ -65,9 +65,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
 
     class AlbumViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
     {
-        ImageView albumArt;
-        TextView albumName;
-        TextView albumArtist;
+        private ImageView albumArt;
+        private TextView albumName;
+        private TextView albumArtist;
 
         public AlbumViewHolder(@NonNull View itemView)
         {

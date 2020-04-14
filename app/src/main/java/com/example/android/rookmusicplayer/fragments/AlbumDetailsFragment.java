@@ -51,7 +51,6 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
     private Albums currentAlbum;
     private AlbumDetailsAdapter albumDetailsAdapter;
     private RecyclerView recyclerView;
-    private boolean shuffled;
     private String album;
     private String artist;
     private String art;
@@ -165,8 +164,9 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(CLEAR, null);
         Bundle queue = new Bundle();
         queue.putInt("CURRENT_QUEUE_POSITION", position);
+        queue.putInt("FROM", FROM_ALBUM);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
-        mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_ALBUM, null);
+        mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_ALBUM, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(albumSongs.get(position).getPath(), null);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
         nowPlayingFrom = "Now playing from " + album;
@@ -176,7 +176,6 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
     @Override
     public void onClick(View view)
     {
-        Bundle from = new Bundle();
         switch (view.getId())
         {
             case R.id.playAlbum:
@@ -192,9 +191,9 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
                 Collections.shuffle(albumSongs);
                 //shuffled = true;
                 App.albumSongs = albumSongs;
+                //from.putInt("FROM", FROM_ALBUM);
+                mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SHUFFLE_QUEUE, null);
                 setQueue(0);
-                from.putInt("FROM", FROM_ALBUM);
-                mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SHUFFLE_QUEUE, from);
                 break;
 
             case R.id.albumMediaControl:

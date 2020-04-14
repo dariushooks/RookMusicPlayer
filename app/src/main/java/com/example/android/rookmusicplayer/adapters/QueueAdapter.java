@@ -3,6 +3,7 @@ package com.example.android.rookmusicplayer.adapters;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.rookmusicplayer.R;
 
+import static com.example.android.rookmusicplayer.App.calculateSampleSize;
 import static com.example.android.rookmusicplayer.App.queueDisplay;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHolder>
 {
+    private static String TAG = QueueAdapter.class.getSimpleName();
     private QueueAdapter.ListItemClickListener listener;
     private QueueChange queueChange;
     private Context context;
-
-    private ImageView albumArt;
-    private TextView songName;
-    private TextView songArtist;
-    private ImageView order;
 
     public interface ListItemClickListener
     {
@@ -82,6 +80,11 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
     class QueueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
 
+        private ImageView albumArt;
+        private TextView songName;
+        private TextView songArtist;
+        private ImageView order;
+
         public QueueViewHolder(@NonNull View itemView)
         {
             super(itemView);
@@ -104,11 +107,21 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
 
         public void bind(int position)
         {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
             MediaMetadataRetriever retriver = new MediaMetadataRetriever();
             retriver.setDataSource(queueDisplay.get(position).getPath());
             byte[] cover = retriver.getEmbeddedPicture();
             if(cover != null)
-                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length));
+            {
+                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                Log.i(TAG, queueDisplay.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                options.inSampleSize = calculateSampleSize(options, 45, 50);
+                options.inJustDecodeBounds = false;
+                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                Log.i(TAG, queueDisplay.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+            }
             else
                 albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
             retriver.release();

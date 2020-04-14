@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -33,8 +32,7 @@ import com.example.android.rookmusicplayer.fragments.PlaylistsFragment;
 import com.example.android.rookmusicplayer.fragments.SearchFragment;
 import com.example.android.rookmusicplayer.fragments.SongsFragment;
 import com.example.android.rookmusicplayer.helpers.GoToDialog;
-import com.example.android.rookmusicplayer.helpers.MediaBrowserHelper;
-import com.example.android.rookmusicplayer.helpers.MediaBrowserHelperAlt;
+import com.example.android.rookmusicplayer.helpers.MediaBrowserHelperMotion;
 import com.example.android.rookmusicplayer.helpers.MediaControlDialog;
 
 import java.util.ArrayList;
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        setContentView(R.layout.activity_main_alt);
+        setContentView(R.layout.activity_main_motion);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
 
             View rootView = findViewById(R.id.fragment_container).getRootView();
             //mediaBrowserHelper = new MediaBrowserHelper(this, rootView, stateViewModel);
-            mediaBrowserHelper = new MediaBrowserHelperAlt(this, rootView, stateViewModel);
+            mediaBrowserHelper = new MediaBrowserHelperMotion(this, rootView, stateViewModel);
             mediaBrowserHelper.onCreate();
         }
     }
@@ -209,24 +207,27 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         {
             case FROM_LIBRARY:
                 queue.putInt("CURRENT_QUEUE_POSITION", index);
+                queue.putInt("FROM", from);
                 getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
-                getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_LIBRARY, null);
+                getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_LIBRARY, queue);
                 nowPlayingFrom = "Now playing from Library";
                 break;
 
             case FROM_ARTIST:
                 queue.putInt("CURRENT_QUEUE_POSITION", index);
+                queue.putInt("FROM", from);
                 getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
                 artistSongs = songs;
-                getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_ARTIST, null);
+                getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_ARTIST, queue);
                 nowPlayingFrom = "Now playing from " + songs.get(index).getArtist();
                 break;
 
             case FROM_SEARCH:
                 queue.putInt("CURRENT_QUEUE_POSITION", 0);
+                queue.putInt("FROM", from);
                 getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
                 searchSong.clear(); searchSong.add(songs.get(index));
-                getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_SEARCH, null);
+                getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_SEARCH, queue);
                 nowPlayingFrom = "Now playing from Search";
                 break;
         }

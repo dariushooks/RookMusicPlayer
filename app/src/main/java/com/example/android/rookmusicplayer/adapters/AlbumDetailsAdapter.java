@@ -20,10 +20,6 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
     private ArrayList<Songs> songs;
     private Context context;
     private ListItemClickListener listener;
-    private TextView trackName;
-    private TextView trackDuration;
-    private TextView trackNumber;
-    private TextView trackNumberOffset;
 
     public interface ListItemClickListener
     {
@@ -66,6 +62,11 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
     class AlbumDetailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
     {
+
+        private TextView trackName;
+        private TextView trackDuration;
+        private TextView trackNumber;
+        private TextView trackNumberOffset;
 
         public AlbumDetailsViewHolder(@NonNull View itemView)
         {
