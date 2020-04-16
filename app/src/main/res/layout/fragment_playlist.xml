@@ -5,146 +5,145 @@
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="67dp"
     android:background="@color/black"
     android:fillViewport="true">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="67dp"
-        android:background="@color/black">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/createNew"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="110dp">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/playlistArtHolder"
-                android:background="@color/darkGray"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_alignParentBottom="true"
-                android:layout_toEndOf="@id/playlistArtHolder"
-                android:background="@color/darkGray"/>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/playlistArtHolder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@android:color/transparent">
-
-                <ImageView
-                    android:id="@+id/playlistArt"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="fitXY"
-                    android:tint="@color/white"
-                    android:src="@drawable/ic_playlist_add"/>
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:layout_toEndOf="@id/playlistArtHolder"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:text="@string/createNewPlaylist"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/recentlyAdded"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="110dp"
-            android:layout_below="@id/createNew">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@id/recentPlaylistArtHolder"
-                android:background="@color/darkGray"/>
+        <View
+            android:id="@+id/createNewTopDivider"
+            android:layout_width="0dp"
+            android:layout_height=".5dp"
+            android:background="@color/darkGray"
+            app:layout_constraintTop_toTopOf="@id/createNew"
+            app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+            app:layout_constraintEnd_toEndOf="@id/createNew"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_alignParentBottom="true"
-                android:layout_toEndOf="@id/recentPlaylistArtHolder"
-                android:background="@color/darkGray"/>
+        <View
+            android:id="@+id/createNewBottomDivider"
+            android:layout_width="0dp"
+            android:layout_height=".5dp"
+            android:background="@color/darkGray"
+            app:layout_constraintBottom_toBottomOf="@id/createNew"
+            app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+            app:layout_constraintEnd_toEndOf="@id/createNew"/>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/recentPlaylistArtHolder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@android:color/transparent">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/playlistArtHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="@id/createNew"
+            app:layout_constraintBottom_toBottomOf="@id/createNew"
+            app:layout_constraintStart_toStartOf="@id/createNew">
 
-                <ImageView
-                    android:id="@+id/recentPlaylistArt"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/playlistart"/>
-
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/playlistArt"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:layout_toEndOf="@id/recentPlaylistArtHolder"
-                android:layout_margin="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:scaleType="fitXY"
+                android:tint="@color/white"
+                android:src="@drawable/ic_playlist_add"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:text="@string/recentlyAdded"/>
+        </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
+        <TextView
+            android:id="@+id/createNewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="@string/createNewPlaylist"
+            app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+            app:layout_constraintEnd_toEndOf="@id/createNew"
+            app:layout_constraintTop_toTopOf="@id/createNewTopDivider"
+            app:layout_constraintBottom_toBottomOf="@id/createNewBottomDivider"/>
 
-        </RelativeLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recentlyAdded"
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toBottomOf="@id/createNew"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <View
+            android:id="@+id/recentlyAddedTopDivider"
+            android:layout_width="0dp"
+            android:layout_height=".5dp"
+            android:background="@color/darkGray"
+            app:layout_constraintTop_toTopOf="@id/recentlyAdded"
+            app:layout_constraintStart_toEndOf="@id/recentPlaylistArtHolder"
+            app:layout_constraintEnd_toEndOf="@id/recentlyAdded"/>
+
+        <View
+            android:id="@+id/recentlyAddedBottomDivider"
+            android:layout_width="0dp"
+            android:layout_height=".5dp"
+            android:background="@color/darkGray"
+            app:layout_constraintBottom_toBottomOf="@id/recentlyAdded"
+            app:layout_constraintStart_toEndOf="@id/recentPlaylistArtHolder"
+            app:layout_constraintEnd_toEndOf="@id/recentlyAdded"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/recentPlaylistArtHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="@id/recentlyAdded"
+            app:layout_constraintBottom_toBottomOf="@id/recentlyAdded"
+            app:layout_constraintStart_toStartOf="@id/recentlyAdded">
+
+            <ImageView
+                android:id="@+id/recentPlaylistArt"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/playlistart"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="@string/recentlyAdded"
+            app:layout_constraintTop_toTopOf="@id/recentlyAddedTopDivider"
+            app:layout_constraintBottom_toBottomOf="@id/recentlyAddedBottomDivider"
+            app:layout_constraintStart_toEndOf="@id/recentPlaylistArtHolder"
+            app:layout_constraintEnd_toEndOf="@id/recentlyAdded"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlistRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/recentlyAdded"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/recentlyAdded"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

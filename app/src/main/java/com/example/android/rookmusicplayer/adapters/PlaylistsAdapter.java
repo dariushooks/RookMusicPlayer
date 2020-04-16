@@ -58,9 +58,9 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
     class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
     {
-        ImageView playlistArt;
-        TextView playlistName;
-        TextView playlistCount;
+        private ImageView playlistArt;
+        private TextView playlistName;
+        private TextView playlistCount;
 
         public PlaylistViewHolder(@NonNull View itemView)
         {

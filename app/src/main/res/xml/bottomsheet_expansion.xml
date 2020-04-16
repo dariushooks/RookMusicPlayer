@@ -89,35 +89,61 @@
         </Constraint>
 
         <Constraint android:id="@+id/upNextQueue">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/dividerQueueTop">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetShuffle">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetRepeat">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/shuffleBackground">
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/repeatBackground">
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/upNext">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/playingFrom">
-            <PropertySet android:alpha="0"/>
+            <PropertySet android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/dividerQueueBottom">
-            <PropertySet android:alpha="0"/>
+            <PropertySet android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentBottomSheetQueue">
-            <PropertySet android:alpha="0"/>
+            <PropertySet
+                android:alpha="0"
+                android:visibility="gone"/>
         </Constraint>
 
     </ConstraintSet>

@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="110dp">
 
     <View
-        android:layout_width="match_parent"
+        android:id="@+id/topDivider"
+        android:layout_width="0dp"
         android:layout_height=".5dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@id/playlistArtHolder"
-        android:background="@color/darkGray"/>
+        android:background="@color/darkGray"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <View
-        android:layout_width="match_parent"
+        android:id="@+id/bottomDivider"
+        android:layout_width="0dp"
         android:layout_height=".5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/playlistArtHolder"
-        android:background="@color/darkGray"/>
+        android:background="@color/darkGray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/playlistArtHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerInParent="true"
         android:layout_marginStart="10dp"
         app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="@android:color/transparent">
+        app:cardBackgroundColor="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/playlistArt"
@@ -35,36 +40,34 @@
             android:layout_height="100dp"
             android:scaleType="fitXY"
             android:src="@drawable/playlistart"/>
+
     </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:layout_toEndOf="@id/playlistArtHolder"
-        android:layout_margin="10dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/gridPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="@id/topDivider"
+        app:layout_constraintBottom_toTopOf="@id/gridPlaylistCount"
+        app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/gridPlaylist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/gridPlaylistCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/gridPlaylist"
+        app:layout_constraintBottom_toBottomOf="@id/bottomDivider"
+        app:layout_constraintStart_toEndOf="@id/playlistArtHolder"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/gridPlaylistCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/white"
-            android:textSize="15sp"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

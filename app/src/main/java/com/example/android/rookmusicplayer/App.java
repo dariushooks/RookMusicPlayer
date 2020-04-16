@@ -121,7 +121,11 @@ public class App extends Application
     {
         super.onCreate();
         createNotificationChannels();
-        AsyncTask.execute(new Runnable() {
+    }
+
+    public void ReadStorage()
+    {
+        /*AsyncTask.execute(new Runnable() {
             @Override
             public void run()
             {
@@ -129,7 +133,10 @@ public class App extends Application
                 sectionContent = new SectionContent(albums, albumsSections);
                 sectionContent.sectionAlbums();
             }
-        });
+        });*/
+        getSongs(); getArtists(); getAlbums(); getPlaylists();
+        sectionContent = new SectionContent(albums, albumsSections);
+        sectionContent.sectionAlbums();
     }
 
     private void createNotificationChannels()
@@ -256,7 +263,7 @@ public class App extends Application
                 else
                     songCount = 0;
                 playlists.add(new Playlists(currentPlaylist, currentId, currentDescription));
-                Log.i(TAG, "PLAYLIST: " + currentPlaylist.toUpperCase() + "\tID: " + currentId + "\tCOUNT: " + songCount);
+                //Log.i(TAG, "PLAYLIST: " + currentPlaylist.toUpperCase() + "\tID: " + currentId + "\tCOUNT: " + songCount);
 
             }while(cursor.moveToNext());
             cursor.close();

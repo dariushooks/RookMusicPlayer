@@ -1,6 +1,7 @@
 package com.example.android.rookmusicplayer;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -81,37 +83,46 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             actionBar.hide();
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+        }
+
         else
         {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            LibraryFragment fragment = new LibraryFragment(songs, artists, albumsSections, playlists, this);
-            transaction.add(R.id.fragment_container, fragment, "Main Library").commit();
-
-            stateViewModel = ViewModelProviders.of(this).get(StateViewModel.class);
-            stateViewModel.getSavedQueue().observe(this, new Observer<List<Songs>>() {
-                @Override
-                public void onChanged(List<Songs> songs)
-                {
-                    savedSongs = (ArrayList<Songs>) songs;
-                    //Log.i(TAG, "RETRIEVED SAVED QUEUE");
-                }
-            });
-
-            stateViewModel.getSavedStateDetails().observe(this, new Observer<List<SavedStateDetails>>() {
-                @Override
-                public void onChanged(List<SavedStateDetails> savedStateDetails)
-                {
-                    savedState = (ArrayList<SavedStateDetails>) savedStateDetails;
-                    //Log.i(TAG, "RETRIEVED SAVED STATE");
-                }
-            });
-
-            View rootView = findViewById(R.id.fragment_container).getRootView();
-            mediaBrowserHelper = new MediaBrowserHelperMotion(this, rootView, stateViewModel);
-            mediaBrowserHelper.onCreate();
+            start();
         }
+    }
+
+    private void start()
+    {
+        ((App)getApplication()).ReadStorage();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        LibraryFragment fragment = new LibraryFragment(songs, artists, albumsSections, playlists, this);
+        transaction.add(R.id.fragment_container, fragment, "Main Library").commit();
+
+        stateViewModel = ViewModelProviders.of(this).get(StateViewModel.class);
+        stateViewModel.getSavedQueue().observe(this, new Observer<List<Songs>>() {
+            @Override
+            public void onChanged(List<Songs> songs)
+            {
+                savedSongs = (ArrayList<Songs>) songs;
+                //Log.i(TAG, "RETRIEVED SAVED QUEUE");
+            }
+        });
+
+        stateViewModel.getSavedStateDetails().observe(this, new Observer<List<SavedStateDetails>>() {
+            @Override
+            public void onChanged(List<SavedStateDetails> savedStateDetails)
+            {
+                savedState = (ArrayList<SavedStateDetails>) savedStateDetails;
+                //Log.i(TAG, "RETRIEVED SAVED STATE");
+            }
+        });
+
+        View rootView = findViewById(R.id.fragment_container).getRootView();
+        mediaBrowserHelper = new MediaBrowserHelperMotion(this, rootView, stateViewModel);
+        mediaBrowserHelper.onCreate();
     }
 
     @Override
@@ -163,11 +174,35 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
                     Toast.makeText(this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
+                    start();
+                }
+
                 break;
 
             default:
                 Toast.makeText(this, "PERMISSIONS NOT GRANTED", Toast.LENGTH_LONG).show();
+                if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                {
+                    new AlertDialog.Builder(MainActivity.this).setTitle("Permission Needed")
+                            .setMessage("This permission is needed to allow access to the music stored on the device")
+                            .setPositiveButton("ALLOW", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                                }
+                            })
+                            .setNegativeButton("DENY", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create().show();
+                }
                 break;
         }
     }

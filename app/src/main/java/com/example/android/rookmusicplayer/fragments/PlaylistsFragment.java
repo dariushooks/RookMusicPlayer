@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +27,8 @@ public class PlaylistsFragment extends Fragment implements PlaylistsAdapter.List
     private ArrayList<Playlists> playlists;
     private View rootView;
     private RecyclerView recyclerView;
-    private RelativeLayout createNewPlaylist;
-    private RelativeLayout recentlyAdded;
+    private ConstraintLayout createNewPlaylist;
+    private ConstraintLayout recentlyAdded;
     private MediaControlDialog mediaControlDialog;
     private NowPlayingPlaylist nowPlayingPlaylist;
     private PlaylistsAdapter playlistsAdapter;
