@@ -17,20 +17,8 @@
         motion:motionInterpolator="linear">
 
         <OnSwipe
-            motion:touchAnchorId="@+id/nowPlayingAnimation"/>
-
-    </Transition>
-
-    <Transition
-        android:id="@+id/bottomSheetSlideDown"
-        motion:constraintSetStart="@+id/end"
-        motion:constraintSetEnd="@+id/start"
-        motion:duration="500"
-        motion:motionInterpolator="linear">
-
-        <OnSwipe
-            motion:touchAnchorId="@+id/currentArtBottomSheetHolder"
-            motion:dragDirection="dragDown"/>
+            motion:touchAnchorId="@+id/nowPlayingAnimation"
+            motion:touchAnchorSide="top"/>
 
     </Transition>
 

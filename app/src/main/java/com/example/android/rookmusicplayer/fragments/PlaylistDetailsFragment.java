@@ -53,7 +53,6 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
     private Playlists currentPlaylist;
     private ArrayList<Songs> playlistSongs;
     private SongsAdapter playlistSongsAdapter;
-    private boolean shuffled;
     private RecyclerView recyclerView;
     private TextView playlistName;
     private TextView playlistCount;
@@ -76,14 +75,13 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
         playlistName.setText(currentPlaylist.getPlaylist());
 
         playlistCount = rootView.findViewById(R.id.numberOfSongs);
-        setPlaylistCount();
 
         rootView.findViewById(R.id.albumDetailArtist).setVisibility(View.GONE);
 
         playlistDescription = rootView.findViewById(R.id.playlistDescription);
         playlistDescription.setText(currentPlaylist.getDescription());
-        if(!playlistDescription.getText().equals(""))
-            playlistDescription.setVisibility(View.VISIBLE);
+        //if(!playlistDescription.getText().equals(""))
+            //playlistDescription.setVisibility(View.VISIBLE);
 
         playAlbum = rootView.findViewById(R.id.playAlbum);
         playAlbum.setOnClickListener(this);
@@ -141,9 +139,6 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
         switch (view.getId())
         {
             case R.id.playAlbum:
-                //if(shuffled)
-                    //Collections.sort(playlistSongs, Comparator.comparing(Songs::getTrack));
-                //shuffled = false;
                 Collections.sort(playlistSongs, Comparator.comparing(Songs::getTrack));
                 App.playlistSongs = playlistSongs;
                 setQueue(0);
@@ -151,7 +146,6 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
 
             case R.id.shuffleAlbum:
                 Collections.shuffle(playlistSongs);
-                //shuffled = true;
                 App.playlistSongs = playlistSongs;
                 setQueue(0);
                 if(currentPlaylist.getPlaylist().equals("Recently Added"))
@@ -215,6 +209,7 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
     public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
     {
         playlistSongs = (ArrayList<Songs>) data;
+        setPlaylistCount();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         playlistSongsAdapter = new SongsAdapter(playlistSongs, this);
         recyclerView.setLayoutManager(layoutManager);
@@ -222,8 +217,5 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<ArrayList> loader)
-    {
-
-    }
+    public void onLoaderReset(@NonNull Loader<ArrayList> loader){}
 }

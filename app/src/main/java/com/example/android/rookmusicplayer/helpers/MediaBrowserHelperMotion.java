@@ -23,6 +23,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -131,6 +132,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private ImageButton nowPlayingButton;
     private ImageButton nowPlayingForward;
     private MotionLayout motionLayout;
+    private FrameLayout frameLayout;
 
     private TextView nowPlayingNameExpanded;
     private TextView nowPlayingArtistAlbumExpanded;
@@ -894,6 +896,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         ///////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////
 
+        frameLayout = rootView.findViewById(R.id.fragment_container);
+
         recyclerView = rootView.findViewById(R.id.currentBottomSheetQueue);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -937,8 +941,17 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             @Override
             public void onTransitionCompleted(MotionLayout motionLayout, int i)
             {
-                if(motionLayout.getCurrentState() == R.id.start || motionLayout.getCurrentState() == R.id.endQueue)
+                if(motionLayout.getCurrentState() == R.id.start)
                 {
+                    //frameLayout.setClickable(true);
+                    nowPlayingArtHolder.animate().scaleX(1f);
+                    nowPlayingArtHolder.animate().scaleY(1f);
+                    nowPlayingArtHolder.setCardElevation(0f);
+                }
+
+                else if(motionLayout.getCurrentState() == R.id.endQueue)
+                {
+                    //frameLayout.setClickable(false);
                     nowPlayingArtHolder.animate().scaleX(1f);
                     nowPlayingArtHolder.animate().scaleY(1f);
                     nowPlayingArtHolder.setCardElevation(0f);
@@ -946,6 +959,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
                 else
                 {
+                    //frameLayout.setClickable(false);
                     if(currentState == PlaybackStateCompat.STATE_PLAYING)
                     {
                         nowPlayingArtHolder.animate().scaleX(1.35f);

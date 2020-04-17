@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void start()
     {
-        //((App)getApplication()).ReadStorage();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         LibraryFragment fragment = new LibraryFragment(songs, artists, albumsSections, playlists, this);
