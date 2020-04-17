@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,8 +35,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static com.example.android.rookmusicplayer.App.ALBUM_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.CLEAR;
 import static com.example.android.rookmusicplayer.App.FROM_ALBUM;
+import static com.example.android.rookmusicplayer.App.GET_ALBUM_SONGS;
 import static com.example.android.rookmusicplayer.App.SET_POSITION;
 import static com.example.android.rookmusicplayer.App.SET_QUEUE_ALBUM;
 import static com.example.android.rookmusicplayer.App.SET_UP_NEXT;
@@ -42,7 +46,7 @@ import static com.example.android.rookmusicplayer.App.SHUFFLE_QUEUE;
 import static com.example.android.rookmusicplayer.App.mediaBrowserHelper;
 import static com.example.android.rookmusicplayer.App.nowPlayingFrom;
 
-public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapter.ListItemClickListener, View.OnClickListener
+public class AlbumDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList>, AlbumDetailsAdapter.ListItemClickListener, View.OnClickListener
 {
     private final String TAG = AlbumDetailsFragment.class.getSimpleName();
 
@@ -94,9 +98,6 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
     {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_album_details, container, false);
-        GetMedia getMedia = new GetMedia(getContext());
-        albumSongs = getMedia.getAlbumSongs(currentAlbum);
-        albumSongs.sort(Comparator.comparing(Songs::getTrack));
 
         album = currentAlbum.getAlbum();
         artist = currentAlbum.getArtist();
@@ -110,30 +111,15 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
 
         albumArt = rootView.findViewById(R.id.albumDetailArt);
 
+        recyclerView = rootView.findViewById(R.id.albumDetailSongs);
+
         try
         {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(art));
             albumArt.setImageBitmap(bitmap);
         } catch (IOException e) { e.printStackTrace(); }
-        /*if(art == null)
-            albumArt.setImageDrawable(getContext().getDrawable(R.drawable.noalbumart));
-        else
-            albumArt.setImageURI(Uri.parse(art));*/
 
         numberOfSongs = rootView.findViewById(R.id.numberOfSongs);
-        String songsNum;
-        if(albumSongs.size() == 1)
-        {
-            songsNum = albumSongs.size() + " song";
-            numberOfSongs.setText(songsNum);
-        }
-
-        else
-        {
-            songsNum = albumSongs.size() + " songs";
-            numberOfSongs.setText(songsNum);
-        }
-
 
         playAlbum = rootView.findViewById(R.id.playAlbum);
         playAlbum.setOnClickListener(this);
@@ -142,13 +128,9 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
         albumMediaControl = rootView.findViewById(R.id.albumMediaControl);
         albumMediaControl.setOnClickListener(this);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        albumDetailsAdapter = new AlbumDetailsAdapter(albumSongs, this);
-        recyclerView = rootView.findViewById(R.id.albumDetailSongs);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(albumDetailsAdapter);
-
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
+        LoaderManager.getInstance(this).initLoader(ALBUM_MEDIA_LOADER, null, this);
+
         return rootView;
     }
 
@@ -179,9 +161,6 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
         switch (view.getId())
         {
             case R.id.playAlbum:
-                //if(shuffled)
-                    //Collections.sort(albumSongs, Comparator.comparing(Songs::getTrack));
-                //shuffled = false;
                 Collections.sort(albumSongs, Comparator.comparing(Songs::getTrack));
                 App.albumSongs = albumSongs;
                 setQueue(0);
@@ -189,9 +168,7 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
 
             case R.id.shuffleAlbum:
                 Collections.shuffle(albumSongs);
-                //shuffled = true;
                 App.albumSongs = albumSongs;
-                //from.putInt("FROM", FROM_ALBUM);
                 mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SHUFFLE_QUEUE, null);
                 setQueue(0);
                 break;
@@ -219,4 +196,39 @@ public class AlbumDetailsFragment extends Fragment implements AlbumDetailsAdapte
         mediaControlDialog = new MediaControlDialog(getContext(), albumSongs.get(position), albumSongs, albumDetailsAdapter, updateLibrary, FROM_ALBUM);
         mediaControlDialog.OpenDialog();
     }
+
+    @NonNull
+    @Override
+    public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+    {
+        return new GetMedia(getContext(), GET_ALBUM_SONGS, -1, currentAlbum);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+    {
+        albumSongs = data;
+        albumSongs.sort(Comparator.comparing(Songs::getTrack));
+
+        String songsNum;
+        if(albumSongs.size() == 1)
+        {
+            songsNum = albumSongs.size() + " song";
+            numberOfSongs.setText(songsNum);
+        }
+
+        else
+        {
+            songsNum = albumSongs.size() + " songs";
+            numberOfSongs.setText(songsNum);
+        }
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        albumDetailsAdapter = new AlbumDetailsAdapter(albumSongs, this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(albumDetailsAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList> loader) { }
 }

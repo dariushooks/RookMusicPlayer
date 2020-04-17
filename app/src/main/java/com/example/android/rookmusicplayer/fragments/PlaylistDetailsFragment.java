@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +33,9 @@ import java.util.Comparator;
 
 import static com.example.android.rookmusicplayer.App.CLEAR;
 import static com.example.android.rookmusicplayer.App.FROM_PLAYLIST;
+import static com.example.android.rookmusicplayer.App.GET_PLAYLIST_SONGS;
+import static com.example.android.rookmusicplayer.App.GET_RECENT_SONGS;
+import static com.example.android.rookmusicplayer.App.PLAYLIST_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.RECENTLY_ADDED;
 import static com.example.android.rookmusicplayer.App.SET_POSITION;
 import static com.example.android.rookmusicplayer.App.SET_QUEUE_PLAYLIST;
@@ -40,7 +45,7 @@ import static com.example.android.rookmusicplayer.App.mediaBrowserHelper;
 import static com.example.android.rookmusicplayer.App.nowPlayingFrom;
 
 
-public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.ListItemClickListener, View.OnClickListener, MediaControlDialog.UpdatePlaylist
+public class PlaylistDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList>, SongsAdapter.ListItemClickListener, View.OnClickListener, MediaControlDialog.UpdatePlaylist
 {
     private final String TAG = PlaylistDetailsFragment.class.getSimpleName();
 
@@ -66,19 +71,9 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
     {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_playlist_details, container, false);
-        GetMedia getMedia = new GetMedia(getContext());
 
         playlistName = rootView.findViewById(R.id.albumDetailName);
         playlistName.setText(currentPlaylist.getPlaylist());
-        if(currentPlaylist.getPlaylist().equals("Recently Added"))
-        {
-            playlistSongs = getMedia.getRecentlyAddedSongs();
-        }
-
-        else
-        {
-            playlistSongs = getMedia.getPlaylistSongs(currentPlaylist);
-        }
 
         playlistCount = rootView.findViewById(R.id.numberOfSongs);
         setPlaylistCount();
@@ -98,10 +93,8 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
         albumMediaControl.setOnClickListener(this);
 
         recyclerView = rootView.findViewById(R.id.albumDetailSongs);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        playlistSongsAdapter = new SongsAdapter(playlistSongs, this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(playlistSongsAdapter);
+
+        LoaderManager.getInstance(this).initLoader(PLAYLIST_MEDIA_LOADER, null, this);
 
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
@@ -199,5 +192,38 @@ public class PlaylistDetailsFragment extends Fragment implements SongsAdapter.Li
     public void updatePlaylistCount()
     {
         setPlaylistCount();
+    }
+
+    @NonNull
+    @Override
+    public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+    {
+        if(currentPlaylist.getPlaylist().equals("Recently Added"))
+        {
+            return new GetMedia(getContext(), GET_RECENT_SONGS, -1);
+            //playlistSongs = getMedia.getRecentlyAddedSongs();
+        }
+
+        else
+        {
+            return new GetMedia(getContext(), GET_PLAYLIST_SONGS, -1, currentPlaylist);
+            //playlistSongs = getMedia.getPlaylistSongs(currentPlaylist);
+        }
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+    {
+        playlistSongs = (ArrayList<Songs>) data;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        playlistSongsAdapter = new SongsAdapter(playlistSongs, this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(playlistSongsAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList> loader)
+    {
+
     }
 }

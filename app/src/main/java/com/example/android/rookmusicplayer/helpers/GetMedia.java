@@ -7,6 +7,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.content.AsyncTaskLoader;
+
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.Playlists;
@@ -14,18 +18,89 @@ import com.example.android.rookmusicplayer.Songs;
 
 import java.util.ArrayList;
 
-public class GetMedia
+import static com.example.android.rookmusicplayer.App.GET_ALBUM_SONGS;
+import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUMS;
+import static com.example.android.rookmusicplayer.App.GET_ARTIST_SONGS;
+import static com.example.android.rookmusicplayer.App.GET_PLAYLIST_SONGS;
+import static com.example.android.rookmusicplayer.App.GET_RECENT_SONGS;
+
+public class GetMedia extends AsyncTaskLoader<ArrayList>
 {
-    Context context;
+    private int content;
     private int ID;
+    private Albums album;
+    private Artists artist;
+    private Playlists playlist;
 
-    public GetMedia(Context context) { this.context = context; }
-    public GetMedia(Context context, int ID) {this.context = context; this.ID = ID;}
+    public GetMedia(@NonNull Context context, int content ,int ID)
+    {
+        super(context);
+        this.content = content;
+        this.ID = ID;
+    }
 
-    public ArrayList<Songs> getAlbumSongs(Albums current)
+    public GetMedia(@NonNull Context context, int content ,int ID, Albums album)
+    {
+        super(context);
+        this.content = content;
+        this.ID = ID;
+        this.album = album;
+    }
+
+    public GetMedia(@NonNull Context context, int content ,int ID, Artists artist)
+    {
+        super(context);
+        this.content = content;
+        this.ID = ID;
+        this.artist = artist;
+    }
+
+    public GetMedia(@NonNull Context context, int content ,int ID, Playlists playlist)
+    {
+        super(context);
+        this.content = content;
+        this.ID = ID;
+        this.playlist = playlist;
+    }
+
+    @Override
+    protected void onStartLoading()
+    {
+        super.onStartLoading();
+        forceLoad();
+    }
+
+    @Nullable
+    @Override
+    public ArrayList loadInBackground()
+    {
+        switch(content)
+        {
+            case GET_ALBUM_SONGS:
+                return getAlbumSongs(album);
+
+            case GET_ARTIST_SONGS:
+                return getArtistSongs(artist);
+
+            case GET_PLAYLIST_SONGS:
+                return getPlaylistSongs(playlist);
+
+            case GET_RECENT_SONGS:
+                return getRecentlyAddedSongs();
+
+            case GET_ARTIST_ALBUMS:
+                return getArtistAlbums();
+
+            default: return new ArrayList<>();
+        }
+    }
+
+    public int getArtistId(){return ID;}
+
+    private ArrayList<Songs> getAlbumSongs(Albums current)
     {
         ArrayList<Songs> songs = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
+        ContentResolver contentResolver = getContext().getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.ALBUM_KEY + "=?";
         String[] selectionArg = {current.getKey()};
@@ -75,10 +150,10 @@ public class GetMedia
         return new ArrayList<>();
     }
 
-    public ArrayList<Songs> getArtistSongs(Artists current)
+    private ArrayList<Songs> getArtistSongs(Artists current)
     {
         ArrayList<Songs> songs = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
+        ContentResolver contentResolver = getContext().getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.ARTIST_KEY + "=?";
         String[] selectionArg = {current.getArtistKey()};
@@ -120,10 +195,10 @@ public class GetMedia
         return new ArrayList<>();
     }
 
-    public ArrayList<Songs> getPlaylistSongs(Playlists current)
+    private ArrayList<Songs> getPlaylistSongs(Playlists current)
     {
         ArrayList<Songs> songs = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
+        ContentResolver contentResolver = getContext().getContentResolver();
         long playlistID = Long.parseLong(current.getId());
         Uri playlistSongsUri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID);
         Cursor cursor = contentResolver.query(playlistSongsUri, null, null, null, null);
@@ -167,11 +242,11 @@ public class GetMedia
         return new ArrayList<>();
     }
 
-    public ArrayList<Songs> getRecentlyAddedSongs()
+    private ArrayList<Songs> getRecentlyAddedSongs()
     {
         int count = 0;
         ArrayList<Songs> songs = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
+        ContentResolver contentResolver = getContext().getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
         Cursor cursor = contentResolver.query(songUri, null, null, null, MediaStore.Audio.Media.DATE_ADDED + " DESC");
@@ -210,10 +285,10 @@ public class GetMedia
         return new ArrayList<>();
     }
 
-    public ArrayList<Albums> getArtistAlbums()
+    private ArrayList<Albums> getArtistAlbums()
     {
         ArrayList<Albums> albums = new ArrayList<>();
-        ContentResolver contentResolver = context.getContentResolver();
+        ContentResolver contentResolver = getContext().getContentResolver();
         Uri albumUri = MediaStore.Audio.Artists.Albums.getContentUri("external", ID);
         Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
         Cursor cursor = contentResolver.query(albumUri, null, null, null, MediaStore.Audio.Artists.Albums.ALBUM + " ASC");

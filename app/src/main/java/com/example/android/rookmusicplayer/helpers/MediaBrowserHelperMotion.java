@@ -20,7 +20,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -32,8 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,12 +59,17 @@ import static com.example.android.rookmusicplayer.App.ACTIVITY_RESTORE;
 import static com.example.android.rookmusicplayer.App.ADD_ALBUM_ARTIST_PLAYLIST;
 import static com.example.android.rookmusicplayer.App.ADD_SONG;
 import static com.example.android.rookmusicplayer.App.CLEAR;
+import static com.example.android.rookmusicplayer.App.GET_ALBUM_SONGS;
+import static com.example.android.rookmusicplayer.App.GET_ARTIST_SONGS;
 import static com.example.android.rookmusicplayer.App.GET_CURRENT_POSITION;
 import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUM;
+import static com.example.android.rookmusicplayer.App.GET_PLAYLIST_SONGS;
 import static com.example.android.rookmusicplayer.App.GET_QUEUE_POSITION;
 import static com.example.android.rookmusicplayer.App.INITIALIZE_QUEUE_CHANGE;
+import static com.example.android.rookmusicplayer.App.PLAYLIST_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.QUEUE_CLICK;
 import static com.example.android.rookmusicplayer.App.QUEUE_END;
+import static com.example.android.rookmusicplayer.App.BROWSER_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.QUEUE_NEXT;
 import static com.example.android.rookmusicplayer.App.RECEIVE_ARTIST_ALBUM;
 import static com.example.android.rookmusicplayer.App.RECEIVE_CURRENT_POSITION;
@@ -89,13 +96,27 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private Context context;
     private MediaBrowserCompat mediaBrowserCompat;
     private MediaControllerCompat mediaControllerCompat;
-    private GetMedia getMedia;
     private int currentState;
     private int repeat;
     private int shuffle;
     private int currentDuration;
     private int currentElapsed;
     private Songs artist_album;
+
+    //ADDING TO QUEUE OR PLAYLIST
+    private int content;
+    private Songs song;
+
+    private Albums album;
+    private ArrayList<Songs> albumSongs;
+
+    private Artists artist;
+    private ArrayList<Songs> artistSongs;
+
+    private Playlists playlist;
+    private Playlists playlistToAdd;
+    private ArrayList<Songs> playlistSongs;
+
 
     //UI
     private View rootView;
@@ -147,7 +168,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         this.context = context;
         this.rootView = rootView;
         this.stateViewModel = stateViewModel;
-        getMedia = new GetMedia(context);
+        //getMedia = new GetMedia(context);
     }
 
     public void onCreate()
@@ -544,60 +565,23 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
     public void addNext(Albums album)
     {
-        ArrayList<Songs> albumSongs = getMedia.getAlbumSongs(album);
-        if(!albumSongs.isEmpty())
-        {
-            if(albumSongs.size() == 1)
-                addNext(albumSongs.get(0));
-            else
-            {
-                addToQueue.clear();
-                addToQueue = albumSongs;
-                Bundle next = new Bundle();
-                next.putInt("QUEUE_POSITION", QUEUE_NEXT);
-                mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, next);
-            }
-            Toast.makeText(context, "ADDED NEXT", Toast.LENGTH_SHORT).show();
-        }
-
+        this.album = album;
+        content = GET_ALBUM_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addNextCallbacks);
     }
 
     public void addNext(Artists artist)
     {
-        ArrayList<Songs> artistSongs = getMedia.getArtistSongs(artist);
-        if(!artistSongs.isEmpty())
-        {
-            if(artistSongs.size() == 1)
-                addNext(artistSongs.get(0));
-            else
-            {
-                addToQueue.clear();
-                addToQueue = artistSongs;
-                Bundle next = new Bundle();
-                next.putInt("QUEUE_POSITION", QUEUE_NEXT);
-                mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, next);
-            }
-            Toast.makeText(context, "ADDED NEXT", Toast.LENGTH_SHORT).show();
-        }
-
+        this.artist = artist;
+        content = GET_ARTIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addNextCallbacks);
     }
 
     public void addNext(Playlists playlist)
     {
-        ArrayList<Songs> playlistSongs = getMedia.getPlaylistSongs(playlist);
-        if(!playlistSongs.isEmpty())
-        {
-            if(playlistSongs.size() == 1)
-                addNext(playlistSongs.get(0));
-            else
-            {
-                addToQueue.clear();
-                addToQueue = playlistSongs;
-                Bundle next = new Bundle();
-                next.putInt("QUEUE_POSITION", QUEUE_NEXT);
-                mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, next);
-            }
-        }
+        this.playlist = playlist;
+        content = GET_PLAYLIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addNextCallbacks);
     }
 
     public void addLast(Songs song)
@@ -611,118 +595,296 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
     public void addLast(Albums album)
     {
-        ArrayList<Songs> albumSongs = getMedia.getAlbumSongs(album);
-        if(!albumSongs.isEmpty())
-        {
-            if(albumSongs.size() == 1)
-                addLast(albumSongs.get(0));
-            else
-            {
-                addToQueue.clear();
-                addToQueue = albumSongs;
-                Bundle end = new Bundle();
-                end.putInt("QUEUE_POSITION", QUEUE_END);
-                mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, end);
-                Toast.makeText(context, "ADDED LAST", Toast.LENGTH_SHORT).show();
-            }
-        }
-
+        this.album = album;
+        content = GET_ALBUM_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addLastCallbacks);
     }
 
     public void addLast(Artists artist)
     {
-        ArrayList<Songs> artistSongs = getMedia.getArtistSongs(artist);
-        if(!artistSongs.isEmpty())
-        {
-            if(artistSongs.size() == 1)
-                addLast(artistSongs.get(0));
-            else
-            {
-                addToQueue.clear();
-                addToQueue = artistSongs;
-                Bundle end = new Bundle();
-                end.putInt("QUEUE_POSITION", QUEUE_END);
-                mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, end);
-                Toast.makeText(context, "ADDED LAST", Toast.LENGTH_SHORT).show();
-            }
-        }
+        this.artist = artist;
+        content = GET_ARTIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addLastCallbacks);
     }
 
     public void addLast(Playlists playlist)
     {
-        ArrayList<Songs> playlistSongs = getMedia.getPlaylistSongs(playlist);
-        if(!playlistSongs.isEmpty())
-        {
-            if(playlistSongs.size() == 1)
-                addLast(playlistSongs.get(0));
-            else
-            {
-                addToQueue.clear();
-                addToQueue = playlistSongs;
-                Bundle end = new Bundle();
-                end.putInt("QUEUE_POSITION", QUEUE_END);
-                mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, end);
-                Toast.makeText(context, "ADDED LAST", Toast.LENGTH_SHORT).show();
-            }
-        }
+        this.playlist = playlist;
+        content = GET_PLAYLIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addLastCallbacks);
     }
 
     public void addToPlaylist(Playlists playlist, Songs song)
     {
         //GET SONGS CURRENTLY IN PLAYLIST AND ADD NEW SONG
-        ArrayList<Songs> playlistSongs = getMedia.getPlaylistSongs(playlist);
-        playlistSongs.add(song);
-
-        long playlistID = Long.parseLong(playlist.getId());
-        ContentResolver contentResolver = context.getContentResolver();
-        Uri playlistSongsUri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID);
-
-        //DELETE SONGS IN PLAYLIST MEMBER TABLE
-        contentResolver.delete(playlistSongsUri, null, null);
-
-        //RECREATE PLAYLIST MEMBER TABLE WITH NEW SONG AND INSERT
-        ContentValues[] values = new ContentValues[playlistSongs.size()];
-
-        for(int i = 0; i < playlistSongs.size(); i++)
-        {
-            values[i] = new ContentValues();
-            values[i].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Long.valueOf(i));
-            values[i].put(MediaStore.Audio.Playlists.Members.AUDIO_ID, Long.parseLong(playlistSongs.get(i).getId()));
-            values[i].put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID);
-        }
-
-        contentResolver.bulkInsert(playlistSongsUri, values);
-
-        //Log.i(TAG, song.getTitle().toUpperCase() + " ADDED TO PLAYLIST " + playlist.getPlaylist().toUpperCase());
-
+        this.playlist = playlist;
+        this.song = song;
+        content = GET_PLAYLIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(PLAYLIST_MEDIA_LOADER, null, addToPlaylistCallbacks);
     }
 
     public void addToPlaylist(Playlists playlist, Albums album)
     {
-        ArrayList<Songs> albumSongs = getMedia.getAlbumSongs(album);
-        for (int i = 0; i < albumSongs.size(); i++)
-        {
-            addToPlaylist(playlist, albumSongs.get(i));
-        }
+        this.album = album;
+        this.playlist = playlist;
+        content = GET_ALBUM_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addToPlaylistCallbacks);
     }
 
     public void addToPlaylist(Playlists playlist, Artists artist)
     {
-        ArrayList<Songs> artistSongs = getMedia.getArtistSongs(artist);
-        for (int i = 0; i < artistSongs.size(); i++)
-        {
-            addToPlaylist(playlist, artistSongs.get(i));
-        }
+        this.artist = artist;
+        this.playlist = playlist;
+        content = GET_ARTIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addToPlaylistCallbacks);
     }
 
     public void addToPlaylist(Playlists playlist, Playlists playlistToAdd)
     {
-        ArrayList<Songs> playlistSongs = getMedia.getPlaylistSongs(playlistToAdd);
-        for (int i = 0; i < playlistSongs.size(); i++)
-        {
-            addToPlaylist(playlist, playlistSongs.get(i));
-        }
+        this.playlist = playlist;
+        this.playlistToAdd = playlistToAdd;
+        content = GET_PLAYLIST_SONGS;
+        LoaderManager.getInstance((MainActivity) context).initLoader(BROWSER_MEDIA_LOADER, null, addToPlaylistCallbacks);
     }
+
+    private LoaderManager.LoaderCallbacks<ArrayList> addNextCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()
+    {
+        @NonNull
+        @Override
+        public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+        {
+            switch(content)
+            {
+                case GET_ALBUM_SONGS: return new GetMedia(context, content, -1, album);
+                case GET_ARTIST_SONGS: return new GetMedia(context, content, -1, artist);
+                case GET_PLAYLIST_SONGS: return new GetMedia(context, content, -1, playlist);
+                default: return new GetMedia(context, -1, -1);
+            }
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+        {
+            switch(content)
+            {
+                case GET_ALBUM_SONGS:
+                    albumSongs = data;
+                    if(!albumSongs.isEmpty())
+                    {
+                        if(albumSongs.size() == 1)
+                            addNext(albumSongs.get(0));
+                        else
+                        {
+                            addToQueue.clear();
+                            addToQueue = albumSongs;
+                            Bundle next = new Bundle();
+                            next.putInt("QUEUE_POSITION", QUEUE_NEXT);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, next);
+                        }
+                        Toast.makeText(context, "ADDED NEXT", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+
+                case GET_ARTIST_SONGS:
+                    artistSongs = data;
+                    if(!artistSongs.isEmpty())
+                    {
+                        if(artistSongs.size() == 1)
+                            addNext(artistSongs.get(0));
+                        else
+                        {
+                            addToQueue.clear();
+                            addToQueue = artistSongs;
+                            Bundle next = new Bundle();
+                            next.putInt("QUEUE_POSITION", QUEUE_NEXT);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, next);
+                        }
+                        Toast.makeText(context, "ADDED NEXT", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+
+                case GET_PLAYLIST_SONGS:
+                    playlistSongs = data;
+                    if(!playlistSongs.isEmpty())
+                    {
+                        if(playlistSongs.size() == 1)
+                            addNext(playlistSongs.get(0));
+                        else
+                        {
+                            addToQueue.clear();
+                            addToQueue = playlistSongs;
+                            Bundle next = new Bundle();
+                            next.putInt("QUEUE_POSITION", QUEUE_NEXT);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, next);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<ArrayList> loader) { }
+    };
+
+    private LoaderManager.LoaderCallbacks<ArrayList> addLastCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()
+    {
+        @NonNull
+        @Override
+        public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+        {
+            switch(content)
+            {
+                case GET_ALBUM_SONGS: return new GetMedia(context, content, -1, album);
+                case GET_ARTIST_SONGS: return new GetMedia(context, content, -1, artist);
+                case GET_PLAYLIST_SONGS: return new GetMedia(context, content, -1, playlist);
+                default: return new GetMedia(context, -1, -1);
+            }
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+        {
+            switch(content)
+            {
+                case GET_ALBUM_SONGS:
+                    albumSongs = data;
+                    if(!albumSongs.isEmpty())
+                    {
+                        if(albumSongs.size() == 1)
+                            addLast(albumSongs.get(0));
+                        else
+                        {
+                            addToQueue.clear();
+                            addToQueue = albumSongs;
+                            Bundle end = new Bundle();
+                            end.putInt("QUEUE_POSITION", QUEUE_END);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, end);
+                            Toast.makeText(context, "ADDED LAST", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+
+                case GET_ARTIST_SONGS:
+                    artistSongs = data;
+                    if(!artistSongs.isEmpty())
+                    {
+                        if(artistSongs.size() == 1)
+                            addLast(artistSongs.get(0));
+                        else
+                        {
+                            addToQueue.clear();
+                            addToQueue = artistSongs;
+                            Bundle end = new Bundle();
+                            end.putInt("QUEUE_POSITION", QUEUE_END);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, end);
+                            Toast.makeText(context, "ADDED LAST", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+
+                case GET_PLAYLIST_SONGS:
+                    playlistSongs = data;
+                    if(!playlistSongs.isEmpty())
+                    {
+                        if(playlistSongs.size() == 1)
+                            addLast(playlistSongs.get(0));
+                        else
+                        {
+                            addToQueue.clear();
+                            addToQueue = playlistSongs;
+                            Bundle end = new Bundle();
+                            end.putInt("QUEUE_POSITION", QUEUE_END);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(ADD_ALBUM_ARTIST_PLAYLIST, end);
+                            Toast.makeText(context, "ADDED LAST", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<ArrayList> loader) { }
+    };
+
+    private LoaderManager.LoaderCallbacks<ArrayList> addToPlaylistCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()
+    {
+        @NonNull
+        @Override
+        public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+        {
+            switch(content)
+            {
+                case GET_ALBUM_SONGS: return new GetMedia(context, content, -1, album);
+                case GET_ARTIST_SONGS: return new GetMedia(context, content, -1, artist);
+                case GET_PLAYLIST_SONGS: return new GetMedia(context, content, -1, playlistToAdd);
+                default: return new GetMedia(context, -1, -1);
+            }
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+        {
+            switch(content)
+            {
+                case GET_ALBUM_SONGS:
+                    albumSongs = data;
+                    for (int i = 0; i < albumSongs.size(); i++)
+                    {
+                        addToPlaylist(playlist, albumSongs.get(i));
+                    }
+                    break;
+
+                case GET_ARTIST_SONGS:
+                    artistSongs = data;
+                    for (int i = 0; i < artistSongs.size(); i++)
+                    {
+                        addToPlaylist(playlist, artistSongs.get(i));
+                    }
+                    break;
+
+                case GET_PLAYLIST_SONGS:
+                    playlistSongs = data;
+                    if(loader.getId() == PLAYLIST_MEDIA_LOADER)
+                    {
+                        playlistSongs.add(song);
+
+                        long playlistID = Long.parseLong(playlist.getId());
+                        ContentResolver contentResolver = context.getContentResolver();
+                        Uri playlistSongsUri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID);
+
+                        //DELETE SONGS IN PLAYLIST MEMBER TABLE
+                        contentResolver.delete(playlistSongsUri, null, null);
+
+                        //RECREATE PLAYLIST MEMBER TABLE WITH NEW SONG AND INSERT
+                        ContentValues[] values = new ContentValues[playlistSongs.size()];
+
+                        for(int i = 0; i < playlistSongs.size(); i++)
+                        {
+                            values[i] = new ContentValues();
+                            values[i].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Long.valueOf(i));
+                            values[i].put(MediaStore.Audio.Playlists.Members.AUDIO_ID, Long.parseLong(playlistSongs.get(i).getId()));
+                            values[i].put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID);
+                        }
+
+                        contentResolver.bulkInsert(playlistSongsUri, values);
+
+                        //Log.i(TAG, song.getTitle().toUpperCase() + " ADDED TO PLAYLIST " + playlist.getPlaylist().toUpperCase());
+                    }
+
+                    else
+                    {
+                        for (int i = 0; i < playlistSongs.size(); i++)
+                        {
+                            addToPlaylist(playlist, playlistSongs.get(i));
+                        }
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<ArrayList> loader) { }
+    };
 
     private void buildTransportControls()
     {

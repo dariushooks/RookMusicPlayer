@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.android.rookmusicplayer.Albums;
@@ -25,7 +27,10 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
+import static com.example.android.rookmusicplayer.App.ARTIST_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
+import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUMS;
+import static com.example.android.rookmusicplayer.App.GET_ARTIST_SONGS;
 
 public class ArtistDetailsFragment extends Fragment
 {
@@ -70,21 +75,18 @@ public class ArtistDetailsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_artist_details, container, false);
-        GetMedia getMedia = new GetMedia(getContext(), id);
-        artistSongs = getMedia.getArtistSongs(currentArtist);
-        artistAlbums = getMedia.getArtistAlbums();
+
         artist = currentArtist.getArtist();
 
         viewPager = rootView.findViewById(R.id.artistDetailViewPager);
 
-        pagerAdapter = new ArtistDetailsPagerAdapter(getChildFragmentManager(), artistSongs, artistAlbums, FROM_ARTIST, updateLibrary);
-        viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = rootView.findViewById(R.id.artistDetailTabs);
         tabLayout.setupWithViewPager(viewPager);
 
         artistName = rootView.findViewById(R.id.artistDetailArtist);
         artistName.setText(artist);
 
+        LoaderManager.getInstance(this).initLoader(ARTIST_MEDIA_LOADER, null, songsCallbacks);
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
@@ -96,4 +98,45 @@ public class ArtistDetailsFragment extends Fragment
         artistName.setTransitionName(currentArtist.getArtist());
     }
 
+    private LoaderManager.LoaderCallbacks<ArrayList> songsCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()
+    {
+        @NonNull
+        @Override
+        public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+        {
+            return new GetMedia(getContext(), GET_ARTIST_SONGS, -1, currentArtist);
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+        {
+            id = ((GetMedia) loader).getArtistId();
+            artistSongs = data;
+            LoaderManager.getInstance(ArtistDetailsFragment.this).initLoader(ARTIST_MEDIA_LOADER, null, albumsCallbacks);
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}
+    };
+
+    private LoaderManager.LoaderCallbacks<ArrayList> albumsCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()
+    {
+        @NonNull
+        @Override
+        public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+        {
+            return new GetMedia(getContext(), GET_ARTIST_ALBUMS, ArtistDetailsFragment.this.id);
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+        {
+            artistAlbums = data;
+            pagerAdapter = new ArtistDetailsPagerAdapter(getChildFragmentManager(), artistSongs, artistAlbums, FROM_ARTIST, updateLibrary);
+            viewPager.setAdapter(pagerAdapter);
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}
+    };
 }

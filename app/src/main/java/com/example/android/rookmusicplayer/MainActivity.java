@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.example.android.rookmusicplayer.architecture.StateViewModel;
 import com.example.android.rookmusicplayer.fragments.AlbumDetailsFragment;
@@ -36,6 +39,7 @@ import com.example.android.rookmusicplayer.fragments.SongsFragment;
 import com.example.android.rookmusicplayer.helpers.GoToDialog;
 import com.example.android.rookmusicplayer.helpers.MediaBrowserHelperMotion;
 import com.example.android.rookmusicplayer.helpers.MediaControlDialog;
+import com.example.android.rookmusicplayer.helpers.ReadStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +48,7 @@ import static com.example.android.rookmusicplayer.App.CLEAR;
 import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
 import static com.example.android.rookmusicplayer.App.FROM_LIBRARY;
 import static com.example.android.rookmusicplayer.App.FROM_SEARCH;
+import static com.example.android.rookmusicplayer.App.READ_STORAGE_LOADER;
 import static com.example.android.rookmusicplayer.App.SET_POSITION;
 import static com.example.android.rookmusicplayer.App.SET_QUEUE_ARTIST;
 import static com.example.android.rookmusicplayer.App.SET_QUEUE_LIBRARY;
@@ -63,7 +68,7 @@ import static com.example.android.rookmusicplayer.App.savedState;
 import static com.example.android.rookmusicplayer.App.searchSong;
 import static com.example.android.rookmusicplayer.App.songs;
 
-public class MainActivity extends AppCompatActivity implements SongsFragment.NowPlayingLibrary, AlbumsFragment.NowPlayingAlbum, ArtistsFragment.NowPlayingArtist, PlaylistsFragment.NowPlayingPlaylist, GoToDialog.GoTo, LibraryFragment.Query, MediaControlDialog.UpdateLibrary
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks, SongsFragment.NowPlayingLibrary, AlbumsFragment.NowPlayingAlbum, ArtistsFragment.NowPlayingArtist, PlaylistsFragment.NowPlayingPlaylist, GoToDialog.GoTo, LibraryFragment.Query, MediaControlDialog.UpdateLibrary
 {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -89,13 +94,13 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
 
         else
         {
-            start();
+            LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, this);
         }
     }
 
     private void start()
     {
-        ((App)getApplication()).ReadStorage();
+        //((App)getApplication()).ReadStorage();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         LibraryFragment fragment = new LibraryFragment(songs, artists, albumsSections, playlists, this);
@@ -176,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     Toast.makeText(this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
-                    start();
+                    LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, MainActivity.this);
                 }
 
                 break;
@@ -337,5 +342,24 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment).addToBackStack("").commit();
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+    }
+
+    @NonNull
+    @Override
+    public Loader onCreateLoader(int id, @Nullable Bundle args)
+    {
+        return new ReadStorage(this);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader loader, Object data)
+    {
+        start();
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader loader)
+    {
+
     }
 }

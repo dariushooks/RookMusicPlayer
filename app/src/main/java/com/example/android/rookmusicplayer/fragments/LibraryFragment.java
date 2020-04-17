@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.android.rookmusicplayer.Albums;
@@ -29,17 +31,20 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 
 import static com.example.android.rookmusicplayer.App.FROM_LIBRARY;
+import static com.example.android.rookmusicplayer.App.GET_ALBUM_SONGS;
+import static com.example.android.rookmusicplayer.App.LIBRARY_MEDIA_LOADER;
 
-public class LibraryFragment extends Fragment
+public class LibraryFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList>
 {
     private final String TAG = LibraryFragment.class.getSimpleName();
 
     private View rootView;
     private ViewPager viewPager;
-    ArrayList<Songs> songs;
-    ArrayList<Artists> artists;
-    ArrayList<AlbumsSections> albumsSections;
-    ArrayList<Playlists> playlists;
+    private Albums album;
+    private ArrayList<Songs> songs;
+    private ArrayList<Artists> artists;
+    private ArrayList<AlbumsSections> albumsSections;
+    private ArrayList<Playlists> playlists;
     private MusicPagerAdapter musicPagerAdapter;
     private ImageButton searchView;
     private Query query;
@@ -119,8 +124,8 @@ public class LibraryFragment extends Fragment
 
         for(int i = 0; i < artistAlbums.size(); i++)
         {
-            GetMedia getMedia = new GetMedia(getContext());
-            deleteAlbumFromLibrary(artistAlbums.get(i), getMedia.getAlbumSongs(artistAlbums.get(i)));
+            album = artistAlbums.get(i);
+            LoaderManager.getInstance(this).initLoader(LIBRARY_MEDIA_LOADER, null, this);
         }
 
         musicPagerAdapter.notifyDataSetChanged();
@@ -134,4 +139,20 @@ public class LibraryFragment extends Fragment
         try { query = (Query) context; }
         catch (ClassCastException e) { throw new ClassCastException(context.toString().trim() + " must implement search"); }
     }
+
+    @NonNull
+    @Override
+    public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+    {
+        return new GetMedia(getContext(), GET_ALBUM_SONGS, -1, album);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+    {
+        deleteAlbumFromLibrary(album, data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}
 }

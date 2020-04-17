@@ -1,6 +1,7 @@
 package com.example.android.rookmusicplayer.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.rookmusicplayer.MainActivity;
+import com.example.android.rookmusicplayer.fragments.LibraryFragment;
+import com.example.android.rookmusicplayer.fragments.PlaylistsFragment;
 import com.example.android.rookmusicplayer.helpers.GetMedia;
 import com.example.android.rookmusicplayer.Playlists;
 import com.example.android.rookmusicplayer.R;
 
 import java.util.ArrayList;
 
+import static com.example.android.rookmusicplayer.App.GET_PLAYLIST_SONGS;
+import static com.example.android.rookmusicplayer.App.PLAYLIST_MEDIA_LOADER;
+
 public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.PlaylistViewHolder>
 {
     private final String TAG = PlaylistsAdapter.class.getSimpleName();
+    private Playlists playlist;
     private ArrayList<Playlists> playlists;
     private ListItemClickListener listener;
     private Context context;
@@ -56,7 +67,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
     @Override
     public int getItemCount() { return playlists.size(); }
 
-    class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
+    class PlaylistViewHolder extends RecyclerView.ViewHolder implements LoaderManager.LoaderCallbacks<ArrayList>, View.OnClickListener, View.OnLongClickListener
     {
         private ImageView playlistArt;
         private TextView playlistName;
@@ -76,21 +87,8 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
         {
             playlistArt.setImageDrawable(context.getDrawable(R.drawable.playlistart));
             playlistName.setText(playlists.get(position).getPlaylist());
-            GetMedia getMedia = new GetMedia(context);
-            int pCount = getMedia.getPlaylistSongs(playlists.get(position)).size();
-            String count;
-
-            if(pCount == 1)
-            {
-                count = pCount + " song";
-                playlistCount.setText(count);
-            }
-
-            else
-            {
-                count = pCount + " songs";
-                playlistCount.setText(count);
-            }
+            playlist = playlists.get(position);
+            LoaderManager.getInstance((MainActivity) context).initLoader(PLAYLIST_MEDIA_LOADER, null, this);
         }
 
         @Override
@@ -107,5 +105,34 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
             listener.onLongListItemClick(playlists.get(clickedPosition));
             return true;
         }
+
+        @NonNull
+        @Override
+        public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+        {
+            return new GetMedia(context, GET_PLAYLIST_SONGS, -1, playlist);
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
+        {
+            int pCount = data.size();
+            String count;
+
+            if(pCount == 1)
+            {
+                count = pCount + " song";
+                playlistCount.setText(count);
+            }
+
+            else
+            {
+                count = pCount + " songs";
+                playlistCount.setText(count);
+            }
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}
     }
 }
