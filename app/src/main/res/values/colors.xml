@@ -7,4 +7,5 @@
     <color name="gray">#EEEEEE</color>
     <color name="darkGray">#212121</color>
     <color name="black">#000000</color>
+    <color name="ic_launcher_background">#000</color>
 </resources>

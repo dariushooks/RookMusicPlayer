@@ -1,7 +1,6 @@
 package com.example.android.rookmusicplayer.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +61,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.fragment_search_constraint, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         constraintLayout = rootView.findViewById(R.id.searchLayout);
         constraintSet.clone(constraintLayout);

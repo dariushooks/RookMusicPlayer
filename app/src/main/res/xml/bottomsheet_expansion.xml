@@ -18,6 +18,7 @@
 
         <OnSwipe
             motion:touchAnchorId="@+id/nowPlayingAnimation"
+            motion:dragDirection="dragUp"
             motion:touchAnchorSide="top"/>
 
     </Transition>
@@ -54,6 +55,16 @@
             android:layout_marginTop="10dp"
             motion:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"/>
+
+        <Constraint
+            android:id="@+id/fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="67dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"/>
 
         <Constraint android:id="@+id/currentNameCollapsed">
             <PropertySet android:alpha="1"/>
@@ -156,6 +167,17 @@
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"/>
+
+        <Constraint
+            android:id="@+id/fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="67dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent">
+        </Constraint>
 
         <Constraint
             android:id="@id/currentPlayBottomSheet"
