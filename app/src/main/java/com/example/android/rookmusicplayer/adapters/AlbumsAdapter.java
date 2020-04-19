@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.R;
 
@@ -90,7 +91,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
                 //albumArt.setImageBitmap(art);
                 //Log.i(TAG, albums.get(position).getAlbum() + " After: " + "Width: " + art.getWidth() + "\tHeight: " + art.getHeight());
                 if(bitmap != null)
-                   albumArt.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 450, 200, true));
+                    Glide.with(context).load(bitmap).override(450,200).into(albumArt);
+                   //albumArt.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 450, 200, true));
                 else
                     albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
             } catch (IOException e) { e.printStackTrace(); }

@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.MainActivity;

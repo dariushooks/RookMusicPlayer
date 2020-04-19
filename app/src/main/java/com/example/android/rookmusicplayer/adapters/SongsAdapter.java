@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.R;
 import com.example.android.rookmusicplayer.helpers.SectionIndexFixer;
 import com.example.android.rookmusicplayer.Songs;
@@ -146,11 +147,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             byte[] cover = retriever.getEmbeddedPicture();
             if(cover != null)
             {
-                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                Glide.with(context).load(cover).override(45, 50).into(albumArt);
+               /* albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
                 //Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);
                 options.inJustDecodeBounds = false;
-                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));*/
                 //Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
             }
             else

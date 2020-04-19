@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.R;
 
 import static com.example.android.rookmusicplayer.App.calculateSampleSize;
@@ -115,16 +116,18 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
             byte[] cover = retriver.getEmbeddedPicture();
             if(cover != null)
             {
-                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                Glide.with(context).load(cover).override(45, 50).into(albumArt);
+                /*albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
                 //Log.i(TAG, queueDisplay.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);
                 options.inJustDecodeBounds = false;
-                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));*/
                 //Log.i(TAG, queueDisplay.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
             }
             else
                 albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
             retriver.release();
+
             songName.setText(queueDisplay.get(position).getTitle());
             songArtist.setText(queueDisplay.get(position).getArtist());
         }
