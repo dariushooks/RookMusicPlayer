@@ -76,11 +76,11 @@
 
     <ImageButton
         android:id="@+id/slideDownBottomSheet"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:alpha="0"
-        android:background="@drawable/ic_slide_down"
-        android:backgroundTint="@color/white"
+        android:background="@drawable/bottomsheet_slide_down"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
         app:layout_constraintTop_toTopOf="@id/nowPlayingAnimation" />

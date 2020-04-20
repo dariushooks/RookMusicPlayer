@@ -39,7 +39,7 @@
 
         <Constraint
             android:id="@+id/nowPlayingAnimation"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="67dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
@@ -155,7 +155,6 @@
             android:id="@+id/nowPlayingAnimation"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="25dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
@@ -177,7 +176,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toTopOf="@+id/collapsedSeekBar"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent">
@@ -327,7 +325,6 @@
             android:id="@+id/nowPlayingAnimation"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="25dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
@@ -359,7 +356,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
-            motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toTopOf="@+id/collapsedSeekBar"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent">
