@@ -6,12 +6,15 @@ import android.app.NotificationManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Handler;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.transition.ChangeBounds;
 import android.transition.ChangeClipBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
 import android.transition.TransitionSet;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -29,6 +32,14 @@ public class App extends Application
     public static final String CHANNEL_1 = "channel_1";
     public static MediaBrowserHelperMotion mediaBrowserHelper;
 
+    //CURRENTLY PLAYING
+    public static Handler playingHandler = new Handler();
+    public static ImageView currentImageView;
+    public static int currentlyPlaying = 1;
+    public static int currentState;
+    public static int repeat;
+    public static int shuffle;
+
     //LOADERS
     public static final int READ_STORAGE_LOADER = 0;
     public static final int PLAYLIST_MEDIA_LOADER = 1;
@@ -37,7 +48,6 @@ public class App extends Application
     public static final int ALBUM_MEDIA_LOADER = 4;
     public static final int LIBRARY_MEDIA_LOADER = 5;
     public static final int ARTIST_MEDIA_LOADER = 6;
-
 
     //GET MEDIA
     public static final int GET_ALBUM_SONGS = 1;
@@ -162,33 +172,6 @@ public class App extends Application
         }
 
         return sampleSize;
-    }
-
-    public static Bitmap calculateBitmapSize(Bitmap bitmap, int reqWidth, int reqHeight)
-    {
-        final int width = bitmap.getWidth();
-        final int height = bitmap.getHeight();
-        int scaleWidth = bitmap.getWidth();
-        int scaleHeight = bitmap.getHeight();
-        int sampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth)
-        {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / sampleSize) >= reqHeight && (halfWidth / sampleSize) >= reqWidth)
-            {
-                scaleWidth = halfWidth / sampleSize;
-                scaleHeight = halfHeight / sampleSize;
-                sampleSize *= 2;
-            }
-        }
-
-        return Bitmap.createScaledBitmap(bitmap, scaleWidth, scaleHeight, false);
     }
 
     public static class DetailsTransition extends TransitionSet

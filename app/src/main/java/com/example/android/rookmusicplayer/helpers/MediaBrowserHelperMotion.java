@@ -41,7 +41,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.MainActivity;
@@ -84,12 +83,15 @@ import static com.example.android.rookmusicplayer.App.SET_FROM;
 import static com.example.android.rookmusicplayer.App.SET_POSITION;
 import static com.example.android.rookmusicplayer.App.SET_UP_NEXT;
 import static com.example.android.rookmusicplayer.App.addToQueue;
+import static com.example.android.rookmusicplayer.App.currentState;
 import static com.example.android.rookmusicplayer.App.itemTouchHelper;
 import static com.example.android.rookmusicplayer.App.nowPlayingFrom;
 import static com.example.android.rookmusicplayer.App.queueAdapter;
 import static com.example.android.rookmusicplayer.App.queueDisplay;
+import static com.example.android.rookmusicplayer.App.repeat;
 import static com.example.android.rookmusicplayer.App.savedSongs;
 import static com.example.android.rookmusicplayer.App.savedState;
+import static com.example.android.rookmusicplayer.App.shuffle;
 
 public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListener
 {
@@ -98,9 +100,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private Context context;
     private MediaBrowserCompat mediaBrowserCompat;
     private MediaControllerCompat mediaControllerCompat;
-    private int currentState;
-    private int repeat;
-    private int shuffle;
     private int currentDuration;
     private int currentElapsed;
     private Songs artist_album;
@@ -122,7 +121,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
     //UI
     private View rootView;
-    private Handler myHandler = new Handler();
+    private Handler timeHandler = new Handler();
+    private Handler playingHandler = new Handler();
     private AudioManager audioManager;
     private RecyclerView recyclerView;
 
@@ -134,6 +134,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private ImageButton nowPlayingForward;
     private MotionLayout motionLayout;
     private FrameLayout frameLayout;
+    private ImageView currentlyPlayingSong;
+    private int currentlyPlaying = 1;
 
     private TextView nowPlayingNameExpanded;
     private TextView nowPlayingArtistAlbumExpanded;
@@ -306,14 +308,60 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
             {
                 mediaControllerCompat.sendCommand(GET_CURRENT_POSITION, null, resultReceiver);
-                myHandler.postDelayed(this, 1000);
+                timeHandler.postDelayed(this, 1000);
             }
 
             else
             {
-                myHandler.removeCallbacks(this);
+                timeHandler.removeCallbacks(this);
             }
 
+        }
+    };
+
+    private Runnable updateCurrentlyPlaying = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            if(currentState == PlaybackStateCompat.STATE_PLAYING)
+            {
+                switch(currentlyPlaying)
+                {
+                    case 1:
+                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying2);
+                        currentlyPlaying = 2;
+                        break;
+
+                    case 2:
+                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying3);
+                        currentlyPlaying = 3;
+                        break;
+
+                    case 3:
+                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying4);
+                        currentlyPlaying = 4;
+                        break;
+
+                    case 4:
+                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying1);
+                        currentlyPlaying = 1;
+                        break;
+                }
+                playingHandler.postDelayed(this, 300);
+            }
+
+            else
+            {
+                currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying1);
+                currentlyPlaying = 1;
+                playingHandler.removeCallbacks(this);
+            }
         }
     };
 
@@ -445,7 +493,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     {
                         case PlaybackStateCompat.STATE_PLAYING:
                             currentState = PlaybackStateCompat.STATE_PLAYING;
-                            myHandler.post(updateTime);
+                            timeHandler.post(updateTime);
+                            //playingHandler.post(updateCurrentlyPlaying);
                             nowPlayingNameExpanded.setSelected(true);
                             nowPlayingArtistAlbumExpanded.setSelected(true);
                             nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
@@ -984,6 +1033,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             }
         });
 
+        currentlyPlayingSong = rootView.findViewById(R.id.currentlyPlayingSong);
         nowPlayingArt = rootView.findViewById(R.id.currentArtBottomSheet);
         nowPlayingArtHolder = rootView.findViewById(R.id.currentArtBottomSheetHolder);
         nowPlayingName = rootView.findViewById(R.id.currentNameCollapsed);

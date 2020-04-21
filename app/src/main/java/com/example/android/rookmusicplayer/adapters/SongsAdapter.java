@@ -3,6 +3,8 @@ package com.example.android.rookmusicplayer.adapters;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.os.Handler;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.example.android.rookmusicplayer.App.calculateSampleSize;
+import static com.example.android.rookmusicplayer.App.currentState;
 import static com.example.android.rookmusicplayer.App.lettersSongs;
 import static com.example.android.rookmusicplayer.App.sectionsSongs;
 
@@ -32,6 +35,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     private ArrayList<Songs> songs;
     private ListItemClickListener listener;
     private Context context;
+    private int previousPosition;
+    private int currentlyPlaying = 1;
+    private ImageView currentSong;
+    private ImageView previousSong;
+    private int position;
+    private Handler playingHandler = new Handler();
 
     public interface ListItemClickListener
     {
@@ -104,22 +113,65 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
-        return Integer.parseInt(songs.get(position).getId());
-    }
+    public int getItemViewType(int position) { return Integer.parseInt(songs.get(position).getId()); }
 
     @Override
-    public int getItemCount()
+    public int getItemCount() { return songs.size(); }
+
+    private Runnable updateCurrentlyPlaying = new Runnable()
     {
-        return songs.size();
-    }
+        @Override
+        public void run()
+        {
+            if(currentState == PlaybackStateCompat.STATE_PLAYING)
+            {
+                switch(currentlyPlaying)
+                {
+                    case 1:
+                        currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentSong.setImageResource(R.drawable.ic_currentlyplaying2);
+                        currentlyPlaying = 2;
+                        break;
+
+                    case 2:
+                        currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentSong.setImageResource(R.drawable.ic_currentlyplaying3);
+                        currentlyPlaying = 3;
+                        break;
+
+                    case 3:
+                        currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentSong.setImageResource(R.drawable.ic_currentlyplaying4);
+                        currentlyPlaying = 4;
+                        break;
+
+                    case 4:
+                        currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                        currentSong.setImageResource(R.drawable.ic_currentlyplaying1);
+                        currentlyPlaying = 1;
+                        break;
+                }
+                //notifyItemChanged(position);
+                playingHandler.postDelayed(this, 300);
+            }
+
+            else
+            {
+                //playingHandler.removeCallbacks(this);
+                currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+                currentSong.setImageResource(R.drawable.ic_currentlyplaying1);
+                currentlyPlaying = 1;
+                playingHandler.post(this);
+            }
+        }
+    };
 
     class SongViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
     {
 
         private RelativeLayout container;
         private ImageView albumArt;
+        private ImageView songPlaying;
         private TextView songName;
         private TextView songArtist;
         private TextView songDuration;
@@ -129,6 +181,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             super(itemView);
             container = itemView.findViewById(R.id.songContainer);
             albumArt = itemView.findViewById(R.id.songArt);
+            songPlaying = itemView.findViewById(R.id.songPlaying);
             songName = itemView.findViewById(R.id.songName);
             songArtist = itemView.findViewById(R.id.songArtist);
             songDuration = itemView.findViewById(R.id.songDuration);
@@ -178,8 +231,29 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         @Override
         public void onClick(View view)
         {
-            int clickedPosition = getAdapterPosition();
-            listener.onListItemClick(clickedPosition);
+            if(previousSong == null)
+            {
+                previousSong = songPlaying;
+                previousPosition = getAdapterPosition();
+            }
+
+            else
+            {
+                playingHandler.removeCallbacks(updateCurrentlyPlaying);
+                previousSong.setBackgroundColor(context.getColor(R.color.transparent));
+                previousSong.setImageResource(0);
+                notifyItemChanged(previousPosition);
+                previousSong = songPlaying;
+                previousPosition = getAdapterPosition();
+            }
+
+            position = getAdapterPosition();
+            listener.onListItemClick(position);
+            currentSong = songPlaying;
+            currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
+            currentSong.setImageResource(R.drawable.ic_currentlyplaying2);
+            currentlyPlaying = 1;
+            playingHandler.post(updateCurrentlyPlaying);
         }
 
         @Override
@@ -190,5 +264,4 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             return true;
         }
     }
-
 }
