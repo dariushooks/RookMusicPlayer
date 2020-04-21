@@ -242,7 +242,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 playingHandler.removeCallbacks(updateCurrentlyPlaying);
                 previousSong.setBackgroundColor(context.getColor(R.color.transparent));
                 previousSong.setImageResource(0);
-                notifyItemChanged(previousPosition);
+                //notifyItemChanged(previousPosition);
                 previousSong = songPlaying;
                 previousPosition = getAdapterPosition();
             }
