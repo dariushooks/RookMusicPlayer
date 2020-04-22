@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -68,7 +67,7 @@ import static com.example.android.rookmusicplayer.App.savedState;
 import static com.example.android.rookmusicplayer.App.searchSong;
 import static com.example.android.rookmusicplayer.App.songs;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks, SongsFragment.NowPlayingLibrary, AlbumsFragment.NowPlayingAlbum, ArtistsFragment.NowPlayingArtist, PlaylistsFragment.NowPlayingPlaylist, GoToDialog.GoTo, LibraryFragment.Query, MediaControlDialog.UpdateLibrary
+public class MainActivity extends AppCompatActivity implements SongsFragment.NowPlayingLibrary, AlbumsFragment.NowPlayingAlbum, ArtistsFragment.NowPlayingArtist, PlaylistsFragment.NowPlayingPlaylist, GoToDialog.GoTo, LibraryFragment.Query, MediaControlDialog.UpdateLibrary
 {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -94,11 +93,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         else
         {
-            LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, this);
+            LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
         }
     }
 
-    private void start()
+    private void loadUI()
     {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        View rootView = findViewById(R.id.fragment_container).getRootView();
+        View rootView = findViewById(R.id.mainLayout).getRootView();
         mediaBrowserHelper = new MediaBrowserHelperMotion(this, rootView, stateViewModel);
         mediaBrowserHelper.onCreate();
     }
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
                     Toast.makeText(this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
-                    LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, MainActivity.this);
+                    LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
                 }
 
                 break;
@@ -343,22 +342,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 
-    @NonNull
-    @Override
-    public Loader onCreateLoader(int id, @Nullable Bundle args)
-    {
-        return new ReadStorage(this);
-    }
 
-    @Override
-    public void onLoadFinished(@NonNull Loader loader, Object data)
+    private LoaderManager.LoaderCallbacks loaderCallbacks = new LoaderManager.LoaderCallbacks()
     {
-        start();
-    }
+        @NonNull
+        @Override
+        public Loader onCreateLoader(int id, @Nullable Bundle args) { return new ReadStorage(MainActivity.this); }
 
-    @Override
-    public void onLoaderReset(@NonNull Loader loader)
-    {
+        @Override
+        public void onLoadFinished(@NonNull Loader loader, Object data)
+        {
+            LoaderManager.getInstance(MainActivity.this).destroyLoader(READ_STORAGE_LOADER);
+            loadUI();
+        }
 
-    }
+        @Override
+        public void onLoaderReset(@NonNull Loader loader) {}
+    };
 }
