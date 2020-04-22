@@ -1,8 +1,11 @@
 package com.example.android.rookmusicplayer.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.R;
+
+import java.io.IOException;
 
 import static com.example.android.rookmusicplayer.App.calculateSampleSize;
 import static com.example.android.rookmusicplayer.App.queueDisplay;
@@ -111,22 +116,22 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
 
-            MediaMetadataRetriever retriver = new MediaMetadataRetriever();
-            retriver.setDataSource(queueDisplay.get(position).getPath());
-            byte[] cover = retriver.getEmbeddedPicture();
-            if(cover != null)
+            try
             {
-                Glide.with(context).load(cover).override(45, 50).into(albumArt);
-                /*albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
-                //Log.i(TAG, queueDisplay.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(queueDisplay.get(position).getArt()));
+                if(bitmap != null)
+                {
+                    Glide.with(context).load(bitmap).into(albumArt);
+               /* albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
+                //Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);
                 options.inJustDecodeBounds = false;
                 albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));*/
-                //Log.i(TAG, queueDisplay.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
-            }
-            else
-                albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
-            retriver.release();
+                    //Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                }
+                else
+                    albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
+            } catch (IOException e) { e.printStackTrace(); }
 
             songName.setText(queueDisplay.get(position).getTitle());
             songArtist.setText(queueDisplay.get(position).getArtist());

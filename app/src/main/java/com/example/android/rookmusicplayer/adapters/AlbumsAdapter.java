@@ -91,7 +91,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
                 //albumArt.setImageBitmap(art);
                 //Log.i(TAG, albums.get(position).getAlbum() + " After: " + "Width: " + art.getWidth() + "\tHeight: " + art.getHeight());
                 if(bitmap != null)
-                    Glide.with(context).load(bitmap).override(450,200).into(albumArt);
+                    Glide.with(context).load(bitmap).into(albumArt);
                    //albumArt.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 450, 200, true));
                 else
                     albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));

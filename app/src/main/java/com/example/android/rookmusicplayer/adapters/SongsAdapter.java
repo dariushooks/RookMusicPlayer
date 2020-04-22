@@ -1,16 +1,16 @@
 package com.example.android.rookmusicplayer.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,10 +21,10 @@ import com.example.android.rookmusicplayer.R;
 import com.example.android.rookmusicplayer.helpers.SectionIndexFixer;
 import com.example.android.rookmusicplayer.Songs;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static com.example.android.rookmusicplayer.App.calculateSampleSize;
 import static com.example.android.rookmusicplayer.App.currentState;
 import static com.example.android.rookmusicplayer.App.lettersSongs;
 import static com.example.android.rookmusicplayer.App.sectionsSongs;
@@ -169,7 +169,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     class SongViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
     {
 
-        private RelativeLayout container;
         private ImageView albumArt;
         private ImageView songPlaying;
         private TextView songName;
@@ -179,7 +178,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         public SongViewHolder(@NonNull View itemView)
         {
             super(itemView);
-            container = itemView.findViewById(R.id.songContainer);
             albumArt = itemView.findViewById(R.id.songArt);
             songPlaying = itemView.findViewById(R.id.songPlaying);
             songName = itemView.findViewById(R.id.songName);
@@ -195,22 +193,22 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
 
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(songs.get(position).getPath());
-            byte[] cover = retriever.getEmbeddedPicture();
-            if(cover != null)
+            try
             {
-                Glide.with(context).load(cover).override(45, 50).into(albumArt);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(songs.get(position).getArt()));
+                if(bitmap != null)
+                {
+                    Glide.with(context).load(bitmap).into(albumArt);
                /* albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
                 //Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);
                 options.inJustDecodeBounds = false;
                 albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));*/
-                //Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
-            }
-            else
-                albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
-            retriever.release();
+                    //Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
+                }
+                else
+                    albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
+            } catch (IOException e) { e.printStackTrace(); }
 
             songName.setText(songs.get(position).getTitle());
             songArtist.setText(songs.get(position).getArtist());

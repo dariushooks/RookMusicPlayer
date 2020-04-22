@@ -112,7 +112,7 @@ public class ArtistDetailsFragment extends Fragment
         {
             id = ((GetMedia) loader).getArtistId();
             artistSongs = data;
-            LoaderManager.getInstance(ArtistDetailsFragment.this).initLoader(ARTIST_MEDIA_LOADER, null, albumsCallbacks);
+            LoaderManager.getInstance(ArtistDetailsFragment.this).restartLoader(ARTIST_MEDIA_LOADER, null, albumsCallbacks);
         }
 
         @Override

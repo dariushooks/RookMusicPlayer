@@ -4,19 +4,24 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.ResultReceiver;
+import android.provider.MediaStore;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -178,7 +183,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     public void onDestroy()
     {
         super.onDestroy();
-        Log.i(TAG, "SERVICE BEING DESTROYED");
+        //Log.i(TAG, "SERVICE BEING DESTROYED");
         abandonAudioFocus();
         unregisterReceiver(broadcastReceiver);
         mediaPlayer.release();
@@ -233,7 +238,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         public void onPlayFromMediaId(String mediaId, Bundle extras)
         {
             super.onPlayFromMediaId(mediaId, extras);
-            Log.i(TAG, "Playing from media id: " + mediaId);
+            //Log.i(TAG, "Playing from media id: " + mediaId);
             if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
             {
                 startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
@@ -480,7 +485,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             stateViewModel.insert(new SavedQueue(id, title, album, albumKey, art, artist, artistKey, duration, path, track));
         }
 
-        Log.i(TAG, "QUEUE SAVED");
+        //Log.i(TAG, "QUEUE SAVED");
     }
 
     private void updateSavedState()
@@ -503,7 +508,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             stateViewModel.update(details);
         }
 
-        Log.i(TAG, "SAVED STATE UPDATED");
+        //Log.i(TAG, "SAVED STATE UPDATED");
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////
@@ -541,6 +546,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         metadata.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, currentSong.getAlbum());
         metadata.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentSong.getDuration());
         metadata.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentSong.getPath());
+        metadata.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, currentSong.getArt());
         mediaSession.setMetadata(metadata.build());
     }
 
@@ -684,31 +690,35 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void buildNotification(Context context, Songs currentSong)
     {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        /*MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(currentSong.getPath());
         byte[] cover = retriever.getEmbeddedPicture();
-        retriever.release();
+        retriever.release();*/
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder = new NotificationCompat.Builder(context, CHANNEL_1);
-        builder.setSmallIcon(R.drawable.ic_noartistart);
-        builder.setContentTitle(currentSong.getTitle())
-                .setContentText(currentSong.getArtist() + " - " + currentSong.getAlbum());
-        if(cover != null)
-            builder.setLargeIcon(BitmapFactory.decodeByteArray(cover, 0, cover.length));
-        else
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.noalbumart));
+        try
+        {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(currentSong.getArt()));
+            builder = new NotificationCompat.Builder(context, CHANNEL_1);
+            builder.setSmallIcon(R.drawable.ic_noartistart);
+            builder.setContentTitle(currentSong.getTitle())
+                    .setContentText(currentSong.getArtist() + " - " + currentSong.getAlbum());
+            if(bitmap != null)
+                builder.setLargeIcon(bitmap);
+            else
+                builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.noalbumart));
 
-        builder.setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-        if(currentState == PlaybackStateCompat.STATE_PLAYING)
-            startForeground(1, buildPlayNotification(builder));
-        else
-            NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, buildPauseNotification(builder));
+            builder.setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+            if(currentState == PlaybackStateCompat.STATE_PLAYING)
+                startForeground(1, buildPlayNotification(builder));
+            else
+                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, buildPauseNotification(builder));
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
     private Runnable updateTime = new Runnable()
@@ -883,10 +893,13 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void playSong(String mediaId)
     {
+        ContentResolver contentResolver = getContentResolver();
+        Uri uri = Uri.parse(mediaId);
         try
         {
             mediaPlayer.reset();
             mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
+            //mediaPlayer.setDataSource(contentResolver.openAssetFileDescriptor(uri, "r").getFileDescriptor());
             mediaPlayer.setDataSource(mediaId);
             mediaPlayer.prepareAsync();
 

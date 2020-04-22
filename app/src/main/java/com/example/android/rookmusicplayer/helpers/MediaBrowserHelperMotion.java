@@ -6,9 +6,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +40,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.MainActivity;
@@ -52,6 +52,7 @@ import com.example.android.rookmusicplayer.adapters.QueueAdapter;
 import com.example.android.rookmusicplayer.architecture.SavedDetails;
 import com.example.android.rookmusicplayer.architecture.StateViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -122,7 +123,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     //UI
     private View rootView;
     private Handler timeHandler = new Handler();
-    private Handler playingHandler = new Handler();
     private AudioManager audioManager;
     private RecyclerView recyclerView;
 
@@ -134,8 +134,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private ImageButton nowPlayingForward;
     private MotionLayout motionLayout;
     private FrameLayout frameLayout;
-    private ImageView currentlyPlayingSong;
-    private int currentlyPlaying = 1;
 
     private TextView nowPlayingNameExpanded;
     private TextView nowPlayingArtistAlbumExpanded;
@@ -319,52 +317,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         }
     };
 
-    private Runnable updateCurrentlyPlaying = new Runnable()
-    {
-        @Override
-        public void run()
-        {
-            if(currentState == PlaybackStateCompat.STATE_PLAYING)
-            {
-                switch(currentlyPlaying)
-                {
-                    case 1:
-                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
-                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying2);
-                        currentlyPlaying = 2;
-                        break;
-
-                    case 2:
-                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
-                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying3);
-                        currentlyPlaying = 3;
-                        break;
-
-                    case 3:
-                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
-                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying4);
-                        currentlyPlaying = 4;
-                        break;
-
-                    case 4:
-                        currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
-                        currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying1);
-                        currentlyPlaying = 1;
-                        break;
-                }
-                playingHandler.postDelayed(this, 300);
-            }
-
-            else
-            {
-                currentlyPlayingSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
-                currentlyPlayingSong.setImageResource(R.drawable.ic_currentlyplaying1);
-                currentlyPlaying = 1;
-                playingHandler.removeCallbacks(this);
-            }
-        }
-    };
-
     private final ResultReceiver resultReceiver =
             new ResultReceiver(new Handler())
             {
@@ -422,15 +374,16 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 public void onMetadataChanged(MediaMetadataCompat metadata)
                 {
                     super.onMetadataChanged(metadata);
-                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                    String source = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
-                    retriever.setDataSource(source);
-                    byte[] cover = retriever.getEmbeddedPicture();
-                    if (cover != null)
-                        nowPlayingArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length));
-                    else
-                        nowPlayingArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
-                    retriever.release();
+                    Uri source = Uri.parse(metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI));
+                    try
+                    {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), source);
+                        if (bitmap != null)
+                            Glide.with(context).load(bitmap).override(300, 300).into(nowPlayingArt);//nowPlayingArt.setImageBitmap(bitmap);
+                        else
+                            nowPlayingArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
+                    } catch (IOException e) { e.printStackTrace(); }
+
                     if(motionLayout.getCurrentState() == R.id.end && currentState == PlaybackStateCompat.STATE_PLAYING)
                         nowPlayingArtHolder.setCardElevation(30);
                     nowPlayingName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
@@ -494,7 +447,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                         case PlaybackStateCompat.STATE_PLAYING:
                             currentState = PlaybackStateCompat.STATE_PLAYING;
                             timeHandler.post(updateTime);
-                            //playingHandler.post(updateCurrentlyPlaying);
                             nowPlayingNameExpanded.setSelected(true);
                             nowPlayingArtistAlbumExpanded.setSelected(true);
                             nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
@@ -1033,7 +985,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             }
         });
 
-        currentlyPlayingSong = rootView.findViewById(R.id.currentlyPlayingSong);
         nowPlayingArt = rootView.findViewById(R.id.currentArtBottomSheet);
         nowPlayingArtHolder = rootView.findViewById(R.id.currentArtBottomSheetHolder);
         nowPlayingName = rootView.findViewById(R.id.currentNameCollapsed);

@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if(actionBar != null)
             actionBar.hide();
 
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
         }

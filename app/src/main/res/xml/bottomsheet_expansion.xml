@@ -17,7 +17,8 @@
         motion:motionInterpolator="linear">
 
         <OnSwipe
-            motion:touchAnchorId="@+id/nowPlayingAnimation"/>
+            motion:touchAnchorId="@+id/nowPlayingAnimation"
+            motion:touchAnchorSide="top"/>
 
     </Transition>
 
