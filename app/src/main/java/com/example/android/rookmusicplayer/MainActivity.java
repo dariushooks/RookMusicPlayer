@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_motion);
+        setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             }
         });
 
-        View rootView = findViewById(R.id.mainLayout).getRootView();
+        View rootView = findViewById(R.id.bottomSheetPlaying).getRootView();
         mediaBrowserHelper = new MediaBrowserHelperMotion(this, rootView, stateViewModel);
         mediaBrowserHelper.onCreate();
     }
@@ -267,7 +267,8 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                 nowPlayingFrom = "Now playing from Search";
                 break;
         }
-        getMediaController().getTransportControls().playFromMediaId(songs.get(index).getPath(), null);
+
+        getMediaController().getTransportControls().playFromMediaId(songs.get(index).getId(), null);
         getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
         mediaBrowserHelper.setBottomSheetQueue();
     }

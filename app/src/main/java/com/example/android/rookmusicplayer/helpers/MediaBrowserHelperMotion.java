@@ -3,11 +3,13 @@ package com.example.android.rookmusicplayer.helpers;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -378,8 +380,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     try
                     {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), source);
-                        if (bitmap != null)
-                            Glide.with(context).load(bitmap).override(300, 300).into(nowPlayingArt);//nowPlayingArt.setImageBitmap(bitmap);
+                        if(bitmap != null)
+                            Glide.with(context).load(bitmap).override(400).into(nowPlayingArt);
                         else
                             nowPlayingArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
                     } catch (IOException e) { e.printStackTrace(); }
@@ -483,7 +485,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         Bundle click = new Bundle();
         click.putInt("clickedIndex", position);
         mediaControllerCompat.getTransportControls().sendCustomAction(QUEUE_CLICK, click);
-        mediaControllerCompat.getTransportControls().playFromMediaId(queueDisplay.get(position).getPath(), null);
+        mediaControllerCompat.getTransportControls().playFromMediaId(queueDisplay.get(position).getId(), null);
         mediaControllerCompat.getTransportControls().sendCustomAction(SET_UP_NEXT, null);
     }
 

@@ -149,7 +149,7 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
         queue.putInt("FROM", FROM_ALBUM);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_ALBUM, queue);
-        mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(albumSongs.get(position).getPath(), null);
+        mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(albumSongs.get(position).getId(), null);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
         nowPlayingFrom = "Now playing from " + album;
         mediaBrowserHelper.setBottomSheetQueue();

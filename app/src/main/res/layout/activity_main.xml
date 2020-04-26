@@ -417,3 +417,4 @@
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
+

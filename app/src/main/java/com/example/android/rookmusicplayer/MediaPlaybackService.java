@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -334,7 +335,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 case SAVE_QUEUE: saveQueue(); break;
                 case RESTORE_SAVED_QUEUE: queue.addAll(savedSongs); break;
                 case INITIALIZE_QUEUE_CHANGE: queueAdapter.initializeQueueChange(MediaPlaybackService.this); break;
-                case SET_ELAPSED_TIME: elapsed = extras.getInt("CURRENT_ELAPSED_TIME"); setSong(queue.get(position).getPath()); break;
+                case SET_ELAPSED_TIME: elapsed = extras.getInt("CURRENT_ELAPSED_TIME"); setSong(queue.get(position).getId()); break;
                 case SET_FROM: from = extras.getInt("CURRENT_FROM"); break;
             }
         }
@@ -353,7 +354,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     updateQueueDisplay(SKIP_PREVIOUS);
                     position--;
                 }
-                mediaId = queue.get(position).getPath();
+
+                mediaId = queue.get(position).getId();
                 if(currentState == PlaybackStateCompat.STATE_PLAYING)
                     playSong(mediaId);
                 else
@@ -379,7 +381,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 stateBuilder.setState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
                 mediaSession.setPlaybackState(stateBuilder.build());
                 position++;
-                String mediaId = queue.get(position).getPath();
+                String mediaId = queue.get(position).getId();
                 if(currentState == PlaybackStateCompat.STATE_PLAYING)
                     playSong(mediaId);
                 else
@@ -541,11 +543,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     private void buildMetadata(Songs currentSong)
     {
         MediaMetadataCompat.Builder metadata = new MediaMetadataCompat.Builder();
+        metadata.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentSong.getId());
         metadata.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentSong.getTitle());
         metadata.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentSong.getArtist());
         metadata.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, currentSong.getAlbum());
         metadata.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentSong.getDuration());
-        metadata.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, currentSong.getPath());
+        metadata.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, currentSong.getPath());
         metadata.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, currentSong.getArt());
         mediaSession.setMetadata(metadata.build());
     }
@@ -893,14 +896,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void playSong(String mediaId)
     {
-        ContentResolver contentResolver = getContentResolver();
-        Uri uri = Uri.parse(mediaId);
+        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(mediaId));
         try
         {
             mediaPlayer.reset();
             mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
-            //mediaPlayer.setDataSource(contentResolver.openAssetFileDescriptor(uri, "r").getFileDescriptor());
-            mediaPlayer.setDataSource(mediaId);
+            mediaPlayer.setDataSource(this, uri);
             mediaPlayer.prepareAsync();
 
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
@@ -911,11 +912,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void setSong(String mediaId)
     {
+        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(mediaId));
         try
         {
             mediaPlayer.reset();
             mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
-            mediaPlayer.setDataSource(mediaId);
+            mediaPlayer.setDataSource(this, uri);
             mediaPlayer.prepareAsync();
 
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
@@ -937,7 +939,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     position++;
             }
 
-            String mediaId = queue.get(position).getPath();
+            String mediaId = queue.get(position).getId();
             playSong(mediaId);
             buildMetadata(queue.get(position));
             updateQueueDisplay(SKIP_NEXT);

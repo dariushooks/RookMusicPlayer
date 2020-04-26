@@ -198,7 +198,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(songs.get(position).getArt()));
                 if(bitmap != null)
                 {
-                    Glide.with(context).load(bitmap).into(albumArt);
+                    Glide.with(context).load(bitmap).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
                /* albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
                 //Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
                 options.inSampleSize = calculateSampleSize(options, 45, 50);

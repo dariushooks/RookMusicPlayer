@@ -109,7 +109,7 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
             queue.putInt("FROM", FROM_PLAYLIST);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_PLAYLIST, queue);
-        mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(playlistSongs.get(position).getPath(), null);
+        mediaBrowserHelper.getMediaController().getTransportControls().playFromMediaId(playlistSongs.get(position).getId(), null);
         mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
         nowPlayingFrom = "Now playing from " + currentPlaylist.getPlaylist();
         mediaBrowserHelper.setBottomSheetQueue();
