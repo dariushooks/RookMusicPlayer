@@ -3,13 +3,11 @@ package com.example.android.rookmusicplayer.helpers;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -173,7 +171,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         this.context = context;
         this.rootView = rootView;
         this.stateViewModel = stateViewModel;
-        //getMedia = new GetMedia(context);
     }
 
     public void onCreate()
