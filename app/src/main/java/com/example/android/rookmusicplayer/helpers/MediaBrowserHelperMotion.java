@@ -307,7 +307,19 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         {
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
             {
-                mediaControllerCompat.sendCommand(GET_CURRENT_POSITION, null, resultReceiver);
+                mediaControllerCompat.sendCommand(GET_CURRENT_POSITION, null, new ResultReceiver(new Handler())
+                {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData)
+                    {
+                        super.onReceiveResult(resultCode, resultData);
+                        currentElapsed = resultData.getInt("currentPosition");
+                        progressBar.setProgress(currentElapsed);
+                        seekBar.setProgress(currentElapsed);
+                        String elapsedTime = calculateTime(currentElapsed);
+                        nowPlayingElapsedExpanded.setText(elapsedTime);
+                    }
+                });
                 timeHandler.postDelayed(this, 1000);
             }
 
@@ -328,13 +340,13 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     super.onReceiveResult(resultCode, resultData);
                     switch (resultCode)
                     {
-                        case RECEIVE_CURRENT_POSITION:
+                        /*case RECEIVE_CURRENT_POSITION:
                             currentElapsed = resultData.getInt("currentPosition");
                             progressBar.setProgress(currentElapsed);
                             seekBar.setProgress(currentElapsed);
                             String elapsedTime = calculateTime(currentElapsed);
                             nowPlayingElapsedExpanded.setText(elapsedTime);
-                            break;
+                            break;*/
 
                         case RECEIVE_ARTIST_ALBUM: artist_album = resultData.getParcelable("currentArtistAlbum");
                             GoToDialog goToDialog = new GoToDialog(context, artist_album);
@@ -391,6 +403,12 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     nowPlayingName.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
                     nowPlayingArtist.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
+                    nowPlayingNameExpanded.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+                    String artist = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+                    String album = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
+                    String expanded = artist + " - " + album;
+                    nowPlayingArtistAlbumExpanded.setText(expanded);
+
                     if (currentState == PlaybackStateCompat.STATE_PLAYING)
                     {
                         nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
@@ -405,15 +423,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
                     setShuffle(shuffle);
                     setRepeat(repeat);
-
-                    nowPlayingNameExpanded.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-                    nowPlayingNameExpanded.setSelected(true);
-
-                    String artist = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
-                    String album = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
-                    String expanded = artist + " - " + album;
-                    nowPlayingArtistAlbumExpanded.setText(expanded);
-                    nowPlayingArtistAlbumExpanded.setSelected(true);
 
                     currentDuration = (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
                     progressBar.setMax(currentDuration);
@@ -913,7 +922,7 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             @Override
             public void onTransitionStarted(MotionLayout motionLayout, int i, int i1)
             {
-                if(motionLayout.getStartState() == R.id.end && upNextIsShowing)
+                if((motionLayout.getStartState() == R.id.end || motionLayout.getStartState() == R.id.start) && upNextIsShowing)
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
@@ -1002,8 +1011,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     if(currentState == PlaybackStateCompat.STATE_PLAYING)
                     {
                         mediaControllerCompat.getTransportControls().pause();
-                        nowPlayingNameExpanded.setSelected(false);
-                        nowPlayingArtistAlbumExpanded.setSelected(false);
                         nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
                         nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                     }
@@ -1011,8 +1018,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     else
                     {
                         mediaControllerCompat.getTransportControls().play();
-                        nowPlayingNameExpanded.setSelected(true);
-                        nowPlayingArtistAlbumExpanded.setSelected(true);
                         nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_pause));
                         nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_pause));
                     }

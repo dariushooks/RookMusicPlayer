@@ -171,7 +171,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
             else
             {
                 if(trackNum > 9)
-                    trackNumberOffset.setVisibility(View.INVISIBLE);
+                    trackNumberOffset.setVisibility(View.GONE);
                 trackNumber.setText(trackNum + "");
             }
         }

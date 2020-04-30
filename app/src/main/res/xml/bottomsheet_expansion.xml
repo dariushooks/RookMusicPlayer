@@ -176,8 +176,7 @@
             android:layout_marginEnd="25dp"
             motion:layout_constraintBottom_toTopOf="@+id/collapsedSeekBar"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintEnd_toEndOf="parent">
-        </Constraint>
+            motion:layout_constraintEnd_toEndOf="parent"/>
 
         <Constraint
             android:id="@id/currentPlayBottomSheet"
@@ -193,14 +192,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet"/>
+            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet">
+            <CustomAttribute
+                motion:attributeName="Gravity"/>
+        </Constraint>
 
         <Constraint
             android:id="@+id/currentArtistAlbumBottomSheet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"/>

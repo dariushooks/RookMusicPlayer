@@ -662,42 +662,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     ///////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////*/
 
-    private Notification buildPlayNotification(NotificationCompat.Builder builder)
-    {
-        builder.setOngoing(true);
-        builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
-        builder.addAction(R.drawable.ic_fast_rewind, "Back",
-                MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-        builder.addAction(R.drawable.ic_pause, "Pause",
-                MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
-        builder.addAction(R.drawable.ic_fast_forward, "Forward",
-                MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-        //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-        handler.post(updateTime);
-        return builder.build();
-    }
-
-    private Notification buildPauseNotification(NotificationCompat.Builder builder)
-    {
-        builder.setOngoing(false);
-        builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
-        builder.addAction(R.drawable.ic_fast_rewind, "Back",
-                MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-        builder.addAction(R.drawable.ic_play, "Play",
-                MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
-        builder.addAction(R.drawable.ic_fast_forward, "Forward",
-                MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-        //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-        return builder.build();
-    }
-
     private void buildNotification(Context context, Songs currentSong)
     {
-        /*MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(currentSong.getPath());
-        byte[] cover = retriever.getEmbeddedPicture();
-        retriever.release();*/
-
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -708,6 +674,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             builder.setSmallIcon(R.drawable.ic_noartistart);
             builder.setContentTitle(currentSong.getTitle())
                     .setContentText(currentSong.getArtist() + " - " + currentSong.getAlbum());
+
             if(bitmap != null)
                 builder.setLargeIcon(bitmap);
             else
@@ -717,10 +684,34 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
-                startForeground(1, buildPlayNotification(builder));
+            {
+                builder.setOngoing(true);
+                builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
+                builder.addAction(R.drawable.ic_fast_rewind, "Back",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
+                builder.addAction(R.drawable.ic_pause, "Pause",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
+                builder.addAction(R.drawable.ic_fast_forward, "Forward",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
+                startForeground(1, builder.build());
+                handler.post(updateTime);
+            }
+
             else
-                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, buildPauseNotification(builder));
+            {
+                builder.setOngoing(false);
+                builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
+                builder.addAction(R.drawable.ic_fast_rewind, "Back",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
+                builder.addAction(R.drawable.ic_play, "Play",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
+                builder.addAction(R.drawable.ic_fast_forward, "Forward",
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
+                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
+            }
+
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -735,6 +726,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
+                saveQueue();
                 handler.postDelayed(this, 1000);
             }
 
@@ -745,6 +737,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 stopForeground(true);
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
+                saveQueue();
                 handler.removeCallbacks(this);
             }
         }
