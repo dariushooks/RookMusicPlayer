@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -104,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         LibraryFragment fragment = new LibraryFragment(songs, artists, albumsSections, playlists, this);
         transaction.add(R.id.fragment_container, fragment, "Main Library").commit();
 
-        stateViewModel = ViewModelProviders.of(this).get(StateViewModel.class);
+        stateViewModel = new ViewModelProvider(this).get(StateViewModel.class);
+        //stateViewModel = ViewModelProviders.of(this).get(StateViewModel.class);
         stateViewModel.getSavedQueue().observe(this, new Observer<List<Songs>>() {
             @Override
             public void onChanged(List<Songs> songs)

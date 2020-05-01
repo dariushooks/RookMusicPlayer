@@ -733,12 +733,12 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             else
             {
                 //Log.i(TAG, "Time Paused at " + calculateTime(mediaPlayer.getCurrentPosition()));
+                handler.removeCallbacks(this);
                 builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
                 stopForeground(true);
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
                 saveQueue();
-                handler.removeCallbacks(this);
             }
         }
     };

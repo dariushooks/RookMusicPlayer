@@ -1,8 +1,10 @@
 package com.example.android.rookmusicplayer.adapters;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -83,10 +85,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         }
 
         new SectionIndexFixer().fixIndex(lettersSongs, sectionsSongs);
-        for(int i = 0; i < 27; i++)
+        /*for(int i = 0; i < 27; i++)
         {
             //Log.i(TAG, "Letter " + lettersSongs.get(i) + "\tSection " + sectionsSongs.get(i));
-        }
+        }*/
     }
 
     @NonNull
@@ -193,16 +195,19 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
 
-            try
+            Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(songs.get(position).getId()));
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(context, uri);
+            byte[] cover = retriever.getEmbeddedPicture();
+            Glide.with(context).load(cover).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
+            /*try
             {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(songs.get(position).getArt()));
-                if(bitmap != null)
-                {
-                    Glide.with(context).load(bitmap).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
-                }
+                if(cover != null)
+                    Glide.with(context).load(cover).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
                 else
-                    albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
-            } catch (IOException e) { e.printStackTrace(); }
+                    albumArt.setImageResource(R.drawable.noalbumart);
+            } catch (IOException e) { e.printStackTrace(); }*/
 
             songName.setText(songs.get(position).getTitle());
             songArtist.setText(songs.get(position).getArtist());
