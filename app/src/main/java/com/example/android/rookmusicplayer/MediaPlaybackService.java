@@ -1,15 +1,12 @@
 package com.example.android.rookmusicplayer;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
@@ -27,7 +24,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -214,13 +210,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
                 //SET PLAYBACK STATE
                 currentState = PlaybackStateCompat.STATE_PLAYING;
-                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 0);
-                stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
+                stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
                         PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
                 mediaSession.setPlaybackState(stateBuilder.build());
 
                 //SHOW PLAY NOTIFICATION
                 buildNotification(MediaPlaybackService.this, queue.get(position));
+                handler.post(updateQueueState);
             }
         }
 
@@ -249,8 +246,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
                 //SET PLAYBACK STATE
                 currentState = PlaybackStateCompat.STATE_PLAYING;
-                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-                stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
+                stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
                         PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
                 mediaSession.setPlaybackState(stateBuilder.build());
 
@@ -269,8 +266,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
                 //SET PLAYBACK STATE
                 currentState = PlaybackStateCompat.STATE_PAUSED;
-                stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-                stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, mediaPlayer.getCurrentPosition(), 0);
+                stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
                 mediaSession.setPlaybackState(stateBuilder.build());
 
                 //SHOW PAUSE NOTIFICATION
@@ -397,6 +395,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         {
             super.onSeekTo(pos);
             mediaPlayer.seekTo((int)pos);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                    PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+            mediaSession.setPlaybackState(stateBuilder.build());
         }
 
         @Override
@@ -667,7 +669,53 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        try
+        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(currentSong.getId()));
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, uri);
+        byte[] cover = retriever.getEmbeddedPicture();
+        builder = new NotificationCompat.Builder(context, CHANNEL_1);
+        builder.setSmallIcon(R.drawable.ic_noartistart);
+        builder.setContentTitle(currentSong.getTitle())
+                .setContentText(currentSong.getArtist() + " - " + currentSong.getAlbum());
+
+        if(cover != null)
+            builder.setLargeIcon(BitmapFactory.decodeByteArray(cover, 0, cover.length));
+        else
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.noalbumart));
+
+        builder.setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+
+        if(currentState == PlaybackStateCompat.STATE_PLAYING)
+        {
+            builder.setOngoing(true);
+            builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
+            builder.addAction(R.drawable.ic_fast_rewind, "Back",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
+            builder.addAction(R.drawable.ic_pause, "Pause",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
+            builder.addAction(R.drawable.ic_fast_forward, "Forward",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
+            startForeground(1, builder.build());
+        }
+
+        else
+        {
+            builder.setOngoing(false);
+            builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0, 1, 2).setMediaSession(mediaSession.getSessionToken()));
+            builder.addAction(R.drawable.ic_fast_rewind, "Back",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
+            builder.addAction(R.drawable.ic_play, "Play",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
+            builder.addAction(R.drawable.ic_fast_forward, "Forward",
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
+            NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
+        }
+
+
+        /*try
         {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(currentSong.getArt()));
             builder = new NotificationCompat.Builder(context, CHANNEL_1);
@@ -696,7 +744,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 builder.addAction(R.drawable.ic_fast_forward, "Forward",
                         MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
                 startForeground(1, builder.build());
-                handler.post(updateTime);
             }
 
             else
@@ -712,10 +759,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
             }
 
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) { e.printStackTrace(); }*/
     }
 
-    private Runnable updateTime = new Runnable()
+    private Runnable updateQueueState = new Runnable()
     {
         @Override
         public void run()
@@ -723,8 +770,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
             {
                 //Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
-                builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
+                //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+                //NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
                 saveQueue();
                 handler.postDelayed(this, 1000);
@@ -734,9 +781,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             {
                 //Log.i(TAG, "Time Paused at " + calculateTime(mediaPlayer.getCurrentPosition()));
                 handler.removeCallbacks(this);
-                builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-                stopForeground(true);
-                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
+                //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+                stopForeground(false);
+                //NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
                 saveQueue();
             }
@@ -897,9 +944,10 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             mediaPlayer.setDataSource(this, uri);
             mediaPlayer.prepareAsync();
 
-            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-            stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
             mediaSession.setPlaybackState(stateBuilder.build());
+            handler.post(updateQueueState);
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -913,8 +961,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             mediaPlayer.setDataSource(this, uri);
             mediaPlayer.prepareAsync();
 
-            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-            stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, mediaPlayer.getCurrentPosition(), 0);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
             mediaSession.setPlaybackState(stateBuilder.build());
         } catch (IOException e) { e.printStackTrace(); }
     }
