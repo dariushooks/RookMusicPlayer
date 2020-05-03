@@ -200,14 +200,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             retriever.setDataSource(context, uri);
             byte[] cover = retriever.getEmbeddedPicture();
             Glide.with(context).load(cover).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
-            /*try
-            {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(songs.get(position).getArt()));
-                if(cover != null)
-                    Glide.with(context).load(cover).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
-                else
-                    albumArt.setImageResource(R.drawable.noalbumart);
-            } catch (IOException e) { e.printStackTrace(); }*/
 
             songName.setText(songs.get(position).getTitle());
             songArtist.setText(songs.get(position).getArtist());

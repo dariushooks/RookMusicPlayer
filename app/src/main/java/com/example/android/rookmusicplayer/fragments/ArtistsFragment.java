@@ -124,7 +124,7 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.ListItem
         }
         catch (ClassCastException e)
         {
-            throw new ClassCastException(context.toString().trim() + " must implement sendAlbum");
+            throw new ClassCastException(context.toString().trim() + " must implement sendArtist");
         }
     }
 }

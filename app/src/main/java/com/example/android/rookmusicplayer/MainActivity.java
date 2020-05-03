@@ -16,13 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
@@ -281,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         AlbumDetailsFragment fragment = new AlbumDetailsFragment(album, updateLibrary);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addSharedElement(sharedArt, ViewCompat.getTransitionName(sharedArt)).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
+        transaction.addSharedElement(sharedArt, sharedArt.getTransitionName()).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 
@@ -291,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         ArtistDetailsFragment fragment = new ArtistDetailsFragment(artist, updateLibrary);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addSharedElement(sharedArtist, ViewCompat.getTransitionName(sharedArtist)).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
+        transaction.addSharedElement(sharedArtist, sharedArtist.getTransitionName()).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 

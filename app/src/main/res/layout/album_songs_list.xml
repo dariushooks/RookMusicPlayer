@@ -26,6 +26,7 @@
         android:textSize="15sp"
         android:textColor="@color/white"
         android:text="1"
+        app:layout_goneMarginStart="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/trackNumberOffset"/>
@@ -41,9 +42,10 @@
 
     <TextView
         android:id="@+id/trackName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
         android:maxLines="1"
         android:ellipsize="end"
         android:textSize="18sp"
@@ -51,7 +53,8 @@
         android:text="track name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/trackDuration"
-        app:layout_constraintStart_toEndOf="@id/trackPlaying"/>
+        app:layout_constraintStart_toEndOf="@id/trackPlaying"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/trackDuration"

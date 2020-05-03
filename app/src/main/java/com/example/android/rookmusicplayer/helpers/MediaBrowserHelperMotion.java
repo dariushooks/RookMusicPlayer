@@ -387,20 +387,11 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 public void onMetadataChanged(MediaMetadataCompat metadata)
                 {
                     super.onMetadataChanged(metadata);
-                    //Uri source = Uri.parse(metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI));
                     Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                     retriever.setDataSource(context, uri);
                     byte[] cover = retriever.getEmbeddedPicture();
                     Glide.with(context).load(cover).fallback(R.drawable.noalbumart).override(400).into(nowPlayingArt);
-                    /*try
-                    {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), source);
-                        if(bitmap != null)
-                            Glide.with(context).load(bitmap).fallback(R.drawable.noalbumart).override(400).into(nowPlayingArt);
-                        else
-                            nowPlayingArt.setImageResource(R.drawable.noalbumart);
-                    } catch (IOException e) { e.printStackTrace(); }*/
 
                     if(motionLayout.getCurrentState() == R.id.end && currentState == PlaybackStateCompat.STATE_PLAYING)
                         nowPlayingArtHolder.setCardElevation(30);

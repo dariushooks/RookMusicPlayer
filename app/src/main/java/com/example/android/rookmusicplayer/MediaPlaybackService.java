@@ -527,15 +527,15 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     {
         if(currentState == PlaybackStateCompat.STATE_PLAYING)
         {
-            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 0);
-            stateBuilder.setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
             mediaSession.setPlaybackState(stateBuilder.build());
         }
 
         else
         {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, mediaPlayer.getCurrentPosition(), 0);
-            stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
             mediaSession.setPlaybackState(stateBuilder.build());
         }
 
@@ -685,8 +685,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
         builder.setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         if(currentState == PlaybackStateCompat.STATE_PLAYING)
         {
@@ -713,53 +712,6 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
             NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
         }
-
-
-        /*try
-        {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(currentSong.getArt()));
-            builder = new NotificationCompat.Builder(context, CHANNEL_1);
-            builder.setSmallIcon(R.drawable.ic_noartistart);
-            builder.setContentTitle(currentSong.getTitle())
-                    .setContentText(currentSong.getArtist() + " - " + currentSong.getAlbum());
-
-            if(bitmap != null)
-                builder.setLargeIcon(bitmap);
-            else
-                builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.noalbumart));
-
-            builder.setContentIntent(pendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-
-            if(currentState == PlaybackStateCompat.STATE_PLAYING)
-            {
-                builder.setOngoing(true);
-                builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
-                builder.addAction(R.drawable.ic_fast_rewind, "Back",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-                builder.addAction(R.drawable.ic_pause, "Pause",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
-                builder.addAction(R.drawable.ic_fast_forward, "Forward",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-                startForeground(1, builder.build());
-            }
-
-            else
-            {
-                builder.setOngoing(false);
-                builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0,1,2).setMediaSession(mediaSession.getSessionToken()));
-                builder.addAction(R.drawable.ic_fast_rewind, "Back",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
-                builder.addAction(R.drawable.ic_play, "Play",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_PLAY_PAUSE));
-                builder.addAction(R.drawable.ic_fast_forward, "Forward",
-                        MediaButtonReceiver.buildMediaButtonPendingIntent(MediaPlaybackService.this, PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
-                NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
-            }
-
-        } catch (IOException e) { e.printStackTrace(); }*/
     }
 
     private Runnable updateQueueState = new Runnable()
@@ -897,6 +849,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 queueAdapter.notifyItemRemoved(queueDisplay.size() - 1);
                 queueAdapter.notifyItemInserted(0);
                 break;
+
             case QUEUE_END: queue.add(song);
                 break;
         }
@@ -914,6 +867,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 }
                 queueAdapter.notifyDataSetChanged();
                 break;
+
             case QUEUE_END: queue.addAll(addToQueue); break;
         }
     }

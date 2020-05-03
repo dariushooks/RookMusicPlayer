@@ -86,15 +86,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
             try
             {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(albums.get(position).getArt()));
-                //Log.i(TAG, albums.get(position).getAlbum() + " Before: " + "Width: " + bitmap.getWidth() + "\tHeight: " + bitmap.getHeight());
-                //Bitmap art = calculateBitmapSize(bitmap, 400, 175);
-                //albumArt.setImageBitmap(art);
-                //Log.i(TAG, albums.get(position).getAlbum() + " After: " + "Width: " + art.getWidth() + "\tHeight: " + art.getHeight());
-                if(bitmap != null)
-                    Glide.with(context).load(bitmap).into(albumArt);
-                   //albumArt.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 450, 200, true));
-                else
-                    albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
+                Glide.with(context).load(bitmap).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
             } catch (IOException e) { e.printStackTrace(); }
             albumName.setText(albums.get(position).getAlbum());
             albumArtist.setText(albums.get(position).getArtist());

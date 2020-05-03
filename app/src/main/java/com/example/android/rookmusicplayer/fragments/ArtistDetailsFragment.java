@@ -66,7 +66,7 @@ public class ArtistDetailsFragment extends Fragment
 
         setSharedElementEnterTransition(new App.DetailsTransition());
         setSharedElementReturnTransition(new App.DetailsTransition());
-        setEnterTransition(new Fade().setStartDelay(500));
+        setEnterTransition(new Fade());
         setReturnTransition(new Fade());
     }
 
@@ -85,6 +85,7 @@ public class ArtistDetailsFragment extends Fragment
 
         artistName = rootView.findViewById(R.id.artistDetailArtist);
         artistName.setText(artist);
+        artistName.setTransitionName(currentArtist.getArtist());
 
         LoaderManager.getInstance(this).initLoader(ARTIST_MEDIA_LOADER, null, songsCallbacks);
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
@@ -95,7 +96,7 @@ public class ArtistDetailsFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        artistName.setTransitionName(currentArtist.getArtist());
+        //artistName.setTransitionName(currentArtist.getArtist());
     }
 
     private LoaderManager.LoaderCallbacks<ArrayList> songsCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()
