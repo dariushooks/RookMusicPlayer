@@ -38,7 +38,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
     {
         this.albums = albums;
         this.listener = listener;
-        //setHasStableIds(true);
     }
 
     @NonNull
@@ -58,8 +57,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         holder.bind(position);
         ViewCompat.setTransitionName(holder.albumArt, albums.get(position).getAlbum());
     }
-
-
 
     @Override
     public int getItemCount() { return albums.size(); }

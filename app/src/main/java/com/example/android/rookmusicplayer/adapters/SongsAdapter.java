@@ -2,7 +2,6 @@ package com.example.android.rookmusicplayer.adapters;
 
 import android.content.ContentUris;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -23,7 +22,6 @@ import com.example.android.rookmusicplayer.R;
 import com.example.android.rookmusicplayer.helpers.SectionIndexFixer;
 import com.example.android.rookmusicplayer.Songs;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 

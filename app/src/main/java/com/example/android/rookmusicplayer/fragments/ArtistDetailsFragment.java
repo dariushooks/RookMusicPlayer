@@ -72,20 +72,21 @@ public class ArtistDetailsFragment extends Fragment
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_artist_details, container, false);
 
         artist = currentArtist.getArtist();
+        artistName = rootView.findViewById(R.id.artistDetailArtist);
+        artistName.setText(artist);
+        artistName.setTransitionName(currentArtist.getArtist());
 
         viewPager = rootView.findViewById(R.id.artistDetailViewPager);
 
         TabLayout tabLayout = rootView.findViewById(R.id.artistDetailTabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        artistName = rootView.findViewById(R.id.artistDetailArtist);
-        artistName.setText(artist);
-        artistName.setTransitionName(currentArtist.getArtist());
 
         LoaderManager.getInstance(this).initLoader(ARTIST_MEDIA_LOADER, null, songsCallbacks);
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
