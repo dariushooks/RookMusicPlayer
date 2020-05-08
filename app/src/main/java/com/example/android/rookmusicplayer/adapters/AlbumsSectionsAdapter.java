@@ -88,8 +88,6 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
         holder.bind(position);
     }
 
-
-
     @Override
     public int getItemCount() { return albumsSections.size(); }
 
@@ -106,8 +104,7 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
         public void bind(int position)
         {
             GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
-            layoutManager.setItemPrefetchEnabled(true);
-            layoutManager.setInitialPrefetchItemCount(albumsSections.get(position).getSectionedAlbums().size());
+            layoutManager.setInitialPrefetchItemCount(albumsSections.get(position).getSectionedAlbums().size() + 1);
             AlbumsAdapter albumsAdapter = new AlbumsAdapter(albumsSections.get(position).getSectionedAlbums(), listener);
             albumsSections.get(position).setAlbumsAdapter(albumsAdapter);
             recyclerView.setRecycledViewPool(viewPool);
