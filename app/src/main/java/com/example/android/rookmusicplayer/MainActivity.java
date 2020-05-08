@@ -334,12 +334,12 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     }
 
     @Override
-    public void search()
+    public void search(ImageView sharedImage)
     {
         SearchFragment fragment = new SearchFragment(songs, artists, albums);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment).addToBackStack("").commit();
+        transaction.addSharedElement(sharedImage, sharedImage.getTransitionName()).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 

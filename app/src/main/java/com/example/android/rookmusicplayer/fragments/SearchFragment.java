@@ -1,6 +1,7 @@
 package com.example.android.rookmusicplayer.fragments;
 
 import android.os.Bundle;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.transition.TransitionManager;
 
 import com.example.android.rookmusicplayer.Albums;
+import com.example.android.rookmusicplayer.App;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.R;
 import com.example.android.rookmusicplayer.Songs;
@@ -54,6 +56,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener
         this.songs = songs;
         this.artists = artists;
         this.albums = albums;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setSharedElementEnterTransition(new App.DetailsTransition());
+        setSharedElementReturnTransition(new App.DetailsTransition());
+        setEnterTransition(new Fade().setStartDelay(500));
+        setReturnTransition(new Fade());
     }
 
     @Nullable

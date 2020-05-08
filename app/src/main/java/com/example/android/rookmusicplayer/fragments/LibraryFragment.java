@@ -2,11 +2,13 @@ package com.example.android.rookmusicplayer.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,7 +48,7 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
     private ArrayList<AlbumsSections> albumsSections;
     private ArrayList<Playlists> playlists;
     private MusicPagerAdapter musicPagerAdapter;
-    private ImageButton searchView;
+    private ImageView searchView;
     private Query query;
     private MediaControlDialog.UpdateLibrary update;
 
@@ -57,6 +59,13 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
         this.albumsSections = albumsSections;
         this.playlists = playlists;
         this.update = update;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setReenterTransition(new Fade().setStartDelay(500));
     }
 
     @Nullable
@@ -71,17 +80,17 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
         viewPager.setAdapter(musicPagerAdapter);
         TabLayout tabLayout = rootView.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        searchView = rootView.findViewById(R.id.search);
+        searchView = rootView.findViewById(R.id.searchButton);
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { query.search(); }
+            public void onClick(View view) { query.search(searchView); }
         });
 
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
     }
 
-    public interface Query { void search(); }
+    public interface Query { void search(ImageView sharedImage); }
 
     public void deleteSongFromLibrary(Songs song)
     {

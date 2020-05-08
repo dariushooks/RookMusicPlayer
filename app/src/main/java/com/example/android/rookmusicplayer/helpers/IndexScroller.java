@@ -382,7 +382,7 @@ public class IndexScroller implements ViewGroup.OnTouchListener
     public boolean onTouch(View view, MotionEvent motionEvent)
     {
         float x, y;
-        indexDivider.setVisibility(View.VISIBLE);
+        //indexDivider.setVisibility(View.VISIBLE);
         switch (motionEvent.getAction())
         {
             case MotionEvent.ACTION_MOVE:
