@@ -87,11 +87,12 @@ public class ReadStorage extends AsyncTaskLoader
     {
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri albumUri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ALBUM_ID, MediaStore.Audio.Albums.ALBUM_KEY, MediaStore.Audio.Albums.ARTIST};
+        String[] projection = {MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ALBUM_ID, MediaStore.Audio.Albums.ALBUM_KEY, MediaStore.Audio.Albums.ARTIST};
         Cursor cursor = contentResolver.query(albumUri, projection, null, null, MediaStore.Audio.Albums.ALBUM + " ASC");
         if(cursor != null && cursor.moveToFirst())
         {
             Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
+            int id = cursor.getColumnIndex(MediaStore.Audio.Albums._ID);
             int album = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM);
             int albumID = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID);
             int albumKey = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_KEY);
@@ -99,12 +100,13 @@ public class ReadStorage extends AsyncTaskLoader
 
             do
             {
+                String ID = cursor.getString(id);
                 String currentAlbum = cursor.getString(album);
                 int currentID = cursor.getInt(albumID);
                 String currentAlbumKey = cursor.getString(albumKey);
                 String currentArtist = cursor.getString(artist);
                 String currentArt = ContentUris.withAppendedId(albumArtUri, currentID).toString();
-                albums.add(new Albums(currentAlbum, currentAlbumKey, currentArt, currentArtist));
+                albums.add(new Albums(ID, currentAlbum, currentAlbumKey, currentArt, currentArtist));
             }while(cursor.moveToNext());
             cursor.close();
         }

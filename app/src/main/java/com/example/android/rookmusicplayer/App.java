@@ -3,6 +3,7 @@ package com.example.android.rookmusicplayer;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -34,7 +35,8 @@ public class App extends Application
 
     //CURRENTLY PLAYING
     public static Handler playingHandler = new Handler();
-    public static ImageView currentImageView;
+    public ImageView currentSong;
+    public ImageView previousSong;
     public static int currentlyPlaying = 1;
     public static int currentState;
     public static int repeat;

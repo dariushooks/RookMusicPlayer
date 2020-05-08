@@ -52,8 +52,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.album_songs_list, parent, false);
-        AlbumDetailsViewHolder viewHolder = new AlbumDetailsViewHolder(view);
-        return viewHolder;
+        return new AlbumDetailsViewHolder(view);
     }
 
     @Override
@@ -104,13 +103,11 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                         currentlyPlaying = 1;
                         break;
                 }
-                //notifyItemChanged(position);
                 playingHandler.postDelayed(this, 300);
             }
 
             else
             {
-                //playingHandler.removeCallbacks(this);
                 currentSong.setBackgroundColor(context.getColor(R.color.black));
                 currentSong.setImageResource(R.drawable.ic_currentlyplaying1);
                 currentlyPlaying = 1;
@@ -179,7 +176,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         @Override
         public void onClick(View view)
         {
-            if(previousSong == null)
+            /*if(previousSong == null)
             {
                 previousSong = trackPlaying;
                 previousPosition = getAdapterPosition();
@@ -190,18 +187,17 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                 playingHandler.removeCallbacks(updateTrackPlaying);
                 previousSong.setBackgroundColor(context.getColor(R.color.transparent));
                 previousSong.setImageResource(0);
-                //notifyItemChanged(previousPosition);
                 previousSong = trackPlaying;
                 previousPosition = getAdapterPosition();
-            }
+            }*/
 
             position = getAdapterPosition();
             listener.onListItemClick(position);
-            currentSong = trackPlaying;
+            /*currentSong = trackPlaying;
             currentSong.setBackgroundColor(context.getColor(R.color.black));
             currentSong.setImageResource(R.drawable.ic_currentlyplaying2);
             currentlyPlaying = 1;
-            playingHandler.post(updateTrackPlaying);
+            playingHandler.post(updateTrackPlaying);*/
         }
 
 

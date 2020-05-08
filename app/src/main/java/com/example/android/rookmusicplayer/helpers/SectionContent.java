@@ -10,6 +10,33 @@ public class SectionContent
     private Albums album;
     private ArrayList<Albums> albums;
     private ArrayList<AlbumsSections> albumsSections;
+    private ArrayList<Albums> section0 = new ArrayList<>();
+    private ArrayList<Albums> sectionA = new ArrayList<>();
+    private ArrayList<Albums> sectionB = new ArrayList<>();
+    private ArrayList<Albums> sectionC = new ArrayList<>();
+    private ArrayList<Albums> sectionD = new ArrayList<>();
+    private ArrayList<Albums> sectionE = new ArrayList<>();
+    private ArrayList<Albums> sectionF = new ArrayList<>();
+    private ArrayList<Albums> sectionG = new ArrayList<>();
+    private ArrayList<Albums> sectionH = new ArrayList<>();
+    private ArrayList<Albums> sectionI = new ArrayList<>();
+    private ArrayList<Albums> sectionJ = new ArrayList<>();
+    private ArrayList<Albums> sectionK = new ArrayList<>();
+    private ArrayList<Albums> sectionL = new ArrayList<>();
+    private ArrayList<Albums> sectionM = new ArrayList<>();
+    private ArrayList<Albums> sectionN = new ArrayList<>();
+    private ArrayList<Albums> sectionO = new ArrayList<>();
+    private ArrayList<Albums> sectionP = new ArrayList<>();
+    private ArrayList<Albums> sectionQ = new ArrayList<>();
+    private ArrayList<Albums> sectionR = new ArrayList<>();
+    private ArrayList<Albums> sectionS = new ArrayList<>();
+    private ArrayList<Albums> sectionT = new ArrayList<>();
+    private ArrayList<Albums> sectionU = new ArrayList<>();
+    private ArrayList<Albums> sectionV = new ArrayList<>();
+    private ArrayList<Albums> sectionW = new ArrayList<>();
+    private ArrayList<Albums> sectionX = new ArrayList<>();
+    private ArrayList<Albums> sectionY = new ArrayList<>();
+    private ArrayList<Albums> sectionZ = new ArrayList<>();
 
     public SectionContent(ArrayList<Albums> albums, ArrayList<AlbumsSections> albumsSections)
     {
@@ -25,135 +52,81 @@ public class SectionContent
 
     public void sectionAlbums()
     {
-        boolean letter;
-        for(int i = 0; i < 27; i++)
+        for(int i = 0; i < albums.size(); i++)
         {
-            ArrayList<Albums> sections = new ArrayList<>();
-            for(int j = 0; j < albums.size(); j++)
-            {
-                String album = albums.get(j).getAlbum();
-                char sectionLetter = album.charAt(0);
-                letter = Character.isLetter(sectionLetter);
-                addAlbumToSection(sections, i, j, sectionLetter, letter);
-            }
+            String album = albums.get(i).getAlbum();
+            char sectionLetter = album.charAt(0);
+            boolean letter = Character.isLetter(sectionLetter);
+            if(!letter)
+                section0.add(albums.get(i));
+            else
+                addToSection(albums.get(i), sectionLetter);
+        }
+        addAllSections();
+    }
 
-            albumsSections.add(new AlbumsSections(sections, null));
+    private void addToSection(Albums album, Character letter)
+    {
+        switch(Character.toUpperCase(letter))
+        {
+            case 'A': sectionA.add(album); break;
+            case 'B': sectionB.add(album); break;
+            case 'C': sectionC.add(album); break;
+            case 'D': sectionD.add(album); break;
+            case 'E': sectionE.add(album); break;
+            case 'F': sectionF.add(album); break;
+            case 'G': sectionG.add(album); break;
+            case 'H': sectionH.add(album); break;
+            case 'I': sectionI.add(album); break;
+            case 'J': sectionJ.add(album); break;
+            case 'K': sectionK.add(album); break;
+            case 'L': sectionL.add(album); break;
+            case 'M': sectionM.add(album); break;
+            case 'N': sectionN.add(album); break;
+            case 'O': sectionO.add(album); break;
+            case 'P': sectionP.add(album); break;
+            case 'Q': sectionQ.add(album); break;
+            case 'R': sectionR.add(album); break;
+            case 'S': sectionS.add(album); break;
+            case 'T': sectionT.add(album); break;
+            case 'U': sectionU.add(album); break;
+            case 'V': sectionV.add(album); break;
+            case 'W': sectionW.add(album); break;
+            case 'X': sectionX.add(album); break;
+            case 'Y': sectionY.add(album); break;
+            case 'Z': sectionZ.add(album); break;
         }
     }
 
-    private void addAlbumToSection(ArrayList<Albums> sections, int index, int position, Character sectionLetter, boolean letter)
+    private void addAllSections()
     {
-        switch (index)
-        {
-            case 0:
-                if(!letter)
-                    sections.add(albums.get(position));
-                break;
-            case 1:
-                if(sectionLetter.equals('A') || sectionLetter.equals('a'))
-                    sections.add(albums.get(position));
-                break;
-            case 2:
-                if(sectionLetter.equals('B') || sectionLetter.equals('b'))
-                    sections.add(albums.get(position));
-                break;
-            case 3:
-                if(sectionLetter.equals('C') || sectionLetter.equals('c'))
-                    sections.add(albums.get(position));
-                break;
-            case 4:
-                if(sectionLetter.equals('D') || sectionLetter.equals('d'))
-                    sections.add(albums.get(position));
-                break;
-            case 5:
-                if(sectionLetter.equals('E') || sectionLetter.equals('e'))
-                    sections.add(albums.get(position));
-                break;
-            case 6:
-                if(sectionLetter.equals('F') || sectionLetter.equals('f'))
-                    sections.add(albums.get(position));
-                break;
-            case 7:
-                if(sectionLetter.equals('G') || sectionLetter.equals('g'))
-                    sections.add(albums.get(position));
-                break;
-            case 8:
-                if(sectionLetter.equals('H') || sectionLetter.equals('h'))
-                    sections.add(albums.get(position));
-                break;
-            case 9:
-                if(sectionLetter.equals('I') || sectionLetter.equals('i'))
-                    sections.add(albums.get(position));
-                break;
-            case 10:
-                if(sectionLetter.equals('J') || sectionLetter.equals('j'))
-                    sections.add(albums.get(position));
-                break;
-            case 11:
-                if(sectionLetter.equals('K') || sectionLetter.equals('k'))
-                    sections.add(albums.get(position));
-                break;
-            case 12:
-                if(sectionLetter.equals('L') || sectionLetter.equals('l'))
-                    sections.add(albums.get(position));
-                break;
-            case 13:
-                if(sectionLetter.equals('M') || sectionLetter.equals('m'))
-                    sections.add(albums.get(position));
-                break;
-            case 14:
-                if(sectionLetter.equals('N') || sectionLetter.equals('n'))
-                    sections.add(albums.get(position));
-                break;
-            case 15:
-                if(sectionLetter.equals('O') || sectionLetter.equals('o'))
-                    sections.add(albums.get(position));
-                break;
-            case 16:
-                if(sectionLetter.equals('P') || sectionLetter.equals('p'))
-                    sections.add(albums.get(position));
-                break;
-            case 17:
-                if(sectionLetter.equals('Q') || sectionLetter.equals('q'))
-                    sections.add(albums.get(position));
-                break;
-            case 18:
-                if(sectionLetter.equals('R') || sectionLetter.equals('r'))
-                    sections.add(albums.get(position));
-                break;
-            case 19:
-                if(sectionLetter.equals('S') || sectionLetter.equals('s'))
-                    sections.add(albums.get(position));
-                break;
-            case 20:
-                if(sectionLetter.equals('T') || sectionLetter.equals('t'))
-                    sections.add(albums.get(position));
-                break;
-            case 21:
-                if(sectionLetter.equals('U') || sectionLetter.equals('u'))
-                    sections.add(albums.get(position));
-                break;
-            case 22:
-                if(sectionLetter.equals('V') || sectionLetter.equals('v'))
-                    sections.add(albums.get(position));
-                break;
-            case 23:
-                if(sectionLetter.equals('W') || sectionLetter.equals('w'))
-                    sections.add(albums.get(position));
-                break;
-            case 24:
-                if(sectionLetter.equals('X') || sectionLetter.equals('x'))
-                    sections.add(albums.get(position));
-                break;
-            case 25:
-                if(sectionLetter.equals('Y') || sectionLetter.equals('y'))
-                    sections.add(albums.get(position));
-                break;
-            case 26:
-                if(sectionLetter.equals('Z') || sectionLetter.equals('z'))
-                    sections.add(albums.get(position));
-                break;
-        }
+        albumsSections.add(new AlbumsSections(section0, null));
+        albumsSections.add(new AlbumsSections(sectionA, null));
+        albumsSections.add(new AlbumsSections(sectionB, null));
+        albumsSections.add(new AlbumsSections(sectionC, null));
+        albumsSections.add(new AlbumsSections(sectionD, null));
+        albumsSections.add(new AlbumsSections(sectionE, null));
+        albumsSections.add(new AlbumsSections(sectionF, null));
+        albumsSections.add(new AlbumsSections(sectionG, null));
+        albumsSections.add(new AlbumsSections(sectionH, null));
+        albumsSections.add(new AlbumsSections(sectionI, null));
+        albumsSections.add(new AlbumsSections(sectionJ, null));
+        albumsSections.add(new AlbumsSections(sectionK, null));
+        albumsSections.add(new AlbumsSections(sectionL, null));
+        albumsSections.add(new AlbumsSections(sectionM, null));
+        albumsSections.add(new AlbumsSections(sectionN, null));
+        albumsSections.add(new AlbumsSections(sectionO, null));
+        albumsSections.add(new AlbumsSections(sectionP, null));
+        albumsSections.add(new AlbumsSections(sectionQ, null));
+        albumsSections.add(new AlbumsSections(sectionR, null));
+        albumsSections.add(new AlbumsSections(sectionS, null));
+        albumsSections.add(new AlbumsSections(sectionT, null));
+        albumsSections.add(new AlbumsSections(sectionU, null));
+        albumsSections.add(new AlbumsSections(sectionV, null));
+        albumsSections.add(new AlbumsSections(sectionW, null));
+        albumsSections.add(new AlbumsSections(sectionX, null));
+        albumsSections.add(new AlbumsSections(sectionY, null));
+        albumsSections.add(new AlbumsSections(sectionZ, null));
     }
 
     public AlbumsSections getSection()

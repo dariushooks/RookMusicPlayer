@@ -24,11 +24,13 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
     private ArrayList<AlbumsSections> albumsSections;
     private Context context;
     private AlbumsAdapter.ListItemClickListener listener;
+    private RecyclerView.RecycledViewPool viewPool;
 
     public AlbumsSectionsAdapter(ArrayList<AlbumsSections> albumsSections, AlbumsAdapter.ListItemClickListener listener)
     {
         this.albumsSections = albumsSections;
         this.listener = listener;
+        viewPool = new RecyclerView.RecycledViewPool();
         int letter = 65;
         lettersAlbums.clear(); sectionsAlbums.clear();
         for(int i = 0; i < albumsSections.size(); i++)
@@ -77,8 +79,7 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.albums_sections, parent, false);
-        AlbumsSectionsViewHolder viewHolder = new AlbumsSectionsViewHolder(view);
-        return viewHolder;
+        return new AlbumsSectionsViewHolder(view);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
 
     class AlbumsSectionsViewHolder extends RecyclerView.ViewHolder
     {
-        RecyclerView recyclerView;
+        private RecyclerView recyclerView;
 
         public AlbumsSectionsViewHolder(@NonNull View itemView)
         {
@@ -105,8 +106,11 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
         public void bind(int position)
         {
             GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
+            layoutManager.setItemPrefetchEnabled(true);
+            layoutManager.setInitialPrefetchItemCount(albumsSections.get(position).getSectionedAlbums().size());
             AlbumsAdapter albumsAdapter = new AlbumsAdapter(albumsSections.get(position).getSectionedAlbums(), listener);
             albumsSections.get(position).setAlbumsAdapter(albumsAdapter);
+            recyclerView.setRecycledViewPool(viewPool);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(albumsAdapter);
         }

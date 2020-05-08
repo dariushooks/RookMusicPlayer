@@ -77,7 +77,7 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
 
     public AlbumDetailsFragment(Songs currentAlbum, MediaControlDialog.UpdateLibrary updateLibrary)
     {
-        this.currentAlbum = new Albums(currentAlbum.getAlbum(), currentAlbum.getAlbumKey(), currentAlbum.getArt(), currentAlbum.getArtist());
+        this.currentAlbum = new Albums("-1", currentAlbum.getAlbum(), currentAlbum.getAlbumKey(), currentAlbum.getArt(), currentAlbum.getArtist());
         this.updateLibrary = updateLibrary;
     }
 

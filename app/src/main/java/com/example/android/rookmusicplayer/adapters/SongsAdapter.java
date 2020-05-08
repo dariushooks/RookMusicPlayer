@@ -96,8 +96,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.songs_list, parent, false);
-        SongViewHolder viewHolder = new SongViewHolder(view);
-        return viewHolder;
+        return new SongViewHolder(view);
     }
 
     @Override
@@ -151,13 +150,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                         currentlyPlaying = 1;
                         break;
                 }
-                //notifyItemChanged(position);
                 playingHandler.postDelayed(this, 300);
             }
 
             else
             {
-                //playingHandler.removeCallbacks(this);
                 currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
                 currentSong.setImageResource(R.drawable.ic_currentlyplaying1);
                 currentlyPlaying = 1;
@@ -218,7 +215,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         @Override
         public void onClick(View view)
         {
-            if(previousSong == null)
+            /*if(previousSong == null)
             {
                 previousSong = songPlaying;
                 previousPosition = getAdapterPosition();
@@ -229,18 +226,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 playingHandler.removeCallbacks(updateCurrentlyPlaying);
                 previousSong.setBackgroundColor(context.getColor(R.color.transparent));
                 previousSong.setImageResource(0);
-                //notifyItemChanged(previousPosition);
                 previousSong = songPlaying;
                 previousPosition = getAdapterPosition();
-            }
+            }*/
 
             position = getAdapterPosition();
             listener.onListItemClick(position);
-            currentSong = songPlaying;
+            /*currentSong = songPlaying;
             currentSong.setBackgroundColor(context.getColor(R.color.nowPlaying));
             currentSong.setImageResource(R.drawable.ic_currentlyplaying2);
             currentlyPlaying = 1;
-            playingHandler.post(updateCurrentlyPlaying);
+            playingHandler.post(updateCurrentlyPlaying);*/
         }
 
         @Override

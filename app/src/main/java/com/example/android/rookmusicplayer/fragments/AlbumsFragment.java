@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.AlbumsSections;
+import com.example.android.rookmusicplayer.App;
 import com.example.android.rookmusicplayer.helpers.IndexScroller;
 import com.example.android.rookmusicplayer.helpers.MediaControlDialog;
 import com.example.android.rookmusicplayer.R;
@@ -62,6 +63,17 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
         this.updateLibrary = updateLibrary;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        setSharedElementEnterTransition(new App.DetailsTransition());
+        setSharedElementReturnTransition(new App.DetailsTransition());
+        setExitTransition(new Fade());
+        setReenterTransition(new Fade());
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -103,9 +115,6 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 break;
         }
 
-
-        setExitTransition(new Fade());
-        setReenterTransition(new Fade());
         return rootView;
     }
 

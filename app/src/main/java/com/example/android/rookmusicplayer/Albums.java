@@ -5,37 +5,40 @@ import android.os.Parcelable;
 
 public class Albums implements Parcelable
 {
+    private String id;
     private String album;
     private String key;
     private String art;
     private String artist;
 
-    public Albums(String album_name, String album_key, String album_art, String album_artist)
+    public Albums(String id, String album, String key, String art, String artist)
     {
-        album = album_name;
-        key = album_key;
-        art = album_art;
-        artist = album_artist;
+        this.id = id;
+        this.album = album;
+        this.key = key;
+        this.art = art;
+        this.artist = artist;
     }
 
-    protected Albums(Parcel in) {
+    protected Albums(Parcel in)
+    {
+        id = in.readString();
         album = in.readString();
         key = in.readString();
         art = in.readString();
         artist = in.readString();
     }
 
-    public static final Creator<Albums> CREATOR = new Creator<Albums>() {
+    public static final Creator<Albums> CREATOR = new Creator<Albums>()
+    {
         @Override
-        public Albums createFromParcel(Parcel in) {
-            return new Albums(in);
-        }
+        public Albums createFromParcel(Parcel in) { return new Albums(in); }
 
         @Override
-        public Albums[] newArray(int size) {
-            return new Albums[size];
-        }
+        public Albums[] newArray(int size) { return new Albums[size]; }
     };
+
+    public String getId() {return id;}
 
     public String getAlbum() {return album;}
 
@@ -51,6 +54,7 @@ public class Albums implements Parcelable
     @Override
     public void writeToParcel(Parcel parcel, int i)
     {
+        parcel.writeString(id);
         parcel.writeString(album);
         parcel.writeString(key);
         parcel.writeString(art);

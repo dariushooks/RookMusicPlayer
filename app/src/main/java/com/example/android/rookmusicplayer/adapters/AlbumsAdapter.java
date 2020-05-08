@@ -38,6 +38,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
     {
         this.albums = albums;
         this.listener = listener;
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -47,8 +48,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.albums_grid, parent, false);
-        AlbumViewHolder viewHolder = new AlbumViewHolder(view);
-        return viewHolder;
+        return new AlbumViewHolder(view);
     }
 
     @Override
@@ -57,6 +57,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         holder.bind(position);
         ViewCompat.setTransitionName(holder.albumArt, albums.get(position).getAlbum());
     }
+
+    @Override
+    public long getItemId(int position) { return Long.parseLong(albums.get(position).getId()); }
 
     @Override
     public int getItemCount() { return albums.size(); }
@@ -79,7 +82,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
 
         public void bind(int position)
         {
-
             try
             {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(albums.get(position).getArt()));
@@ -87,7 +89,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
             } catch (IOException e) { e.printStackTrace(); }
             albumName.setText(albums.get(position).getAlbum());
             albumArtist.setText(albums.get(position).getArtist());
-
         }
 
         @Override
