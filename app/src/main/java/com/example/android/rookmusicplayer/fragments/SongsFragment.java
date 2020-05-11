@@ -79,6 +79,7 @@ public class SongsFragment extends Fragment implements SongsAdapter.ListItemClic
         recyclerView = rootView.findViewById(R.id.songsList);
         songsAdapter = new SongsAdapter(songs, this);
         layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setInitialPrefetchItemCount(songs.size());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(songsAdapter);
         playSongs = rootView.findViewById(R.id.playSongs);

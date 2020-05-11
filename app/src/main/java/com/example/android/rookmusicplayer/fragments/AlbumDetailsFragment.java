@@ -21,6 +21,7 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.App;
 import com.example.android.rookmusicplayer.helpers.GetMedia;
@@ -113,11 +114,7 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
 
         recyclerView = rootView.findViewById(R.id.albumDetailSongs);
 
-        try
-        {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(art));
-            albumArt.setImageBitmap(bitmap);
-        } catch (IOException e) { e.printStackTrace(); }
+        Glide.with(getContext()).load(Uri.parse(art)).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
 
         numberOfSongs = rootView.findViewById(R.id.numberOfSongs);
 

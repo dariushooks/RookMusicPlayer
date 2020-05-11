@@ -2,6 +2,8 @@ package com.example.android.rookmusicplayer.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -17,13 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.R;
+import com.example.android.rookmusicplayer.helpers.SectionIndexFixer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.example.android.rookmusicplayer.App.lettersAlbums;
+import static com.example.android.rookmusicplayer.App.sectionsAlbums;
+
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewHolder>
 {
+    private final int ALBUM_TYPE = 1;
     private String TAG = AlbumsAdapter.class.getSimpleName();
     private ArrayList<Albums> albums;
     private ListItemClickListener listener;
@@ -39,6 +46,37 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         this.albums = albums;
         this.listener = listener;
         setHasStableIds(true);
+        lettersAlbums.clear(); sectionsAlbums.clear();
+        for (int i = 0; i < this.albums.size(); i++)
+        {
+            String album = this.albums.get(i).getAlbum();
+            if(Character.isLetter(album.charAt(0)))
+            {
+                String letter = album.charAt(0) + "";
+                if(lettersAlbums.isEmpty())
+                {
+                    lettersAlbums.add(letter.toUpperCase());
+                    sectionsAlbums.add(i);
+                }
+
+                else if(!lettersAlbums.contains(letter) && lettersAlbums.size() < 26)
+                {
+                    lettersAlbums.add(letter.toUpperCase());
+                    sectionsAlbums.add(i);
+                }
+            }
+
+            else
+            {
+                if(!lettersAlbums.contains("#") && lettersAlbums.size() < 26)
+                {
+                    lettersAlbums.add("#");
+                    sectionsAlbums.add(i);
+                }
+            }
+        }
+
+        new SectionIndexFixer().fixIndex(lettersAlbums, sectionsAlbums);
     }
 
     @NonNull
@@ -62,6 +100,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
     public long getItemId(int position) { return Long.parseLong(albums.get(position).getId()); }
 
     @Override
+    public int getItemViewType(int position) { return ALBUM_TYPE; }
+
+    @Override
     public int getItemCount() { return albums.size(); }
 
     class AlbumViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener
@@ -82,11 +123,8 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
 
         public void bind(int position)
         {
-            try
-            {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(albums.get(position).getArt()));
-                Glide.with(context).load(bitmap).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
-            } catch (IOException e) { e.printStackTrace(); }
+            Uri albumArtUri = Uri.parse(albums.get(position).getArt());
+            Glide.with(context).load(albumArtUri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
             albumName.setText(albums.get(position).getAlbum());
             albumArtist.setText(albums.get(position).getArtist());
         }

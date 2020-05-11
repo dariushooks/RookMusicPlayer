@@ -90,7 +90,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 recyclerView.setLayoutManager(gridlayoutManager1);
                 recyclerView.setAdapter(albumsAdapter);
                 rootView.findViewById(R.id.indexScroller).setVisibility(View.GONE);
-                rootView.findViewById(R.id.indexDivider).setVisibility(View.GONE);
+                rootView.findViewById(R.id.indexLetter).setVisibility(View.GONE);
                 from = FROM_ARTIST;
                 break;
 
@@ -100,16 +100,21 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 recyclerView.setLayoutManager(gridlayoutManager2);
                 recyclerView.setAdapter(albumsAdapter);
                 rootView.findViewById(R.id.indexScroller).setVisibility(View.GONE);
-                rootView.findViewById(R.id.indexDivider).setVisibility(View.GONE);
+                rootView.findViewById(R.id.indexLetter).setVisibility(View.GONE);
                 from = FROM_SEARCH;
                 break;
 
             default:
-                albumsSectionsAdapter = new AlbumsSectionsAdapter(albumsSections,this);
-                LinearLayoutManager linearlayoutManager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(linearlayoutManager);
-                recyclerView.setAdapter(albumsSectionsAdapter);
-                indexScroller = new IndexScroller(getContext(), rootView, recyclerView, linearlayoutManager, sectionsAlbums, lettersAlbums);
+                albumsAdapter = new AlbumsAdapter(App.albums, this);
+                //albumsSectionsAdapter = new AlbumsSectionsAdapter(albumsSections,this);
+                //LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+                layoutManager.setInitialPrefetchItemCount(App.albums.size());
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(albumsAdapter);
+                //rootView.findViewById(R.id.indexLetter).setVisibility(View.GONE);
+                indexScroller = new IndexScroller(getContext(), rootView, recyclerView, layoutManager, sectionsAlbums, lettersAlbums);
                 indexScroller.setScrolling();
                 from = FROM_LIBRARY;
                 break;
@@ -149,11 +154,11 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
 
             else
             {
-                SectionContent sectionContent = new SectionContent(album, albumsSections);
+                /*SectionContent sectionContent = new SectionContent(album, albumsSections);
                 AlbumsSections section = sectionContent.getSection();
                 albums = section.getSectionedAlbums();
-                albumsAdapter = section.getAlbumsAdapter();
-                mediaControlDialog = new MediaControlDialog(getContext(), album, albums, albumsAdapter, updateLibrary, FROM_LIBRARY);
+                albumsAdapter = section.getAlbumsAdapter();*/
+                mediaControlDialog = new MediaControlDialog(getContext(), album, App.albums, albumsAdapter, updateLibrary, FROM_LIBRARY);
                 mediaControlDialog.OpenDialog();
             }
         }

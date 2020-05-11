@@ -5,11 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.AlbumsSections;
 import com.example.android.rookmusicplayer.R;
 
@@ -71,7 +76,6 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
         }
     }
 
-
     @NonNull
     @Override
     public AlbumsSectionsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -93,19 +97,42 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
 
     class AlbumsSectionsViewHolder extends RecyclerView.ViewHolder
     {
+        private TextView header;
         private RecyclerView recyclerView;
 
         public AlbumsSectionsViewHolder(@NonNull View itemView)
         {
             super(itemView);
+            header = itemView.findViewById(R.id.sectionIndex);
             recyclerView = itemView.findViewById(R.id.sectionsList);
         }
 
         public void bind(int position)
         {
+            String section;
+            int letter = 65;
+
+            if(position < 1)
+                header.setText("#");
+
+            else if(position == 1)
+            {
+                section = (char) letter + "";
+                header.setText(section);
+            }
+
+            else
+            {
+                letter++;
+                section = (char) letter + "";
+                header.setText(section);
+            }
+
+            ArrayList<Albums> albums = albumsSections.get(position).getSectionedAlbums();
             GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
-            layoutManager.setInitialPrefetchItemCount(albumsSections.get(position).getSectionedAlbums().size() + 1);
-            AlbumsAdapter albumsAdapter = new AlbumsAdapter(albumsSections.get(position).getSectionedAlbums(), listener);
+            //LinearLayoutManager layoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+            layoutManager.setInitialPrefetchItemCount(albums.size() + 1);
+            AlbumsAdapter albumsAdapter = new AlbumsAdapter(albums, listener);
             albumsSections.get(position).setAlbumsAdapter(albumsAdapter);
             recyclerView.setRecycledViewPool(viewPool);
             recyclerView.setLayoutManager(layoutManager);

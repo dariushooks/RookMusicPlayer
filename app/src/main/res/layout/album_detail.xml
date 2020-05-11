@@ -14,31 +14,35 @@
 
         <TextView
             android:id="@+id/albumDetailName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:maxLines="1"
             android:ellipsize="end"
             android:textStyle="bold"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:textColor="@color/white"
             android:text="album name"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/albumDetailArtist"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:text="album artist"
             app:layout_constraintTop_toBottomOf="@id/albumDetailName"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/numberOfSongs"
