@@ -45,6 +45,7 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
     private Albums album;
     private ArrayList<Songs> songs;
     private ArrayList<Artists> artists;
+    private ArrayList<Albums> albums;
     private ArrayList<AlbumsSections> albumsSections;
     private ArrayList<Playlists> playlists;
     private MusicPagerAdapter musicPagerAdapter;
@@ -52,11 +53,20 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
     private Query query;
     private MediaControlDialog.UpdateLibrary update;
 
-    public LibraryFragment(ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<AlbumsSections> albumsSections, ArrayList<Playlists> playlists, MediaControlDialog.UpdateLibrary update)
+    /*public LibraryFragment(ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<AlbumsSections> albumsSections, ArrayList<Playlists> playlists, MediaControlDialog.UpdateLibrary update)
     {
         this.songs = songs;
         this.artists = artists;
         this.albumsSections = albumsSections;
+        this.playlists = playlists;
+        this.update = update;
+    }*/
+
+    public LibraryFragment(ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<Albums> albums, ArrayList<Playlists> playlists, MediaControlDialog.UpdateLibrary update)
+    {
+        this.songs = songs;
+        this.artists = artists;
+        this.albums = albums;
         this.playlists = playlists;
         this.update = update;
     }
@@ -76,7 +86,7 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
         rootView = inflater.inflate(R.layout.fragment_library, container, false);
 
         viewPager = rootView.findViewById(R.id.viewpager);
-        musicPagerAdapter = new MusicPagerAdapter(getChildFragmentManager(), songs, artists, albumsSections, playlists, FROM_LIBRARY, update);
+        musicPagerAdapter = new MusicPagerAdapter(getChildFragmentManager(), songs, artists, albums, playlists, FROM_LIBRARY, update);
         viewPager.setAdapter(musicPagerAdapter);
         TabLayout tabLayout = rootView.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);

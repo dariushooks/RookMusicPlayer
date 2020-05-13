@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        LibraryFragment fragment = new LibraryFragment(songs, artists, albumsSections, playlists, this);
+        LibraryFragment fragment = new LibraryFragment(songs, artists, albums, playlists, this);
         transaction.add(R.id.fragment_container, fragment, "Main Library").commit();
 
         stateViewModel = new ViewModelProvider(this).get(StateViewModel.class);

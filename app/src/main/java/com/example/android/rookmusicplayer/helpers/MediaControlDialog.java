@@ -2,6 +2,7 @@ package com.example.android.rookmusicplayer.helpers;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -26,11 +27,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.MainActivity;
@@ -242,7 +245,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                     break;
 
             case ALBUM:
-                    setAlbumArt();
+                    setAlbumArt(album);
                     deleteText.setText(context.getString(R.string.deleteAlbumFromLibrary));
                     mediaName.setText(album.getAlbum());
                     mediaArtist.setText(album.getArtist());
@@ -352,26 +355,30 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
 
     private void setSongArt(Songs song)
     {
+        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(song.getId()));
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(song.getPath());
+        retriever.setDataSource(context, uri);
         byte[] cover = retriever.getEmbeddedPicture();
-        if(cover != null)
+        Glide.with(context).load(cover).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(mediaArt);
+        /*if(cover != null)
             mediaArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length));
         else
-            mediaArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
+            mediaArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));*/
         retriever.release();
     }
 
-    private void setAlbumArt()
+    private void setAlbumArt(Albums album)
     {
-        try
+        Uri uri = Uri.parse(album.getArt());
+        Glide.with(context).load(uri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(mediaArt);
+        /*try
         {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(album.getArt()));
             if(bitmap != null)
                 mediaArt.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 450, 200, false));
             else
                 mediaArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) { e.printStackTrace(); }*/
     }
 
     private void setPlaylistArt()

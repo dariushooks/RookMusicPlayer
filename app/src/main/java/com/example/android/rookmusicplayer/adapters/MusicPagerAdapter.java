@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.fragments.AlbumsFragment;
 import com.example.android.rookmusicplayer.AlbumsSections;
 import com.example.android.rookmusicplayer.Artists;
@@ -22,17 +23,29 @@ public class MusicPagerAdapter extends FragmentStatePagerAdapter
 {
     private ArrayList<Songs> songs;
     private ArrayList<Artists> artists;
+    private ArrayList<Albums> albums;
     private ArrayList<AlbumsSections> albumsSections;
     private ArrayList<Playlists> playlists;
     private MediaControlDialog.UpdateLibrary updateLibrary;
     private int from;
 
-    public MusicPagerAdapter(@NonNull FragmentManager fm, ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<AlbumsSections> albumsSections, ArrayList<Playlists> playlists, int from, MediaControlDialog.UpdateLibrary updateLibrary)
+    /*public MusicPagerAdapter(@NonNull FragmentManager fm, ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<AlbumsSections> albumsSections, ArrayList<Playlists> playlists, int from, MediaControlDialog.UpdateLibrary updateLibrary)
     {
         super(fm);
         this.songs = songs;
         this.artists = artists;
         this.albumsSections = albumsSections;
+        this.playlists = playlists;
+        this.from = from;
+        this.updateLibrary = updateLibrary;
+    }*/
+
+    public MusicPagerAdapter(@NonNull FragmentManager fm, ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<Albums> albums, ArrayList<Playlists> playlists, int from, MediaControlDialog.UpdateLibrary updateLibrary)
+    {
+        super(fm);
+        this.songs = songs;
+        this.artists = artists;
+        this.albums = albums;
         this.playlists = playlists;
         this.from = from;
         this.updateLibrary = updateLibrary;
@@ -46,7 +59,7 @@ public class MusicPagerAdapter extends FragmentStatePagerAdapter
         {
             case 0: return new SongsFragment(songs, from, updateLibrary);
             case 1: return new ArtistsFragment(artists, updateLibrary);
-            case 2: return new AlbumsFragment(albumsSections, updateLibrary);
+            case 2: return new AlbumsFragment(albums, -1, updateLibrary);
             case 3: return new PlaylistsFragment(playlists);
             default: return null;
         }

@@ -105,11 +105,11 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 break;
 
             default:
-                albumsAdapter = new AlbumsAdapter(App.albums, this);
+                albumsAdapter = new AlbumsAdapter(albums, this);
                 //albumsSectionsAdapter = new AlbumsSectionsAdapter(albumsSections,this);
                 //LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
-                layoutManager.setInitialPrefetchItemCount(App.albums.size());
+                layoutManager.setInitialPrefetchItemCount(albums.size());
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(albumsAdapter);
@@ -158,7 +158,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 AlbumsSections section = sectionContent.getSection();
                 albums = section.getSectionedAlbums();
                 albumsAdapter = section.getAlbumsAdapter();*/
-                mediaControlDialog = new MediaControlDialog(getContext(), album, App.albums, albumsAdapter, updateLibrary, FROM_LIBRARY);
+                mediaControlDialog = new MediaControlDialog(getContext(), album, albums, albumsAdapter, updateLibrary, FROM_LIBRARY);
                 mediaControlDialog.OpenDialog();
             }
         }
