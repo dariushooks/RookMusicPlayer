@@ -187,17 +187,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
         public void bind(int position)
         {
-            Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(songs.get(position).getId()));
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(context, uri);
-            byte[] cover = retriever.getEmbeddedPicture();
-            Glide.with(context).load(cover).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
-            retriever.release();
+            Uri artUri = Uri.parse(songs.get(position).getArt());
+            Glide.with(context).load(artUri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
 
             songName.setText(songs.get(position).getTitle());
             songArtist.setText(songs.get(position).getArtist());
-
-
 
             String duration;
             long minutes = (songs.get(position).getDuration() / 1000) / 60;

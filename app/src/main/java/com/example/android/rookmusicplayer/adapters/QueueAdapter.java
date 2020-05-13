@@ -113,25 +113,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
 
         public void bind(int position)
         {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-
-            try
-            {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(queueDisplay.get(position).getArt()));
-                if(bitmap != null)
-                {
-                    Glide.with(context).load(bitmap).into(albumArt);
-               /* albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));
-                //Log.i(TAG, songs.get(position).getTitle() + " Before: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
-                options.inSampleSize = calculateSampleSize(options, 45, 50);
-                options.inJustDecodeBounds = false;
-                albumArt.setImageBitmap(BitmapFactory.decodeByteArray(cover, 0, cover.length, options));*/
-                    //Log.i(TAG, songs.get(position).getTitle() + " After: " + "Width: " + options.outWidth + "\tHeight: " + options.outHeight);
-                }
-                else
-                    albumArt.setImageDrawable(context.getDrawable(R.drawable.noalbumart));
-            } catch (IOException e) { e.printStackTrace(); }
+            Uri uri = Uri.parse(queueDisplay.get(position).getArt());
+            Glide.with(context).load(uri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
 
             songName.setText(queueDisplay.get(position).getTitle());
             songArtist.setText(queueDisplay.get(position).getArtist());
