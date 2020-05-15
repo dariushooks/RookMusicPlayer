@@ -138,7 +138,7 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         public void bind(int position)
         {
             Uri albumArtUri = Uri.parse(albums.get(position).getArt());
-            requestManager.load(albumArtUri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart)
+            requestManager.load(albumArtUri).dontAnimate().dontTransform().placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)

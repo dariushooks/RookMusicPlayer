@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -26,6 +27,8 @@ import com.example.android.rookmusicplayer.adapters.ArtistDetailsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.android.rookmusicplayer.App.ARTIST_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
@@ -63,9 +66,15 @@ public class ArtistDetailsFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setSharedElementEnterTransition(new App.DetailsTransition());
-        setSharedElementReturnTransition(new App.DetailsTransition());
+        setSharedElementEnterTransition(new App.DetailsTransition().setDuration(500));
+        setEnterSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements)
+            {
+                sharedElements.put(names.get(0), artistName);
+            }
+        });
+        setSharedElementReturnTransition(new App.DetailsTransition().setDuration(500));
         setEnterTransition(new Fade());
         setReturnTransition(new Fade());
     }
@@ -97,7 +106,6 @@ public class ArtistDetailsFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        //artistName.setTransitionName(currentArtist.getArtist());
     }
 
     private LoaderManager.LoaderCallbacks<ArrayList> songsCallbacks = new LoaderManager.LoaderCallbacks<ArrayList>()

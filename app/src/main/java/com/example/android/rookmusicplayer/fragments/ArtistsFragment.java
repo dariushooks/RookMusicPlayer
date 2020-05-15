@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,8 @@ import com.example.android.rookmusicplayer.R;
 import com.example.android.rookmusicplayer.adapters.ArtistsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
 import static com.example.android.rookmusicplayer.App.SEARCH;
@@ -37,6 +40,7 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.ListItem
     private MediaControlDialog mediaControlDialog;
     private IndexScroller indexScroller;
     private int code;
+    private int position;
     private MediaControlDialog.UpdateLibrary updateLibrary;
 
     public ArtistsFragment(ArrayList<Artists> artists, MediaControlDialog.UpdateLibrary updateLibrary)
@@ -52,6 +56,24 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.ListItem
         this.updateLibrary = updateLibrary;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements)
+            {
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                if(viewHolder == null)
+                    return;
+                sharedElements.put(names.get(0), viewHolder.itemView.findViewById(R.id.artistName));
+            }
+        });
+        setExitTransition(new Fade());
+        setReenterTransition(new Fade());
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -59,7 +81,7 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.ListItem
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = getLayoutInflater().inflate(R.layout.fragment_artists, container, false);
         recyclerView = rootView.findViewById(R.id.artistsList);
-        artistsAdapter = new ArtistsAdapter(artists, this);
+        artistsAdapter = new ArtistsAdapter(artists, this, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -77,17 +99,7 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.ListItem
                 indexScroller.setScrolling();
                 break;
         }
-
-
-        setExitTransition(new Fade());
-        setReenterTransition(new Fade());
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -99,6 +111,7 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.ListItem
     @Override
     public void onListItemClick(int position, TextView artist)
     {
+        this.position = position;
         nowPlayingArtist.sendArtist(artists.get(position), artist, updateLibrary);
     }
 

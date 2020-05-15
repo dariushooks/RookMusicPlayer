@@ -1,6 +1,7 @@
 package com.example.android.rookmusicplayer.adapters;
 
 import android.content.Context;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.R;
+import com.example.android.rookmusicplayer.fragments.ArtistsFragment;
 import com.example.android.rookmusicplayer.helpers.SectionIndexFixer;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
     private String TAG = ArtistsAdapter.class.getSimpleName();
     private ArrayList<Artists> artists;
     private ArtistsAdapter.ListItemClickListener listener;
+    private ArtistsFragment fragment;
     private Context context;
     public interface ListItemClickListener
     {
@@ -33,10 +37,11 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
         void onLongListItemClick(int position);
     }
 
-    public ArtistsAdapter(ArrayList<Artists> artists, ArtistsAdapter.ListItemClickListener listener)
+    public ArtistsAdapter(ArrayList<Artists> artists, ArtistsAdapter.ListItemClickListener listener, ArtistsFragment fragment)
     {
         this.artists = artists;
         this.listener = listener;
+        this.fragment = fragment;
         //setHasStableIds(true);
         lettersArtists.clear(); sectionsArtists.clear();
         for (int i = 0; i < this.artists.size(); i++)
@@ -50,6 +55,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
                     lettersArtists.add(letter.toUpperCase());
                     sectionsArtists.add(i);
                 }
+
                 else if(!lettersArtists.contains(letter) && lettersArtists.size() < 26)
                 {
                     lettersArtists.add(letter.toUpperCase());
@@ -123,14 +129,14 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
 
         public void bind(int position)
         {
-            artistArt.setImageDrawable(context.getDrawable(R.drawable.ic_noartistart));
+            Glide.with(fragment).load(R.drawable.ic_noartistart).into(artistArt);
             artistName.setText(artists.get(position).getArtist());
-
         }
 
         @Override
         public void onClick(View view)
         {
+            ((Fade) fragment.getExitTransition()).excludeTarget(view, true);
             int clickedPosition = getAdapterPosition();
             listener.onListItemClick(clickedPosition, artistName);
         }

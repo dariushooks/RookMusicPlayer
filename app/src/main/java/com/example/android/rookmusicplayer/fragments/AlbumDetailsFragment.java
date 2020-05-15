@@ -121,7 +121,7 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
 
         albumArt = rootView.findViewById(R.id.albumDetailArt);
         albumArt.setTransitionName(currentAlbum.getAlbum());
-        Glide.with(this).load(Uri.parse(art)).dontAnimate().fallback(R.drawable.noalbumart).error(R.drawable.noalbumart)
+        Glide.with(this).load(Uri.parse(art)).dontAnimate().dontTransform().fallback(R.drawable.noalbumart).error(R.drawable.noalbumart)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
