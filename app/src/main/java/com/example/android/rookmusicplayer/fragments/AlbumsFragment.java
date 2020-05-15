@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +27,8 @@ import com.example.android.rookmusicplayer.adapters.AlbumsAdapter;
 import com.example.android.rookmusicplayer.adapters.AlbumsSectionsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.android.rookmusicplayer.App.ARTIST_DETAIL;
 import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
@@ -48,6 +51,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
     private IndexScroller indexScroller;
     private int code;
     private int from;
+    private int position;
     private MediaControlDialog.UpdateLibrary updateLibrary;
 
     public AlbumsFragment(ArrayList<AlbumsSections> albumsSections, MediaControlDialog.UpdateLibrary updateLibrary)
@@ -68,10 +72,20 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
     {
         super.onCreate(savedInstanceState);
 
-        setSharedElementEnterTransition(new App.DetailsTransition());
-        setSharedElementReturnTransition(new App.DetailsTransition());
+        //setSharedElementEnterTransition(new App.DetailsTransition().setDuration(500));
+        //setSharedElementReturnTransition(new App.DetailsTransition());
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements)
+            {
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                if(viewHolder == null)
+                    return;
+                sharedElements.put(names.get(0), viewHolder.itemView.findViewById(R.id.gridArt));
+            }
+        });
         setExitTransition(new Fade());
-        setReenterTransition(new Fade());
+        setReenterTransition(new Fade().setStartDelay(500));
     }
 
     @Nullable
@@ -85,7 +99,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
         switch (code)
         {
             case ARTIST_DETAIL:
-                albumsAdapter = new AlbumsAdapter(albums, this);
+                albumsAdapter = new AlbumsAdapter(albums, this, this);
                 GridLayoutManager gridlayoutManager1 = new GridLayoutManager(getContext(), 2);
                 recyclerView.setLayoutManager(gridlayoutManager1);
                 recyclerView.setAdapter(albumsAdapter);
@@ -95,7 +109,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 break;
 
             case SEARCH:
-                albumsAdapter = new AlbumsAdapter(albums, this);
+                albumsAdapter = new AlbumsAdapter(albums, this, this);
                 GridLayoutManager gridlayoutManager2 = new GridLayoutManager(getContext(), 2);
                 recyclerView.setLayoutManager(gridlayoutManager2);
                 recyclerView.setAdapter(albumsAdapter);
@@ -105,7 +119,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 break;
 
             default:
-                albumsAdapter = new AlbumsAdapter(albums, this);
+                albumsAdapter = new AlbumsAdapter(albums, this, this);
                 //albumsSectionsAdapter = new AlbumsSectionsAdapter(albumsSections,this);
                 //LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
@@ -120,25 +134,36 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
                 break;
         }
 
+        postponeEnterTransition();
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        /*recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
+            {
+                recyclerView.removeOnLayoutChangeListener(this);
+                final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                View viewAtPosition = layoutManager.findViewByPosition(position);
+                // Scroll to position if the view for the current position is null (not currently part of
+                // layout manager children), or it's not completely visible.
+                if (viewAtPosition == null || layoutManager.isViewPartiallyVisible(viewAtPosition, false, true))
+                {
+                    recyclerView.post(() -> layoutManager.scrollToPosition(position));
+                }
+            }
+        });*/
     }
 
     @Override
-    public void onListItemClick(Albums album, ImageView art)
+    public void onListItemClick(Albums album, ImageView art, int position)
     {
-        nowPlayingAlbum.sendAlbum(album, art, from, updateLibrary);
+        this.position = position;
+        nowPlayingAlbum.sendAlbum(album, art, from, updateLibrary, position);
     }
 
     @Override
@@ -167,7 +192,7 @@ public class AlbumsFragment extends Fragment implements AlbumsAdapter.ListItemCl
 
     public interface NowPlayingAlbum
     {
-        void sendAlbum(Albums album, ImageView sharedArt, int from, MediaControlDialog.UpdateLibrary updateLibrary);
+        void sendAlbum(Albums album, ImageView sharedArt, int from, MediaControlDialog.UpdateLibrary updateLibrary, int position);
     }
 
     @Override

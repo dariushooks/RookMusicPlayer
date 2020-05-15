@@ -181,7 +181,10 @@ public class App extends Application
         public DetailsTransition()
         {
             setOrdering(ORDERING_TOGETHER);
-            addTransition(new ChangeBounds()).addTransition(new ChangeTransform()).addTransition(new ChangeClipBounds()).addTransition(new ChangeImageTransform());
+            addTransition(new ChangeBounds())
+                    .addTransition(new ChangeTransform())
+                    .addTransition(new ChangeClipBounds());
+                    //.addTransition(new ChangeImageTransform());
         }
     }
 

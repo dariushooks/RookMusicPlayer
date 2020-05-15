@@ -3,9 +3,12 @@ package com.example.android.rookmusicplayer.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.transition.Fade;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +16,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.R;
+import com.example.android.rookmusicplayer.fragments.AlbumsFragment;
 import com.example.android.rookmusicplayer.helpers.SectionIndexFixer;
 
 import java.io.IOException;
@@ -35,16 +45,20 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
     private ArrayList<Albums> albums;
     private ListItemClickListener listener;
     private Context context;
+    private AlbumsFragment fragment;
+    private RequestManager requestManager;
     public interface ListItemClickListener
     {
-        void onListItemClick(Albums album, ImageView art);
+        void onListItemClick(Albums album, ImageView art, int position);
         void onLongItemClick(Albums album);
     }
 
-    public AlbumsAdapter(ArrayList<Albums> albums, ListItemClickListener listener)
+    public AlbumsAdapter(ArrayList<Albums> albums, ListItemClickListener listener, AlbumsFragment fragment)
     {
         this.albums = albums;
         this.listener = listener;
+        this.fragment = fragment;
+        this.requestManager = Glide.with(fragment);
         setHasStableIds(true);
         lettersAlbums.clear(); sectionsAlbums.clear();
         for (int i = 0; i < this.albums.size(); i++)
@@ -124,7 +138,22 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         public void bind(int position)
         {
             Uri albumArtUri = Uri.parse(albums.get(position).getArt());
-            Glide.with(context).load(albumArtUri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
+            requestManager.load(albumArtUri).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
+                        {
+                            fragment.startPostponedEnterTransition();
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource)
+                        {
+                            fragment.startPostponedEnterTransition();
+                            return false;
+                        }
+                    }).into(albumArt);
             albumName.setText(albums.get(position).getAlbum());
             albumArtist.setText(albums.get(position).getArtist());
         }
@@ -132,8 +161,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
         @Override
         public void onClick(View view)
         {
+            ((Fade) fragment.getExitTransition()).excludeTarget(view, true);
             int clickedPosition = getAdapterPosition();
-            listener.onListItemClick(albums.get(clickedPosition), albumArt);
+            listener.onListItemClick(albums.get(clickedPosition), albumArt, clickedPosition);
         }
 
         @Override

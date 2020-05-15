@@ -132,7 +132,7 @@ public class AlbumsSectionsAdapter extends RecyclerView.Adapter<AlbumsSectionsAd
             GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
             //LinearLayoutManager layoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
             layoutManager.setInitialPrefetchItemCount(albums.size() + 1);
-            AlbumsAdapter albumsAdapter = new AlbumsAdapter(albums, listener);
+            AlbumsAdapter albumsAdapter = new AlbumsAdapter(albums, listener, null);
             albumsSections.get(position).setAlbumsAdapter(albumsAdapter);
             recyclerView.setRecycledViewPool(viewPool);
             recyclerView.setLayoutManager(layoutManager);

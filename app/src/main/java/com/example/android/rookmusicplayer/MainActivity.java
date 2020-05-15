@@ -274,9 +274,9 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     }
 
     @Override
-    public void sendAlbum(Albums album, ImageView sharedArt, int from, MediaControlDialog.UpdateLibrary updateLibrary)
+    public void sendAlbum(Albums album, ImageView sharedArt, int from, MediaControlDialog.UpdateLibrary updateLibrary, int position)
     {
-        AlbumDetailsFragment fragment = new AlbumDetailsFragment(album, updateLibrary);
+        AlbumDetailsFragment fragment = new AlbumDetailsFragment(album, updateLibrary, position);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.addSharedElement(sharedArt, sharedArt.getTransitionName()).replace(R.id.fragment_container, fragment).addToBackStack("").commit();

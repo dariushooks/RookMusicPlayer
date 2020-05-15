@@ -302,13 +302,13 @@ public class GetMedia extends AsyncTaskLoader<ArrayList>
 
             do
             {
-                String ID = cursor.getString(id);
+                //String row = cursor.getString(id);
                 String currentAlbum = cursor.getString(album);
                 long currentAlbumID = cursor.getLong(albumID);
                 String currentAlbumKey = cursor.getString(albumKey);
                 String currentArtist = cursor.getString(artist);
                 String currentArt = ContentUris.withAppendedId(albumArtUri, currentAlbumID).toString();
-                albums.add(new Albums(ID, currentAlbum, currentAlbumKey, currentArt, currentArtist));
+                albums.add(new Albums("0", currentAlbum, currentAlbumKey, currentArt, currentArtist));
             }while(cursor.moveToNext());
             cursor.close();
             return albums;

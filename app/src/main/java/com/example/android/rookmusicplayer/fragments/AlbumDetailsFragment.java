@@ -1,6 +1,7 @@
 package com.example.android.rookmusicplayer.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -22,6 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.App;
 import com.example.android.rookmusicplayer.helpers.GetMedia;
@@ -35,6 +41,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.android.rookmusicplayer.App.ALBUM_MEDIA_LOADER;
 import static com.example.android.rookmusicplayer.App.CLEAR;
@@ -54,6 +62,7 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
     private View rootView;
     private ArrayList<Songs> albumSongs;
     private Albums currentAlbum;
+    private int position;
     private AlbumDetailsAdapter albumDetailsAdapter;
     private RecyclerView recyclerView;
     private String album;
@@ -70,10 +79,11 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
     private MediaControlDialog mediaControlDialog;
     private MediaControlDialog.UpdateLibrary updateLibrary;
 
-    public AlbumDetailsFragment(Albums currentAlbum, MediaControlDialog.UpdateLibrary updateLibrary)
+    public AlbumDetailsFragment(Albums currentAlbum, MediaControlDialog.UpdateLibrary updateLibrary, int position)
     {
         this.currentAlbum = currentAlbum;
         this.updateLibrary = updateLibrary;
+        this.position = position;
     }
 
     public AlbumDetailsFragment(Songs currentAlbum, MediaControlDialog.UpdateLibrary updateLibrary)
@@ -86,11 +96,10 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setSharedElementEnterTransition(new App.DetailsTransition());
-        setSharedElementReturnTransition(new App.DetailsTransition());
+        setSharedElementEnterTransition(new App.DetailsTransition().setDuration(500));
+        setSharedElementReturnTransition(new App.DetailsTransition().setDuration(500));
         setEnterTransition(new Fade().setStartDelay(500));
-        setReturnTransition(new Fade());
+        setReturnTransition(new Fade().excludeTarget(albumArt, true));
     }
 
     @Nullable
@@ -111,11 +120,25 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
         albumArtist.setText(artist);
 
         albumArt = rootView.findViewById(R.id.albumDetailArt);
+        albumArt.setTransitionName(currentAlbum.getAlbum());
+        Glide.with(this).load(Uri.parse(art)).dontAnimate().fallback(R.drawable.noalbumart).error(R.drawable.noalbumart)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
+                    {
+                        startPostponedEnterTransition();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource)
+                    {
+                        startPostponedEnterTransition();
+                        return false;
+                    }
+                }).into(albumArt);
 
         recyclerView = rootView.findViewById(R.id.albumDetailSongs);
-
-        Glide.with(getContext()).load(Uri.parse(art)).placeholder(R.drawable.noalbumart).fallback(R.drawable.noalbumart).error(R.drawable.noalbumart).into(albumArt);
-
         numberOfSongs = rootView.findViewById(R.id.numberOfSongs);
 
         playAlbum = rootView.findViewById(R.id.playAlbum);
@@ -127,7 +150,14 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
 
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         LoaderManager.getInstance(this).initLoader(ALBUM_MEDIA_LOADER, null, this);
-
+        setEnterSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements)
+            {
+                sharedElements.put(names.get(0), albumArt);
+            }
+        });
+        postponeEnterTransition();
         return rootView;
     }
 
@@ -135,7 +165,6 @@ public class AlbumDetailsFragment extends Fragment implements LoaderManager.Load
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        albumArt.setTransitionName(currentAlbum.getAlbum());
     }
 
     private void setQueue(int position)
