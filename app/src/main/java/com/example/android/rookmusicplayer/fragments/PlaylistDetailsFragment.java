@@ -80,8 +80,6 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
 
         playlistDescription = rootView.findViewById(R.id.playlistDescription);
         playlistDescription.setText(currentPlaylist.getDescription());
-        //if(!playlistDescription.getText().equals(""))
-            //playlistDescription.setVisibility(View.VISIBLE);
 
         playAlbum = rootView.findViewById(R.id.playAlbum);
         playAlbum.setOnClickListener(this);
@@ -167,7 +165,8 @@ public class PlaylistDetailsFragment extends Fragment implements LoaderManager.L
     @Override
     public void onListItemClick(int position)
     {
-        Collections.sort(playlistSongs, Comparator.comparing(Songs::getTitle));
+        Collections.sort(playlistSongs, Comparator.comparing(Songs::getTrack));
+        Collections.reverse(playlistSongs);
         App.playlistSongs = playlistSongs;
         setQueue(position);
     }

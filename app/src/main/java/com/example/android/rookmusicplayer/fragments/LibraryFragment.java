@@ -32,11 +32,12 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
+import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
 import static com.example.android.rookmusicplayer.App.FROM_LIBRARY;
 import static com.example.android.rookmusicplayer.App.GET_ALBUM_SONGS;
 import static com.example.android.rookmusicplayer.App.LIBRARY_MEDIA_LOADER;
 
-public class LibraryFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList>
+public class LibraryFragment extends Fragment //implements LoaderManager.LoaderCallbacks<ArrayList>
 {
     private final String TAG = LibraryFragment.class.getSimpleName();
 
@@ -114,9 +115,9 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
-    public void deleteAlbumFromLibrary(Albums album, ArrayList<Songs> albumSongs)
+    public void deleteAlbumFromLibrary(Albums album, ArrayList<Songs> albumSongs, int from)
     {
-        SectionContent sectionContent = new SectionContent(album, albumsSections);
+        /*SectionContent sectionContent = new SectionContent(album, albumsSections);
         AlbumsSections section = sectionContent.getSection();
         ArrayList<Albums> albums = section.getSectionedAlbums();
         for(int j = 0; j < albums.size(); j++)
@@ -126,7 +127,16 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
                 albums.remove(albums.get(j));
                 App.albums.remove(albums.get(j));
             }
-        }
+        }*/
+        if(from == FROM_ARTIST)
+            for(int i = 0; i < albums.size(); i++)
+            {
+                if(albums.get(i).getAlbum().equals(album.getAlbum()))
+                {
+                    albums.remove(albums.get(i));
+                    App.albums.remove(albums.get(i));
+                }
+            }
 
         for(int i = 0; i < albumSongs.size(); i++)
         {
@@ -136,15 +146,20 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
         musicPagerAdapter.notifyDataSetChanged();
     }
 
-    public void deleteArtistFromLibrary(Artists artist, ArrayList<Albums> artistAlbums)
+    public void deleteArtistFromLibrary(Artists artist, ArrayList<Songs> artistSongs)
     {
-        artists.remove(artist);
-        App.artists.remove(artist);
-
-        for(int i = 0; i < artistAlbums.size(); i++)
+        /*for(int i = 0; i < artists.size(); i++)
         {
-            album = artistAlbums.get(i);
-            LoaderManager.getInstance(this).initLoader(LIBRARY_MEDIA_LOADER, null, this);
+            if(artists.get(i).getArtist().equals(artist.getArtist()))
+            {
+                boolean r1 = artists.remove(artists.get(i));
+                boolean r2 = App.artists.remove(artists.get(i));
+            }
+        }*/
+
+        for(int i = 0; i < artistSongs.size(); i++)
+        {
+            deleteSongFromLibrary(artistSongs.get(i));
         }
 
         musicPagerAdapter.notifyDataSetChanged();
@@ -159,7 +174,7 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
         catch (ClassCastException e) { throw new ClassCastException(context.toString().trim() + " must implement search"); }
     }
 
-    @NonNull
+    /*@NonNull
     @Override
     public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
     {
@@ -173,5 +188,5 @@ public class LibraryFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}
+    public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}*/
 }

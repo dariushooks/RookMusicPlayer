@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
+import com.example.android.rookmusicplayer.architecture.LibraryViewModel;
 import com.example.android.rookmusicplayer.architecture.StateViewModel;
 import com.example.android.rookmusicplayer.fragments.AlbumDetailsFragment;
 import com.example.android.rookmusicplayer.fragments.AlbumsFragment;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int PERMISSION_REQUEST_CODE = 1;
     private StateViewModel stateViewModel;
+    private LibraryViewModel libraryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -219,19 +222,19 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     }
 
     @Override
-    public void updateAlbumsLibrary(Albums album, ArrayList<Songs> albumSongs)
+    public void updateAlbumsLibrary(Albums album, ArrayList<Songs> albumSongs, int from)
     {
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
-            fragment.deleteAlbumFromLibrary(album, albumSongs);
+            fragment.deleteAlbumFromLibrary(album, albumSongs, from);
     }
 
     @Override
-    public void updateArtistsLibrary(Artists artist, ArrayList<Albums> artistAlbums)
+    public void updateArtistsLibrary(Artists artist, ArrayList<Songs> artistSongs)
     {
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
-            fragment.deleteArtistFromLibrary(artist, artistAlbums);
+            fragment.deleteArtistFromLibrary(artist, artistSongs);
     }
 
     @Override

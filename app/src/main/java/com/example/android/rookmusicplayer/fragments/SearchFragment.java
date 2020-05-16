@@ -89,7 +89,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener
             @Override
             public boolean onQueryTextSubmit(String s)
             {
-                FragmentManager manager = getFragmentManager();
+                FragmentManager manager = getParentFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 getQuery(transaction, s);
                 return false;
