@@ -440,7 +440,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                         String[] selectionArgsSong = {song.getId()};
                         contentResolver.delete(songUri, selectionSong, selectionArgsSong);*/
 
-                        Toast.makeText(context, song.getTitle() + " DELETED", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, song.getTitle() + " DELETED", Toast.LENGTH_SHORT).show();
                         //Log.i(TAG, song.getTitle().toUpperCase() + " DELETED FROM LIBRARY");
                         break;
 
@@ -647,7 +647,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                     contentResolver.delete(albumSongsUri, selectionAlbumSongs, selectionArgsAlbumSongs);
                 }*/
 
-                Toast.makeText(context, albumName + " DELETED", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, albumName + " DELETED", Toast.LENGTH_SHORT).show();
                 //Log.i(TAG, albumName.toUpperCase() + " DELETED FROM LIBRARY");
             }
 
@@ -695,7 +695,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                     }
                 }*/
 
-                Toast.makeText(context, artist.getArtist() + " DELETED", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, artist.getArtist() + " DELETED", Toast.LENGTH_SHORT).show();
                 //Log.i(TAG, artist.getArtist().toUpperCase() + " DELETED FROM LIBRARY");
                 //LoaderManager.getInstance((MainActivity) context).initLoader(DIALOG_MEDIA_LOADER, null, albumsCallbacks);
             }

@@ -1,8 +1,14 @@
 package com.example.android.rookmusicplayer;
 
 import android.Manifest;
+import android.app.RecoverableSecurityException;
+import android.content.ContentUris;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -71,12 +77,15 @@ import static com.example.android.rookmusicplayer.App.songs;
 public class MainActivity extends AppCompatActivity implements SongsFragment.NowPlayingLibrary, AlbumsFragment.NowPlayingAlbum, ArtistsFragment.NowPlayingArtist, PlaylistsFragment.NowPlayingPlaylist, GoToDialog.GoTo, LibraryFragment.Query, MediaControlDialog.UpdateLibrary
 {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CODE = 1;
 
     //PERMISSIONS
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int PERMISSION_REQUEST_CODE = 1;
     private StateViewModel stateViewModel;
     private LibraryViewModel libraryViewModel;
+    private ArrayList<Songs> deleteSongs;
+    private String mediaName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -219,6 +228,10 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteSongFromLibrary(song);
+        mediaName = song.getTitle();
+        ArrayList<Songs> list = new ArrayList<>();
+        list.add(song);
+        deleteMedia(list);
     }
 
     @Override
@@ -227,6 +240,8 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteAlbumFromLibrary(album, albumSongs, from);
+        mediaName = album.getAlbum();
+        deleteMedia(albumSongs);
     }
 
     @Override
@@ -235,6 +250,29 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteArtistFromLibrary(artist, artistSongs);
+        mediaName = artist.getArtist();
+        deleteMedia(artistSongs);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK)
+        {
+            String selectionSongs = MediaStore.Audio.Media._ID + "=?";
+            for(int i = 0; i < deleteSongs.size(); i++)
+            {
+                long songId = Long.parseLong(deleteSongs.get(i).getId());
+                Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
+                String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
+                getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+            }
+            Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
+        }
+
+        else
+            Toast.makeText(this, "ACCESS DENIED", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -344,6 +382,41 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.addSharedElement(sharedImage, sharedImage.getTransitionName()).replace(R.id.fragment_container, fragment).addToBackStack("").commit();
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
+    }
+
+    private void deleteMedia(ArrayList<Songs> deleteSongs)
+    {
+        this.deleteSongs = deleteSongs;
+        String selectionSongs = MediaStore.Audio.Media._ID + "=?";
+        for(int i = 0; i < deleteSongs.size(); i++)
+        {
+            long songId = Long.parseLong(deleteSongs.get(i).getId());
+            Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
+            String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
+            try
+            {
+                getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+            }
+
+            catch (SecurityException securityException)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                {
+                    RecoverableSecurityException recoverableSecurityException;
+                    if (securityException instanceof RecoverableSecurityException)
+                        recoverableSecurityException = (RecoverableSecurityException) securityException;
+                    else
+                        throw new RuntimeException(securityException.getMessage(), securityException);
+                    IntentSender intentSender = recoverableSecurityException.getUserAction().getActionIntent().getIntentSender();
+                    try {
+                        startIntentSenderForResult(intentSender, REQUEST_CODE, null, 0, 0, 0, null);
+                    } catch (IntentSender.SendIntentException e) { e.printStackTrace(); }
+                }
+
+                else
+                    throw new RuntimeException(securityException.getMessage(), securityException);
+            }
+        }
     }
 
 

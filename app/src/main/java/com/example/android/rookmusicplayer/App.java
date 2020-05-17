@@ -163,7 +163,6 @@ public class App extends Application
 
         if (height > reqHeight || width > reqWidth)
         {
-
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
 
