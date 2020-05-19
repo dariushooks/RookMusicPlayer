@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             public void onChanged(List<Songs> songs)
             {
                 savedSongs = (ArrayList<Songs>) songs;
-                //Log.i(TAG, "RETRIEVED " + savedSongs.size() + " SONGS FROM SAVED QUEUE");
+                Log.i(TAG, "RETRIEVED " + savedSongs.size() + " SONGS FROM SAVED QUEUE");
             }
         });
 

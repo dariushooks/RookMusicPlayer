@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import com.example.android.rookmusicplayer.SavedStateDetails;
 import com.example.android.rookmusicplayer.Songs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StateViewModel extends AndroidViewModel
@@ -27,7 +26,7 @@ public class StateViewModel extends AndroidViewModel
         savedStateDetails = stateRepository.getSavedStateDetails();
     }
 
-    public void insertAll(ArrayList<Songs> savedQueue)
+    public void insertAll(List<Songs> savedQueue)
     {
         stateRepository.insertAll(savedQueue);
     }

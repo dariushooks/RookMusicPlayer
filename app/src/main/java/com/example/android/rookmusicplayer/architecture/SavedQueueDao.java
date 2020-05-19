@@ -6,15 +6,13 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.example.android.rookmusicplayer.Songs;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
 public interface SavedQueueDao
 {
     @Insert
-    void insertAll(ArrayList<Songs> savedQueue);
+    void insertAll(List<Songs> savedQueue);
 
     @Query("DELETE FROM saved_queue")
     void deleteSavedQueue();

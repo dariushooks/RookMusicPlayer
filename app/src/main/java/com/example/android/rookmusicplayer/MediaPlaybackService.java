@@ -255,6 +255,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
                 //SHOW PLAY NOTIFICATION
                 buildNotification(MediaPlaybackService.this, queue.get(position));
+                handler.post(updateQueueState);
             }
         }
 
@@ -724,7 +725,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             {
                 //Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
                 updateSavedState();
-                handler.post(this);
+                handler.postDelayed(this, 1000);
             }
 
             else
@@ -906,6 +907,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void setSong(String mediaId)
     {
+        saveQueue();
         Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(mediaId));
         try
         {

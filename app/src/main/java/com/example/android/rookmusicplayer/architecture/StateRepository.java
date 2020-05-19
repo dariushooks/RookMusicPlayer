@@ -27,7 +27,7 @@ public class StateRepository
         savedStateDetails = savedDetailsDao.getSavedDetails();
     }
 
-    public void insertAll(ArrayList<Songs> savedQueue)
+    public void insertAll(List<Songs> savedQueue)
     {
         new InsertAllQueueAsyncTask(savedQueueDao).execute(savedQueue);
     }
@@ -67,7 +67,7 @@ public class StateRepository
         return  savedStateDetails;
     }
 
-    private static class InsertAllQueueAsyncTask extends AsyncTask<ArrayList<Songs>, Void, Void>
+    private static class InsertAllQueueAsyncTask extends AsyncTask<List<Songs>, Void, Void>
     {
         private SavedQueueDao savedQueueDao;
 
@@ -77,9 +77,9 @@ public class StateRepository
         }
 
         @Override
-        protected Void doInBackground(ArrayList<Songs>... arrayLists)
+        protected Void doInBackground(List<Songs>... lists)
         {
-            savedQueueDao.insertAll(arrayLists[0]);
+            savedQueueDao.insertAll(lists[0]);
             return null;
         }
     }
