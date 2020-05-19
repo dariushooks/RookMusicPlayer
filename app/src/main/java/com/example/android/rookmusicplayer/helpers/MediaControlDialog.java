@@ -1,22 +1,14 @@
 package com.example.android.rookmusicplayer.helpers;
 
 import android.app.Dialog;
-import android.app.PendingIntent;
-import android.app.RecoverableSecurityException;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.IntentSender;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -31,8 +23,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +43,6 @@ import com.example.android.rookmusicplayer.adapters.PlaylistsAdapter;
 import com.example.android.rookmusicplayer.adapters.SongsAdapter;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.example.android.rookmusicplayer.App.DIALOG_MEDIA_LOADER;
@@ -62,8 +51,6 @@ import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
 import static com.example.android.rookmusicplayer.App.FROM_LIBRARY;
 import static com.example.android.rookmusicplayer.App.FROM_PLAYLIST;
 import static com.example.android.rookmusicplayer.App.GET_ALBUM_SONGS;
-import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUM;
-import static com.example.android.rookmusicplayer.App.GET_ARTIST_ALBUMS;
 import static com.example.android.rookmusicplayer.App.GET_ARTIST_SONGS;
 import static com.example.android.rookmusicplayer.App.mediaBrowserHelper;
 import static com.example.android.rookmusicplayer.App.playlists;
@@ -82,7 +69,6 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
     private int removePosition;
     private ArrayList<Songs> albumSongs;
     private ArrayList<Songs> artistSongs;
-    private ArrayList<Albums> artistAlbums;
 
     private Songs song;
     private Songs playlistSong;
@@ -107,7 +93,6 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
     private int code;
     private int ID;
     private Context context;
-    private GetMedia getMedia;
     private MediaControlDialog.UpdateLibrary updateLibrary;
     private MediaControlDialog.UpdatePlaylist updatePlaylist;
 
@@ -422,17 +407,17 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                 {
                     case SONG:
                         alertDialog.dismiss();
+                        /*if(code == FROM_ALBUM || code == FROM_ARTIST)
+                        {
+                            updateLibrary.updateSongsLibrary(song);
+                        }*/
+                        updateLibrary.updateSongsLibrary(song);
                         removePosition = librarySongs.indexOf(song);
                         librarySongs.remove(song);
                         if(code == FROM_LIBRARY || code == FROM_ARTIST)
                             librarySongsAdapter.notifyItemRemoved(removePosition);
                         else if(code == FROM_ALBUM)
                             albumSongsAdapter.notifyItemRemoved(removePosition);
-
-                        if(code == FROM_ALBUM || code == FROM_ARTIST)
-                        {
-                            updateLibrary.updateSongsLibrary(song);
-                        }
 
                         /*long songId = Long.parseLong(song.getId());
                         Uri songUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
@@ -626,78 +611,22 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
             if(media == ALBUM)
             {
                 albumSongs = data;
-                String albumName = album.getAlbum();
-                //String albumKey = album.getKey();
+                updateLibrary.updateAlbumsLibrary(album, albumSongs, code);
                 if(code == FROM_LIBRARY || code == FROM_ARTIST)
                 {
                     removePosition = libraryAlbums.indexOf(album);
                     libraryAlbums.remove(album);
                     libraryAlbumsAdapter.notifyItemRemoved(removePosition);
                 }
-
-                updateLibrary.updateAlbumsLibrary(album, albumSongs, code);
-
-
-                /*String selectionAlbumSongs = MediaStore.Audio.Media._ID + "=?";
-                for(int i = 0; i < albumSongs.size(); i++)
-                {
-                    long songId = Long.parseLong(albumSongs.get(i).getId());
-                    Uri albumSongsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
-                    String[] selectionArgsAlbumSongs = {albumSongs.get(i).getId()};
-                    contentResolver.delete(albumSongsUri, selectionAlbumSongs, selectionArgsAlbumSongs);
-                }*/
-
-                //Toast.makeText(context, albumName + " DELETED", Toast.LENGTH_SHORT).show();
-                //Log.i(TAG, albumName.toUpperCase() + " DELETED FROM LIBRARY");
             }
 
             else
             {
-                ID = ((GetMedia) loader).getArtistId();
                 artistSongs = data;
+                updateLibrary.updateArtistsLibrary(artist, artistSongs);
                 removePosition = libraryArtists.indexOf(artist);
                 libraryArtists.remove(artist);
                 libraryArtistsAdapter.notifyItemRemoved(removePosition);
-                updateLibrary.updateArtistsLibrary(artist, artistSongs);
-
-                /*String selectionArtistSongs = MediaStore.Audio.Media._ID + "=?";
-
-                for(int i = 0; i < artistSongs.size(); i++)
-                {
-                    long songId = Long.parseLong(artistSongs.get(i).getId());
-                    Uri artistSongsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
-                    String[] selectionArgsArtistSongs = {artistSongs.get(i).getId()};
-                    try
-                    {
-                        contentResolver.delete(artistSongsUri, selectionArtistSongs, selectionArgsArtistSongs);
-                    }
-
-                    catch (SecurityException securityException)
-                    {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                        {
-                            RecoverableSecurityException recoverableSecurityException;
-                            if (securityException instanceof RecoverableSecurityException)
-                                recoverableSecurityException = (RecoverableSecurityException) securityException;
-                            else
-                                throw new RuntimeException(securityException.getMessage(), securityException);
-                            IntentSender intentSender = recoverableSecurityException.getUserAction().getActionIntent().getIntentSender();
-                            try {
-                                startIntentSenderForResult(intentSender, 1, null, 0, 0, 0, null);
-                            } catch (IntentSender.SendIntentException e) {
-                                e.printStackTrace();
-                            }
-                            //startIntentSenderForResult(intentSender, image-request-code, null, 0, 0, 0, null);
-                        }
-
-                        else
-                            throw new RuntimeException(securityException.getMessage(), securityException);
-                    }
-                }*/
-
-                //Toast.makeText(context, artist.getArtist() + " DELETED", Toast.LENGTH_SHORT).show();
-                //Log.i(TAG, artist.getArtist().toUpperCase() + " DELETED FROM LIBRARY");
-                //LoaderManager.getInstance((MainActivity) context).initLoader(DIALOG_MEDIA_LOADER, null, albumsCallbacks);
             }
         }
 

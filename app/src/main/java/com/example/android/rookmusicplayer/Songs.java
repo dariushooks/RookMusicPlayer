@@ -1,10 +1,17 @@
 package com.example.android.rookmusicplayer;
 
-import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Parcel;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "saved_queue")
 public class Songs implements Parcelable
 {
+    @PrimaryKey(autoGenerate = true)
+    private int rowId;
+
     private String id;
     private String title;
     private String album;
@@ -29,6 +36,52 @@ public class Songs implements Parcelable
         this.path = path;
         this.track = track;
     }
+
+    //GETTERS
+    public int getRowId() { return rowId; }
+
+    public String getId() {return id;}
+
+    public String getTitle() {return title;}
+
+    public String getAlbum() {return album;}
+
+    public String getAlbumKey() {return albumKey;}
+
+    public String getArt() {return art;}
+
+    public String getArtist() {return artist;}
+
+    public String getArtistKey() {return artistKey;}
+
+    public String getPath() {return path;}
+
+    public Long getDuration() {return duration;}
+
+    public int getTrack() {return track;}
+
+    //SETTERS
+    public void setRowId(int rowId) { this.rowId = rowId; }
+
+    public void setId(String id) { this.id = id; }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public void setAlbum(String album) { this.album = album; }
+
+    public void setAlbumKey(String albumKey) { this.albumKey = albumKey; }
+
+    public void setArt(String art) { this.art = art; }
+
+    public void setArtist(String artist) { this.artist = artist; }
+
+    public void setArtistKey(String artistKey) { this.artistKey = artistKey; }
+
+    public void setDuration(Long duration) { this.duration = duration; }
+
+    public void setPath(String path) { this.path = path; }
+
+    public void setTrack(int track) { this.track = track; }
 
     protected Songs(Parcel in)
     {
@@ -59,26 +112,6 @@ public class Songs implements Parcelable
             return new Songs[size];
         }
     };
-
-    public String getId() {return id;}
-
-    public String getTitle() {return title;}
-
-    public String getAlbum() {return album;}
-
-    public String getAlbumKey() {return albumKey;}
-
-    public String getArt() {return art;}
-
-    public String getArtist() {return artist;}
-
-    public String getArtistKey() {return artistKey;}
-
-    public String getPath() {return path;}
-
-    public Long getDuration() {return duration;}
-
-    public int getTrack() {return track;}
 
     @Override
     public int describeContents() {return 0;}

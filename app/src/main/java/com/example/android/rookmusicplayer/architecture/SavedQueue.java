@@ -3,7 +3,7 @@ package com.example.android.rookmusicplayer.architecture;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "saved_queue")
+@Entity(tableName = "saved")
 public class SavedQueue
 {
     @PrimaryKey(autoGenerate = true)

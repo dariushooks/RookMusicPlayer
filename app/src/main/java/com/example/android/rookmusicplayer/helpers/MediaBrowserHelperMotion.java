@@ -234,26 +234,25 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
                     if(!savedSongs.isEmpty() && !savedState.isEmpty())
                     {
-                        savedPosition = savedState.get(0).getPosition();
-                        savedElapsed = savedState.get(0).getElapsed();
-                        savedDuration = savedState.get(0).getDuration();
-                        savedFrom = savedState.get(0).getFrom();
-                        shuffle = savedState.get(0).getShuffle();
-                        mediaControllerCompat.getTransportControls().setShuffleMode(shuffle);
-                        repeat = savedState.get(0).getRepeat();
-                        mediaControllerCompat.getTransportControls().setRepeatMode(repeat);
-                        currentState = savedState.get(0).getState();
-                        nowPlayingFrom = savedState.get(0).getNow_playing_from();
-                        mediaControllerCompat.getTransportControls().sendCustomAction(CLEAR, null);
-                        Bundle queuePosition = new Bundle(); queuePosition.putInt("CURRENT_QUEUE_POSITION", savedPosition);
-                        Bundle elapsedTime = new Bundle(); elapsedTime.putInt("CURRENT_ELAPSED_TIME", savedElapsed);
-                        Bundle from = new Bundle(); from.putInt("CURRENT_FROM", savedFrom);
-                        mediaControllerCompat.getTransportControls().sendCustomAction(SET_POSITION, queuePosition);
-                        mediaControllerCompat.getTransportControls().sendCustomAction(SET_FROM, from);
-                        mediaControllerCompat.getTransportControls().sendCustomAction(RESTORE_SAVED_QUEUE, null);
                         if(currentState != PlaybackStateCompat.STATE_PLAYING)
                         {
-
+                            savedPosition = savedState.get(0).getPosition();
+                            savedElapsed = savedState.get(0).getElapsed();
+                            savedDuration = savedState.get(0).getDuration();
+                            savedFrom = savedState.get(0).getFrom();
+                            shuffle = savedState.get(0).getShuffle();
+                            mediaControllerCompat.getTransportControls().setShuffleMode(shuffle);
+                            repeat = savedState.get(0).getRepeat();
+                            mediaControllerCompat.getTransportControls().setRepeatMode(repeat);
+                            currentState = savedState.get(0).getState();
+                            nowPlayingFrom = savedState.get(0).getNow_playing_from();
+                            mediaControllerCompat.getTransportControls().sendCustomAction(CLEAR, null);
+                            Bundle queuePosition = new Bundle(); queuePosition.putInt("CURRENT_QUEUE_POSITION", savedPosition);
+                            Bundle elapsedTime = new Bundle(); elapsedTime.putInt("CURRENT_ELAPSED_TIME", savedElapsed);
+                            Bundle from = new Bundle(); from.putInt("CURRENT_FROM", savedFrom);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(SET_POSITION, queuePosition);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(SET_FROM, from);
+                            mediaControllerCompat.getTransportControls().sendCustomAction(RESTORE_SAVED_QUEUE, null);
                             mediaControllerCompat.getTransportControls().sendCustomAction(SET_ELAPSED_TIME, elapsedTime);
                             progressBar.setMax(savedDuration);
                             seekBar.setMax(savedDuration);

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.android.rookmusicplayer.SavedStateDetails;
 import com.example.android.rookmusicplayer.Songs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StateRepository
@@ -26,19 +27,14 @@ public class StateRepository
         savedStateDetails = savedDetailsDao.getSavedDetails();
     }
 
-    public void insert(SavedQueue savedQueue)
+    public void insertAll(ArrayList<Songs> savedQueue)
     {
-        new InsertQueueAsyncTask(savedQueueDao).execute(savedQueue);
+        new InsertAllQueueAsyncTask(savedQueueDao).execute(savedQueue);
     }
 
-    public void update(SavedQueue savedQueue)
+    public void deleteSavedQueue()
     {
-        new UpdateQueueAsyncTask(savedQueueDao).execute(savedQueue);
-    }
-
-    public void delete(SavedQueue savedQueue)
-    {
-        new DeleteQueueAsyncTask(savedQueueDao).execute(savedQueue);
+        new DeleteSavedQueueAsyncTask(savedQueueDao).execute();
     }
 
     public void insert(SavedDetails savedDetails)
@@ -56,11 +52,6 @@ public class StateRepository
         new DeleteDetailsAsyncTask(savedDetailsDao).execute(savedDetails);
     }
 
-    public void deleteSavedQueue()
-    {
-        new DeleteSavedQueueAsyncTask(savedQueueDao).execute();
-    }
-
     public void deleteSavedDetails()
     {
         new DeleteDetailsAsyncTask(savedDetailsDao).execute();
@@ -76,53 +67,19 @@ public class StateRepository
         return  savedStateDetails;
     }
 
-    private static class InsertQueueAsyncTask extends AsyncTask<SavedQueue, Void, Void>
+    private static class InsertAllQueueAsyncTask extends AsyncTask<ArrayList<Songs>, Void, Void>
     {
         private SavedQueueDao savedQueueDao;
 
-        private InsertQueueAsyncTask(SavedQueueDao savedQueueDao)
+        private InsertAllQueueAsyncTask(SavedQueueDao savedQueueDao)
         {
             this.savedQueueDao = savedQueueDao;
         }
 
         @Override
-        protected Void doInBackground(SavedQueue... savedQueues)
+        protected Void doInBackground(ArrayList<Songs>... arrayLists)
         {
-            savedQueueDao.insert(savedQueues[0]);
-            return null;
-        }
-    }
-
-    private static class UpdateQueueAsyncTask extends AsyncTask<SavedQueue, Void, Void>
-    {
-        private SavedQueueDao savedQueueDao;
-
-        private UpdateQueueAsyncTask(SavedQueueDao savedQueueDao)
-        {
-            this.savedQueueDao = savedQueueDao;
-        }
-
-        @Override
-        protected Void doInBackground(SavedQueue... savedQueues)
-        {
-            savedQueueDao.update(savedQueues[0]);
-            return null;
-        }
-    }
-
-    private static class DeleteQueueAsyncTask extends AsyncTask<SavedQueue, Void, Void>
-    {
-        private SavedQueueDao savedQueueDao;
-
-        private DeleteQueueAsyncTask(SavedQueueDao savedQueueDao)
-        {
-            this.savedQueueDao = savedQueueDao;
-        }
-
-        @Override
-        protected Void doInBackground(SavedQueue... savedQueues)
-        {
-            savedQueueDao.delete(savedQueues[0]);
+            savedQueueDao.insertAll(arrayLists[0]);
             return null;
         }
     }

@@ -7,7 +7,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -116,6 +115,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     private NotificationCompat.Builder builder;
 
     //SYNC UI STATE
+    private StateViewModel stateViewModel;
     private int syncPosition;
     private int syncElapsed;
     private int syncDuration;
@@ -167,6 +167,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
         //Handles headphones coming unplugged. cannot be done through a manifest receiver
         IntentFilter filter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(broadcastReceiver, filter);
+
+        stateViewModel = new StateViewModel(getApplication());
     }
 
     @Override
@@ -472,9 +474,9 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void saveQueue()
     {
-        StateViewModel stateViewModel = new StateViewModel(getApplication());
         stateViewModel.deleteSavedQueue();
-        for(int i = 0; i < queue.size(); i++)
+        stateViewModel.insertAll(queue);
+        /*for(int i = 0; i < queue.size(); i++)
         {
             String id = queue.get(i).getId();
             String title = queue.get(i).getTitle();
@@ -487,14 +489,13 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             String path = queue.get(i).getPath();
             int track = queue.get(i).getTrack();
             stateViewModel.insert(new SavedQueue(id, title, album, albumKey, art, artist, artistKey, duration, path, track));
-        }
+        }*/
 
         //Log.i(TAG, "QUEUE SAVED");
     }
 
     private void updateSavedState()
     {
-        StateViewModel stateViewModel = new StateViewModel(getApplication());
         syncPosition = position;
         syncShuffle = shuffle;
         syncRepeat = repeat;
@@ -525,7 +526,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void activityRestore()
     {
-        if(currentState == PlaybackStateCompat.STATE_PLAYING)
+        if(mediaPlayer.isPlaying())
         {
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
             stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
@@ -722,22 +723,15 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             if(currentState == PlaybackStateCompat.STATE_PLAYING)
             {
                 //Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
-                //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-                //NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
-                saveQueue();
-                handler.postDelayed(this, 1000);
+                handler.post(this);
             }
 
             else
             {
                 //Log.i(TAG, "Time Paused at " + calculateTime(mediaPlayer.getCurrentPosition()));
-                handler.removeCallbacks(this);
-                //builder.setProgress(mediaPlayer.getDuration(), mediaPlayer.getCurrentPosition(), false);
-                stopForeground(false);
-                //NotificationManagerCompat.from(MediaPlaybackService.this).notify(1, builder.build());
                 updateSavedState();
-                saveQueue();
+                stopForeground(false);
             }
         }
     };
@@ -797,12 +791,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 Collections.swap(queueDisplay, i, i - 1);
         queueAdapter.notifyItemMoved(from, to);
         Collections.swap(queue, fromPosition, fromPosition + (to - from));
+        saveQueue();
     }
 
     @Override
     public void updateQueueDismiss(int index)
     {
         queue.remove(queueDisplay.get(index));
+        saveQueue();
         queueDisplay.remove(index);
         queueAdapter.notifyItemRemoved(index);
     }
@@ -853,6 +849,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             case QUEUE_END: queue.add(song);
                 break;
         }
+        saveQueue();
     }
 
     private void addAlbumOrArtistToQueue(int add)
@@ -870,6 +867,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
             case QUEUE_END: queue.addAll(addToQueue); break;
         }
+        saveQueue();
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////
@@ -890,6 +888,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
 
     private void playSong(String mediaId)
     {
+        saveQueue();
         Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(mediaId));
         try
         {

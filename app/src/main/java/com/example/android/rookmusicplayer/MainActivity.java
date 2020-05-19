@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,7 +32,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
-import com.example.android.rookmusicplayer.architecture.LibraryViewModel;
 import com.example.android.rookmusicplayer.architecture.StateViewModel;
 import com.example.android.rookmusicplayer.fragments.AlbumDetailsFragment;
 import com.example.android.rookmusicplayer.fragments.AlbumsFragment;
@@ -63,7 +63,6 @@ import static com.example.android.rookmusicplayer.App.SET_UP_NEXT;
 import static com.example.android.rookmusicplayer.App.TO_ALBUM;
 import static com.example.android.rookmusicplayer.App.TO_ARTIST;
 import static com.example.android.rookmusicplayer.App.albums;
-import static com.example.android.rookmusicplayer.App.albumsSections;
 import static com.example.android.rookmusicplayer.App.artistSongs;
 import static com.example.android.rookmusicplayer.App.artists;
 import static com.example.android.rookmusicplayer.App.mediaBrowserHelper;
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int PERMISSION_REQUEST_CODE = 1;
     private StateViewModel stateViewModel;
-    private LibraryViewModel libraryViewModel;
     private ArrayList<Songs> deleteSongs;
     private String mediaName;
 
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             public void onChanged(List<Songs> songs)
             {
                 savedSongs = (ArrayList<Songs>) songs;
-                //Log.i(TAG, "RETRIEVED SAVED QUEUE");
+                //Log.i(TAG, "RETRIEVED " + savedSongs.size() + " SONGS FROM SAVED QUEUE");
             }
         });
 
@@ -225,33 +223,33 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     @Override
     public void updateSongsLibrary(Songs song)
     {
-        LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
-        if(fragment != null)
-            fragment.deleteSongFromLibrary(song);
         mediaName = song.getTitle();
         ArrayList<Songs> list = new ArrayList<>();
         list.add(song);
         deleteMedia(list);
+        LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
+        if(fragment != null)
+            fragment.deleteSongFromLibrary(song);
     }
 
     @Override
     public void updateAlbumsLibrary(Albums album, ArrayList<Songs> albumSongs, int from)
     {
+        mediaName = album.getAlbum();
+        deleteMedia(albumSongs);
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteAlbumFromLibrary(album, albumSongs, from);
-        mediaName = album.getAlbum();
-        deleteMedia(albumSongs);
     }
 
     @Override
     public void updateArtistsLibrary(Artists artist, ArrayList<Songs> artistSongs)
     {
+        mediaName = artist.getArtist();
+        deleteMedia(artistSongs);
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteArtistFromLibrary(artist, artistSongs);
-        mediaName = artist.getArtist();
-        deleteMedia(artistSongs);
     }
 
     @Override

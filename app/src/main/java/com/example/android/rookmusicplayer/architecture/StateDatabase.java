@@ -8,7 +8,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {SavedQueue.class, SavedDetails.class}, version = 1, exportSchema = false)
+import com.example.android.rookmusicplayer.Songs;
+
+@Database(entities = {Songs.class, SavedDetails.class}, version = 1, exportSchema = false)
 public abstract class StateDatabase extends RoomDatabase
 {
     private static StateDatabase instance;

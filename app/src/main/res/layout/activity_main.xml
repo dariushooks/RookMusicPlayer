@@ -36,7 +36,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nowPlayingAnimation"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="67dp"
         android:background="@color/darkGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +104,6 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/ic_fast_forward"
         android:backgroundTint="@color/white"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
         app:layout_constraintTop_toTopOf="@id/nowPlayingAnimation"/>
 

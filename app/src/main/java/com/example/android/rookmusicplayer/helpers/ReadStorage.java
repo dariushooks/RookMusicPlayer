@@ -9,12 +9,14 @@ import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.content.AsyncTaskLoader;
 
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.Artists;
 import com.example.android.rookmusicplayer.Playlists;
 import com.example.android.rookmusicplayer.Songs;
+import com.example.android.rookmusicplayer.architecture.LibraryViewModel;
 
 import static com.example.android.rookmusicplayer.App.albums;
 import static com.example.android.rookmusicplayer.App.albumsSections;
@@ -42,8 +44,8 @@ public class ReadStorage extends AsyncTaskLoader
     public Object loadInBackground()
     {
         getSongs(); getArtists(); getAlbums(); getPlaylists();
-        SectionContent sectionContent = new SectionContent(albums, albumsSections);
-        sectionContent.sectionAlbums();
+        //SectionContent sectionContent = new SectionContent(albums, albumsSections);
+        //sectionContent.sectionAlbums();
         return null;
     }
 
