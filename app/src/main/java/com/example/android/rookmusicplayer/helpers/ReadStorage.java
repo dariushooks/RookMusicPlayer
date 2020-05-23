@@ -27,9 +27,11 @@ import static com.example.android.rookmusicplayer.App.songs;
 
 public class ReadStorage extends AsyncTaskLoader
 {
-    public ReadStorage(@NonNull Context context)
+    private LibraryViewModel libraryViewModel;
+    public ReadStorage(@NonNull Context context, LibraryViewModel libraryViewModel)
     {
         super(context);
+        this.libraryViewModel = libraryViewModel;
     }
 
     @Override
@@ -43,7 +45,10 @@ public class ReadStorage extends AsyncTaskLoader
     @Override
     public Object loadInBackground()
     {
-        getSongs(); getArtists(); getAlbums(); getPlaylists();
+        getSongs();
+        getArtists();
+        getAlbums();
+        getPlaylists();
         //SectionContent sectionContent = new SectionContent(albums, albumsSections);
         //sectionContent.sectionAlbums();
         return null;
@@ -81,6 +86,7 @@ public class ReadStorage extends AsyncTaskLoader
                 long currentDuration = cursor.getLong(duration);
                 songs.add(new Songs(currentID, currentTitle, currentAlbum, currentAlbumKey, currentArt, currentArtist, currentArtistKey, currentDuration, currentPath, -1));
             }while(cursor.moveToNext());
+            libraryViewModel.setSongs(songs);
             cursor.close();
         }
     }
@@ -110,6 +116,7 @@ public class ReadStorage extends AsyncTaskLoader
                 String currentArt = ContentUris.withAppendedId(albumArtUri, currentID).toString();
                 albums.add(new Albums(ID, currentAlbum, currentAlbumKey, currentArt, currentArtist));
             }while(cursor.moveToNext());
+            libraryViewModel.setAlbums(albums);
             cursor.close();
         }
     }
@@ -130,6 +137,7 @@ public class ReadStorage extends AsyncTaskLoader
                 String currentArtistKey = cursor.getString(artistKey);
                 artists.add(new Artists(currentArtist, currentArtistKey));
             }while(cursor.moveToNext());
+            libraryViewModel.setArtists(artists);
             cursor.close();
         }
     }
@@ -165,8 +173,8 @@ public class ReadStorage extends AsyncTaskLoader
                     songCount = 0;
                 playlists.add(new Playlists(currentPlaylist, currentId, currentDescription));
                 //Log.i(TAG, "PLAYLIST: " + currentPlaylist.toUpperCase() + "\tID: " + currentId + "\tCOUNT: " + songCount);
-
             }while(cursor.moveToNext());
+            libraryViewModel.setPlaylists(playlists);
             cursor.close();
         }
     }

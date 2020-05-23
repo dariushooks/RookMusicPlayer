@@ -320,12 +320,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 });
                 timeHandler.postDelayed(this, 1000);
             }
-
-            else
-            {
-                timeHandler.removeCallbacks(this);
-            }
-
         }
     };
 
@@ -488,12 +482,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         mediaControllerCompat.getTransportControls().sendCustomAction(QUEUE_CLICK, click);
         mediaControllerCompat.getTransportControls().playFromMediaId(queueDisplay.get(position).getId(), null);
         mediaControllerCompat.getTransportControls().sendCustomAction(SET_UP_NEXT, null);
-    }
-
-    @Override
-    public void OrderLongClick(int position)
-    {
-
     }
 
     private String calculateTime(int time)

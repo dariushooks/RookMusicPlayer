@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
+import com.example.android.rookmusicplayer.architecture.LibraryViewModel;
 import com.example.android.rookmusicplayer.architecture.StateViewModel;
 import com.example.android.rookmusicplayer.fragments.AlbumDetailsFragment;
 import com.example.android.rookmusicplayer.fragments.AlbumsFragment;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int PERMISSION_REQUEST_CODE = 1;
     private StateViewModel stateViewModel;
+    private LibraryViewModel libraryViewModel;
     private ArrayList<Songs> deleteSongs;
     private String mediaName;
 
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        libraryViewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
             actionBar.hide();
@@ -422,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     {
         @NonNull
         @Override
-        public Loader onCreateLoader(int id, @Nullable Bundle args) { return new ReadStorage(MainActivity.this); }
+        public Loader onCreateLoader(int id, @Nullable Bundle args) { return new ReadStorage(MainActivity.this, libraryViewModel); }
 
         @Override
         public void onLoadFinished(@NonNull Loader loader, Object data)

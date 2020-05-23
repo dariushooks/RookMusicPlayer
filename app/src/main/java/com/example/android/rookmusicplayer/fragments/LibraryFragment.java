@@ -7,21 +7,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.android.rookmusicplayer.Albums;
 import com.example.android.rookmusicplayer.AlbumsSections;
 import com.example.android.rookmusicplayer.App;
 import com.example.android.rookmusicplayer.Artists;
-import com.example.android.rookmusicplayer.helpers.GetMedia;
+import com.example.android.rookmusicplayer.architecture.LibraryViewModel;
 import com.example.android.rookmusicplayer.helpers.MediaControlDialog;
 import com.example.android.rookmusicplayer.Playlists;
 import com.example.android.rookmusicplayer.R;
@@ -31,6 +30,7 @@ import com.example.android.rookmusicplayer.adapters.MusicPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.android.rookmusicplayer.App.FROM_ARTIST;
 import static com.example.android.rookmusicplayer.App.FROM_LIBRARY;
@@ -53,6 +53,7 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
     private ImageView searchView;
     private Query query;
     private MediaControlDialog.UpdateLibrary update;
+    private LibraryViewModel libraryViewModel;
 
     /*public LibraryFragment(ArrayList<Songs> songs, ArrayList<Artists> artists, ArrayList<AlbumsSections> albumsSections, ArrayList<Playlists> playlists, MediaControlDialog.UpdateLibrary update)
     {
@@ -72,11 +73,15 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
         this.update = update;
     }
 
+    public LibraryFragment(){}
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setReenterTransition(new Fade().setStartDelay(500));
+        //libraryViewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
+        //setLiveData();
     }
 
     @Nullable
@@ -85,7 +90,6 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
     {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_library, container, false);
-
         viewPager = rootView.findViewById(R.id.viewpager);
         musicPagerAdapter = new MusicPagerAdapter(getChildFragmentManager(), songs, artists, albums, playlists, FROM_LIBRARY, update);
         viewPager.setAdapter(musicPagerAdapter);
@@ -96,6 +100,8 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
             @Override
             public void onClick(View view) { query.search(searchView); }
         });
+
+
 
         //Log.i(TAG, "FRAGMENT CURRENTLY VISIBLE: " + TAG);
         return rootView;
@@ -174,19 +180,38 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
         catch (ClassCastException e) { throw new ClassCastException(context.toString().trim() + " must implement search"); }
     }
 
-    /*@NonNull
-    @Override
-    public Loader<ArrayList> onCreateLoader(int id, @Nullable Bundle args)
+    private void setLiveData()
     {
-        return new GetMedia(getContext(), GET_ALBUM_SONGS, -1, album);
-    }
+        libraryViewModel.getSongs().observe(getViewLifecycleOwner(), new Observer<List<Songs>>() {
+            @Override
+            public void onChanged(List<Songs> songs)
+            {
+                LibraryFragment.this.songs = (ArrayList<Songs>) songs;
+            }
+        });
 
-    @Override
-    public void onLoadFinished(@NonNull Loader<ArrayList> loader, ArrayList data)
-    {
-        deleteAlbumFromLibrary(album, data);
-    }
+        libraryViewModel.getAlbums().observe(getViewLifecycleOwner(), new Observer<List<Albums>>() {
+            @Override
+            public void onChanged(List<Albums> albums)
+            {
+                LibraryFragment.this.albums = (ArrayList<Albums>) albums;
+            }
+        });
 
-    @Override
-    public void onLoaderReset(@NonNull Loader<ArrayList> loader) {}*/
+        libraryViewModel.getArtists().observe(getViewLifecycleOwner(), new Observer<List<Artists>>() {
+            @Override
+            public void onChanged(List<Artists> artists)
+            {
+                LibraryFragment.this.artists = (ArrayList<Artists>) artists;
+            }
+        });
+
+        libraryViewModel.getPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlists>>() {
+            @Override
+            public void onChanged(List<Playlists> playlists)
+            {
+                LibraryFragment.this.playlists = (ArrayList<Playlists>) playlists;
+            }
+        });
+    }
 }

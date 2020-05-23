@@ -1,11 +1,7 @@
 package com.example.android.rookmusicplayer.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.android.rookmusicplayer.R;
 
-import java.io.IOException;
-
-import static com.example.android.rookmusicplayer.App.calculateSampleSize;
 import static com.example.android.rookmusicplayer.App.queueDisplay;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHolder>
@@ -34,7 +27,6 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
     public interface ListItemClickListener
     {
         void QueueListItemClick(int position);
-        void OrderLongClick(int position);
     }
 
     //Keeps the queue updated on drags and swipes
@@ -99,16 +91,6 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.QueueViewHol
             songArtist = itemView.findViewById(R.id.songArtist);
             order = itemView.findViewById(R.id.order);
             itemView.setOnClickListener(this);
-
-            order.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view)
-                {
-                    int clickedPostion = getAdapterPosition();
-                    listener.OrderLongClick(clickedPostion);
-                    return true;
-                }
-            });
         }
 
         public void bind(int position)

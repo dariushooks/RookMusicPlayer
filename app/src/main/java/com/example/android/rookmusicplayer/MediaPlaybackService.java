@@ -725,7 +725,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             {
                 //Log.i(TAG, "Time Updating to " + calculateTime(mediaPlayer.getCurrentPosition()));
                 updateSavedState();
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 2000);
             }
 
             else
