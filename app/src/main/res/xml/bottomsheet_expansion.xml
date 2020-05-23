@@ -193,21 +193,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            android:layout_marginEnd="10dp"
+            motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet">
-            <CustomAttribute
-                motion:attributeName="Gravity"/>
-        </Constraint>
+            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet"/>
 
         <Constraint
             android:id="@+id/currentArtistAlbumBottomSheet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            android:layout_marginEnd="10dp"
+            motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"/>
 
@@ -378,7 +375,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             motion:layout_constraintStart_toEndOf="@id/currentArtBottomSheetHolder"
-            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintTop_toTopOf="@id/currentArtBottomSheetHolder"/>
 
         <Constraint
@@ -388,7 +385,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             motion:layout_constraintStart_toEndOf="@id/currentArtBottomSheetHolder"
-            motion:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"
             motion:layout_constraintBottom_toBottomOf="@id/currentArtBottomSheetHolder"/>
 

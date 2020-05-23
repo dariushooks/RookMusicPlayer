@@ -36,7 +36,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nowPlayingAnimation"
         android:layout_width="0dp"
-        android:layout_height="67dp"
+        android:layout_height="match_parent"
         android:background="@color/darkGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -167,10 +167,9 @@
         android:id="@+id/currentNameBottomSheet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:gravity="center"
+        android:layout_marginEnd="10dp"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
@@ -179,7 +178,7 @@
         android:textColor="@color/white"
         android:textSize="23sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+        app:layout_constraintEnd_toStartOf="@id/upNextButton"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
         app:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet" />
 
@@ -188,8 +187,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:gravity="center"
+        android:layout_marginEnd="10dp"
         android:background="?attr/selectableItemBackground"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
@@ -198,7 +196,7 @@
         android:text="Artist-Album"
         android:textColor="@color/colorAccent"
         android:textSize="23sp"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+        app:layout_constraintEnd_toStartOf="@id/upNextButton"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
         app:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet" />
 
@@ -281,7 +279,7 @@
 
     <TextView
         android:id="@+id/upNext"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
@@ -290,6 +288,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/upNextQueue"
+        app:layout_constraintEnd_toStartOf="@id/currentBottomSheetShuffle"
         app:layout_constraintTop_toTopOf="@id/upNextQueue"
         app:layout_constraintBottom_toTopOf="@id/playingFrom"/>
 
@@ -342,7 +341,7 @@
         android:id="@+id/currentPlayBottomSheet"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/ic_play"
         android:backgroundTint="@color/white"
         app:layout_constraintEnd_toStartOf="@id/nowPlayingAnimation"
@@ -395,8 +394,8 @@
 
     <View
         android:id="@+id/upNextBackground"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/album_detail_circle"
         android:backgroundTint="@color/darkGray"
         app:layout_constraintTop_toTopOf="@id/upNextButton"
@@ -408,11 +407,11 @@
         android:id="@+id/upNextButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/ic_queue_music"
         android:backgroundTint="@color/colorAccent"
-        app:layout_constraintTop_toBottomOf="@id/volumeControlSeek"
-        app:layout_constraintBottom_toBottomOf="@id/nowPlayingAnimation"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
+        app:layout_constraintTop_toTopOf="@id/currentNameBottomSheet"
+        app:layout_constraintBottom_toBottomOf="@id/currentArtistAlbumBottomSheet"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

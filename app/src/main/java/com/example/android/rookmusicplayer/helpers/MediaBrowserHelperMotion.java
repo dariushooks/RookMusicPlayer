@@ -906,10 +906,10 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                    nowPlayingNameExpanded.setGravity(Gravity.CENTER);
-                    nowPlayingNameExpanded.setTextSize(23f);
-                    nowPlayingArtistAlbumExpanded.setGravity(Gravity.CENTER);
-                    nowPlayingArtistAlbumExpanded.setTextSize(23f);
+                    //nowPlayingNameExpanded.setGravity(Gravity.CENTER);
+                    nowPlayingNameExpanded.setTextSize(25f);
+                    //nowPlayingArtistAlbumExpanded.setGravity(Gravity.CENTER);
+                    nowPlayingArtistAlbumExpanded.setTextSize(25f);
                     upNextIsShowing = false;
                 }
 
@@ -917,9 +917,9 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
-                    nowPlayingNameExpanded.setGravity(Gravity.START);
+                    //nowPlayingNameExpanded.setGravity(Gravity.START);
                     nowPlayingNameExpanded.setTextSize(20f);
-                    nowPlayingArtistAlbumExpanded.setGravity(Gravity.START);
+                    //nowPlayingArtistAlbumExpanded.setGravity(Gravity.START);
                     nowPlayingArtistAlbumExpanded.setTextSize(20f);
                     upNextIsShowing = true;
                 }
