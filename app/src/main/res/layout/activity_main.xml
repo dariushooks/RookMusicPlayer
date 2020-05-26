@@ -408,11 +408,41 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="20dp"
+        android:elevation="0dp"
         android:background="@drawable/ic_queue_music"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintTop_toTopOf="@id/currentNameBottomSheet"
         app:layout_constraintBottom_toBottomOf="@id/currentArtistAlbumBottomSheet"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation" />
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"/>
+
+    <View
+        android:id="@+id/upNextShuffleBackground"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:elevation="5dp"
+        android:visibility="gone"
+        android:background="@drawable/album_detail_circle"
+        android:backgroundTint="@color/darkGray"
+        app:layout_constraintTop_toTopOf="@id/upNextShuffle"
+        app:layout_constraintBottom_toBottomOf="@id/upNextShuffle"
+        app:layout_constraintStart_toStartOf="@id/upNextShuffle"
+        app:layout_constraintEnd_toEndOf="@id/upNextShuffle"/>
+
+    <ImageView
+        android:id="@+id/upNextShuffle"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:elevation="5dp"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/ic_shuffle"
+        android:tint="@color/colorAccent"
+        android:background="@drawable/album_detail_circle"
+        android:backgroundTint="@color/colorAccentTransparent"
+        app:layout_constraintTop_toTopOf="@id/upNextButton"
+        app:layout_constraintEnd_toEndOf="@id/upNextButton"/>
+
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
 

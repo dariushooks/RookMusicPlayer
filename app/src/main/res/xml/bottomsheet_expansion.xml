@@ -191,12 +191,16 @@
             android:id="@+id/currentNameBottomSheet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="10dp"
             motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet"/>
+            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet">
+            <CustomAttribute
+                motion:attributeName="TextSize"
+                motion:customFloatValue="25"/>
+        </Constraint>
 
         <Constraint
             android:id="@+id/currentArtistAlbumBottomSheet"
@@ -206,7 +210,11 @@
             android:layout_marginEnd="10dp"
             motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-            motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"/>
+            motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet">
+            <CustomAttribute
+                motion:attributeName="TextSize"
+                motion:customFloatValue="25"/>
+        </Constraint>
 
         <Constraint
             android:id="@+id/upNextButton">
@@ -376,7 +384,11 @@
             android:layout_marginEnd="10dp"
             motion:layout_constraintStart_toEndOf="@id/currentArtBottomSheetHolder"
             motion:layout_constraintEnd_toStartOf="@id/upNextButton"
-            motion:layout_constraintTop_toTopOf="@id/currentArtBottomSheetHolder"/>
+            motion:layout_constraintTop_toTopOf="@id/currentArtBottomSheetHolder">
+            <CustomAttribute
+                motion:attributeName="TextSize"
+                motion:customFloatValue="20"/>
+        </Constraint>
 
         <Constraint
             android:id="@+id/currentArtistAlbumBottomSheet"
@@ -387,7 +399,11 @@
             motion:layout_constraintStart_toEndOf="@id/currentArtBottomSheetHolder"
             motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet"
-            motion:layout_constraintBottom_toBottomOf="@id/currentArtBottomSheetHolder"/>
+            motion:layout_constraintBottom_toBottomOf="@id/currentArtBottomSheetHolder">
+            <CustomAttribute
+                motion:attributeName="TextSize"
+                motion:customFloatValue="20"/>
+        </Constraint>
 
         <Constraint android:id="@+id/currentNameCollapsed">
             <PropertySet android:alpha="0"/>

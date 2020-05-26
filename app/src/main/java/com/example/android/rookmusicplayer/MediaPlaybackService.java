@@ -453,6 +453,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     }
                     break;
             }
+            saveQueue();
         }
     };
 

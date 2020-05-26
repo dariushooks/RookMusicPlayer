@@ -36,6 +36,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -155,6 +157,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private View repeatBackground;
     private Button upNextQueue;
     private View upNextBackground;
+    private ImageView upNextShuffle;
+    private View upNextShuffleBackground;
     private boolean upNextIsShowing;
 
     //SAVING UI STATE
@@ -906,10 +910,19 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                    //nowPlayingNameExpanded.setGravity(Gravity.CENTER);
-                    nowPlayingNameExpanded.setTextSize(25f);
-                    //nowPlayingArtistAlbumExpanded.setGravity(Gravity.CENTER);
-                    nowPlayingArtistAlbumExpanded.setTextSize(25f);
+                    if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
+                    {
+                        upNextShuffle.setVisibility(View.VISIBLE);
+                        upNextShuffleBackground.setVisibility(View.VISIBLE);
+                    }
+
+                    else
+                    {
+                        upNextShuffle.setVisibility(View.GONE);
+                        upNextShuffleBackground.setVisibility(View.GONE);
+                    }
+                    //nowPlayingNameExpanded.setTextSize(25f);
+                    //nowPlayingArtistAlbumExpanded.setTextSize(25f);
                     upNextIsShowing = false;
                 }
 
@@ -917,10 +930,10 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 {
                     upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
                     upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
-                    //nowPlayingNameExpanded.setGravity(Gravity.START);
-                    nowPlayingNameExpanded.setTextSize(20f);
-                    //nowPlayingArtistAlbumExpanded.setGravity(Gravity.START);
-                    nowPlayingArtistAlbumExpanded.setTextSize(20f);
+                    upNextShuffle.setVisibility(View.GONE);
+                    upNextShuffleBackground.setVisibility(View.GONE);
+                    //nowPlayingNameExpanded.setTextSize(20f);
+                    //nowPlayingArtistAlbumExpanded.setTextSize(20f);
                     upNextIsShowing = true;
                 }
             }
@@ -953,6 +966,12 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 else
                 {
                     //frameLayout.setClickable(false);
+                    if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
+                    {
+                        upNextShuffle.setVisibility(View.VISIBLE);
+                        upNextShuffleBackground.setVisibility(View.VISIBLE);
+                    }
+
                     if(currentState == PlaybackStateCompat.STATE_PLAYING)
                     {
                         nowPlayingArtHolder.animate().scaleX(1.35f);
@@ -1171,7 +1190,10 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             }
         });
 
+
         upNextQueue = rootView.findViewById(R.id.upNextButton);
+        upNextShuffle = rootView.findViewById(R.id.upNextShuffle);
+        upNextShuffleBackground = rootView.findViewById(R.id.upNextShuffleBackground);
         upNextBackground = rootView.findViewById(R.id.upNextBackground);
 
         //////////////////////////////////////////////////////////////////////////////////
