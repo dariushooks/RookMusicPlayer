@@ -155,8 +155,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private View shuffleBackground;
     private Button repeatExpanded;
     private View repeatBackground;
-    private Button upNextQueue;
-    private View upNextBackground;
+    private ImageView upNextQueue;
+    private ImageView upNextBackground;
     private ImageView upNextShuffle;
     private View upNextShuffleBackground;
     private boolean upNextIsShowing;
@@ -908,32 +908,15 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             {
                 if((motionLayout.getStartState() == R.id.end || motionLayout.getStartState() == R.id.start) && upNextIsShowing)
                 {
-                    upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
-                    upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                    if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
-                    {
-                        upNextShuffle.setVisibility(View.VISIBLE);
-                        upNextShuffleBackground.setVisibility(View.VISIBLE);
-                    }
-
-                    else
-                    {
-                        upNextShuffle.setVisibility(View.GONE);
-                        upNextShuffleBackground.setVisibility(View.GONE);
-                    }
-                    //nowPlayingNameExpanded.setTextSize(25f);
-                    //nowPlayingArtistAlbumExpanded.setTextSize(25f);
+                    //upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
+                    //upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
                     upNextIsShowing = false;
                 }
 
                 else if(motionLayout.getEndState() == R.id.endQueue && !upNextIsShowing)
                 {
-                    upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                    upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
-                    upNextShuffle.setVisibility(View.GONE);
-                    upNextShuffleBackground.setVisibility(View.GONE);
-                    //nowPlayingNameExpanded.setTextSize(20f);
-                    //nowPlayingArtistAlbumExpanded.setTextSize(20f);
+                    //upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
+                    //upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
                     upNextIsShowing = true;
                 }
             }
@@ -958,6 +941,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 else if(motionLayout.getCurrentState() == R.id.endQueue)
                 {
                     //frameLayout.setClickable(false);
+                    upNextShuffle.setVisibility(View.INVISIBLE);
+                    upNextShuffleBackground.setVisibility(View.INVISIBLE);
                     nowPlayingArtHolder.animate().scaleX(1f);
                     nowPlayingArtHolder.animate().scaleY(1f);
                     nowPlayingArtHolder.setCardElevation(0f);
@@ -1189,7 +1174,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 }
             }
         });
-
 
         upNextQueue = rootView.findViewById(R.id.upNextButton);
         upNextShuffle = rootView.findViewById(R.id.upNextShuffle);

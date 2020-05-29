@@ -182,10 +182,19 @@
             android:id="@id/currentPlayBottomSheet"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="60dp"
             motion:layout_constraintEnd_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toEndOf="@id/nowPlayingAnimation"
-            motion:layout_constraintTop_toBottomOf="@id/currentArtistAlbumBottomSheet"/>
+            motion:layout_constraintBottom_toTopOf="@id/volumeControlSeek"/>
+
+        <Constraint
+            android:id="@+id/volumeControlSeek"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            motion:layout_constraintStart_toEndOf="@id/volumeDown"
+            motion:layout_constraintEnd_toStartOf="@+id/volumeUp"
+            motion:layout_constraintBottom_toBottomOf="@id/nowPlayingAnimation"/>
 
         <Constraint
             android:id="@+id/currentNameBottomSheet"
@@ -216,12 +225,46 @@
                 motion:customFloatValue="25"/>
         </Constraint>
 
-        <Constraint
-            android:id="@+id/upNextButton">
+        <Constraint android:id="@+id/upNextButton">
+            <PropertySet android:alpha="1"/>
+            <CustomAttribute
+                motion:attributeName="ColorFilter"
+                motion:customColorValue="@color/colorAccent"/>
         </Constraint>
 
-        <Constraint
-            android:id="@+id/upNextBackground">
+        <Constraint android:id="@+id/upNextBackground">
+            <PropertySet android:alpha="1"/>
+            <CustomAttribute
+                motion:attributeName="ColorFilter"
+                motion:customColorValue="@color/darkGray"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentSeekBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentTimeBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentDurationBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentBackBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentForwardBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/volumeDown">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/volumeUp">
+            <PropertySet android:alpha="1"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentNameCollapsed">
@@ -237,8 +280,7 @@
         </Constraint>
 
         <Constraint android:id="@+id/currentNext">
-            <PropertySet
-                android:alpha="0"/>
+            <PropertySet android:alpha="0"/>
         </Constraint>
 
         <Constraint android:id="@+id/slideDownBottomSheet">
@@ -303,6 +345,11 @@
                 android:visibility="gone"/>
         </Constraint>
 
+        <Constraint
+            android:id="@+id/controlCenter">
+            <PropertySet android:visibility="visible"/>
+        </Constraint>
+
     </ConstraintSet>
 
     <!--                                                                                            -->
@@ -326,6 +373,20 @@
 
     <ConstraintSet
         android:id="@+id/endQueue">
+
+        <Constraint android:id="@+id/upNextButton">
+            <PropertySet android:alpha="1"/>
+            <CustomAttribute
+                motion:attributeName="ColorFilter"
+                motion:customColorValue="@color/white"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextBackground">
+            <PropertySet android:alpha="1"/>
+            <CustomAttribute
+                motion:attributeName="ColorFilter"
+                motion:customColorValue="@color/colorAccent"/>
+        </Constraint>
 
         <Constraint
             android:id="@+id/nowPlayingAnimation"
@@ -371,9 +432,18 @@
             android:id="@id/currentPlayBottomSheet"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginBottom="200dp"
+            android:layout_marginBottom="60dp"
             motion:layout_constraintEnd_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintBottom_toTopOf="@id/volumeControlSeek"/>
+
+        <Constraint
+            android:id="@+id/volumeControlSeek"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            motion:layout_constraintStart_toEndOf="@id/volumeDown"
+            motion:layout_constraintEnd_toStartOf="@+id/volumeUp"
             motion:layout_constraintBottom_toBottomOf="@id/nowPlayingAnimation"/>
 
         <Constraint
@@ -403,6 +473,34 @@
             <CustomAttribute
                 motion:attributeName="TextSize"
                 motion:customFloatValue="20"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentSeekBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentTimeBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentDurationBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentBackBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/currentForwardBottomSheet">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/volumeDown">
+            <PropertySet android:alpha="1"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/volumeUp">
+            <PropertySet android:alpha="1"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentNameCollapsed">
@@ -479,6 +577,10 @@
             <PropertySet
                 android:alpha="1"
                 android:visibility="visible"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/controlCenter">
+            <PropertySet android:visibility="visible"/>
         </Constraint>
 
     </ConstraintSet>
