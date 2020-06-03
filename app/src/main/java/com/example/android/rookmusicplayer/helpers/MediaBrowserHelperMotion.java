@@ -941,8 +941,10 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                 else if(motionLayout.getCurrentState() == R.id.endQueue)
                 {
                     //frameLayout.setClickable(false);
-                    upNextShuffle.setVisibility(View.INVISIBLE);
-                    upNextShuffleBackground.setVisibility(View.INVISIBLE);
+                    upNextShuffle.setAlpha(0f);
+                    upNextShuffleBackground.setAlpha(0f);
+                    //upNextShuffle.setVisibility(View.INVISIBLE);
+                    //upNextShuffleBackground.setVisibility(View.INVISIBLE);
                     nowPlayingArtHolder.animate().scaleX(1f);
                     nowPlayingArtHolder.animate().scaleY(1f);
                     nowPlayingArtHolder.setCardElevation(0f);
@@ -953,8 +955,10 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     //frameLayout.setClickable(false);
                     if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
                     {
-                        upNextShuffle.setVisibility(View.VISIBLE);
-                        upNextShuffleBackground.setVisibility(View.VISIBLE);
+                        upNextShuffle.setAlpha(1f);
+                        upNextShuffleBackground.setAlpha(1f);
+                        //upNextShuffle.setVisibility(View.VISIBLE);
+                        //upNextShuffleBackground.setVisibility(View.VISIBLE);
                     }
 
                     if(currentState == PlaybackStateCompat.STATE_PLAYING)

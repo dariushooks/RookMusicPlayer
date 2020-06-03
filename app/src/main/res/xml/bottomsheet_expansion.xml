@@ -239,6 +239,14 @@
                 motion:customColorValue="@color/darkGray"/>
         </Constraint>
 
+        <Constraint android:id="@+id/upNextShuffle">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextShuffleBackground">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
         <Constraint android:id="@+id/currentSeekBottomSheet">
             <PropertySet android:alpha="1"/>
         </Constraint>
@@ -343,11 +351,6 @@
             <PropertySet
                 android:alpha="0"
                 android:visibility="gone"/>
-        </Constraint>
-
-        <Constraint
-            android:id="@+id/controlCenter">
-            <PropertySet android:visibility="visible"/>
         </Constraint>
 
     </ConstraintSet>
@@ -473,6 +476,14 @@
             <CustomAttribute
                 motion:attributeName="TextSize"
                 motion:customFloatValue="20"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextShuffle">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextShuffleBackground">
+            <PropertySet android:alpha="0"/>
         </Constraint>
 
         <Constraint android:id="@+id/currentSeekBottomSheet">

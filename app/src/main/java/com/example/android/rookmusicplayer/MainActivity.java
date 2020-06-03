@@ -1,6 +1,7 @@
 package com.example.android.rookmusicplayer;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.app.RecoverableSecurityException;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +51,7 @@ import com.example.android.rookmusicplayer.helpers.MediaControlDialog;
 import com.example.android.rookmusicplayer.helpers.ReadStorage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.android.rookmusicplayer.App.CLEAR;
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private static final int PERMISSION_REQUEST_CODE = 1;
     private StateViewModel stateViewModel;
     private LibraryViewModel libraryViewModel;
+    private ArrayList<Uri> deleteUris = new ArrayList<>();
     private ArrayList<Songs> deleteSongs;
     private String mediaName;
 
@@ -229,7 +233,10 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         mediaName = song.getTitle();
         ArrayList<Songs> list = new ArrayList<>();
         list.add(song);
-        deleteMedia(list);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            deleteMedia(list);
+        else
+            delete(list);
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteSongFromLibrary(song);
@@ -239,7 +246,10 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     public void updateAlbumsLibrary(Albums album, ArrayList<Songs> albumSongs, int from)
     {
         mediaName = album.getAlbum();
-        deleteMedia(albumSongs);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            deleteMedia(albumSongs);
+        else
+            delete(albumSongs);
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteAlbumFromLibrary(album, albumSongs, from);
@@ -249,7 +259,10 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     public void updateArtistsLibrary(Artists artist, ArrayList<Songs> artistSongs)
     {
         mediaName = artist.getArtist();
-        deleteMedia(artistSongs);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            deleteMedia(artistSongs);
+        else
+            delete(artistSongs);
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
             fragment.deleteArtistFromLibrary(artist, artistSongs);
@@ -261,14 +274,21 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK)
         {
-            String selectionSongs = MediaStore.Audio.Media._ID + "=?";
-            for(int i = 0; i < deleteSongs.size(); i++)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
+
+            else
             {
-                long songId = Long.parseLong(deleteSongs.get(i).getId());
-                Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
-                String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
-                getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+                String selectionSongs = MediaStore.Audio.Media._ID + "=?";
+                for(int i = 0; i < deleteSongs.size(); i++)
+                {
+                    long songId = Long.parseLong(deleteSongs.get(i).getId());
+                    Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
+                    String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
+                    getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+                }
             }
+
             Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
         }
 
@@ -385,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         //Log.i(TAG, "FRAGMENT CURRENTLY IN BACKSTACK: " + manager.findFragmentById(R.id.fragment_container).getClass().getSimpleName());
     }
 
-    private void deleteMedia(ArrayList<Songs> deleteSongs)
+    private void delete(ArrayList<Songs> deleteSongs)
     {
         this.deleteSongs = deleteSongs;
         String selectionSongs = MediaStore.Audio.Media._ID + "=?";
@@ -418,6 +438,49 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                     throw new RuntimeException(securityException.getMessage(), securityException);
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void deleteMedia(ArrayList<Songs> deleteSongs)
+    {
+        long songId;
+        Uri songsUri;
+        for(int i = 0; i < deleteSongs.size(); i++)
+        {
+            songId = Long.parseLong(deleteSongs.get(i).getId());
+            songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
+            deleteUris.add(songsUri);
+        }
+
+        PendingIntent pendingIntent = MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
+        try
+        {
+            startIntentSenderForResult(pendingIntent.getIntentSender(), REQUEST_CODE, null, 0, 0, 0);
+        } catch (IntentSender.SendIntentException e) { e.printStackTrace();}
+        /*try
+        {
+            PendingIntent pendingIntent = MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
+            startIntentSenderForResult(pendingIntent.getIntentSender(), REQUEST_CODE, null, 0, 0, 0);
+        }
+
+        catch (SecurityException securityException)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            {
+                RecoverableSecurityException recoverableSecurityException;
+                if (securityException instanceof RecoverableSecurityException)
+                    recoverableSecurityException = (RecoverableSecurityException) securityException;
+                else
+                    throw new RuntimeException(securityException.getMessage(), securityException);
+                IntentSender intentSender = recoverableSecurityException.getUserAction().getActionIntent().getIntentSender();
+                try {
+                    startIntentSenderForResult(intentSender, REQUEST_CODE, null, 0, 0, 0, null);
+                } catch (IntentSender.SendIntentException e) { e.printStackTrace(); }
+            }
+
+            else
+                throw new RuntimeException(securityException.getMessage(), securityException);
+        }*/
     }
 
 
