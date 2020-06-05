@@ -14,80 +14,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c007895-6150-4a87-ac3a-8f20d8f0f6c8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/executionHistory/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileChanges/last-build.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileContent/fileContent.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/fileHashes/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/classAnalysis.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/jarAnalysis.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/javaCompile.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/app-release.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/release/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/output.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/example/android/rookmusicplayer/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/rookieandroid/rookiemusicplayer/ExampleInstrumentedTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/Albums.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/Albums.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/AlbumsSections.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/AlbumsSections.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/Artists.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/Artists.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/MediaPlaybackService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/MediaPlaybackService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/Playlists.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/Playlists.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/SavedStateDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/SavedStateDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/Songs.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/Songs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/AlbumDetailsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/AlbumDetailsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/AlbumsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/AlbumsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/AlbumsSectionsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/AlbumsSectionsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/ArtistDetailsPagerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/ArtistDetailsPagerAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/ArtistsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/ArtistsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/MusicPagerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/MusicPagerAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/PlaylistDialogAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/PlaylistDialogAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/PlaylistsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/PlaylistsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/QueueAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/QueueAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/adapters/SongsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/adapters/SongsAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/LibraryViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/LibraryViewModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/SavedDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/SavedDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/SavedDetailsDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/SavedDetailsDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/SavedQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/SavedQueue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/SavedQueueDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/SavedQueueDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/StateDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/StateDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/StateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/StateRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/architecture/StateViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/architecture/StateViewModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/AlbumDetailsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/AlbumDetailsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/AlbumsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/AlbumsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/ArtistDetailsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/ArtistDetailsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/ArtistsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/ArtistsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/LibraryFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/LibraryFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/PlaylistDetailsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/PlaylistDetailsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/PlaylistsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/PlaylistsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/SearchFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/SearchFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/fragments/SongsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/fragments/SongsFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/ControlReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/ControlReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/GetMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/GetMedia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/GoToDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/GoToDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/IndexScroller.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/IndexScroller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaBrowserHelperMotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/MediaBrowserHelperMotion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/MediaControlDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/MediaControlDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/ReadStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/ReadStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/SectionContent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/SectionContent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/rookmusicplayer/helpers/SectionIndexFixer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/SectionIndexFixer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/example/android/rookmusicplayer/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/rookieandroid/rookiemusicplayer/ExampleUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/appcompat/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/appcompat/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/constraintlayout/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/constraintlayout/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/core/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/core/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/lifecycle/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/lifecycle/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/media/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/media/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/recyclerview/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/recyclerview/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/test/espresso/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/test/espresso/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/test/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/androidx/test/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/com/google/android/material/group-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/com/google/android/material/group-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/master-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/intermediates/lint-cache/maven.google/master-index.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/MediaBrowserHelperMotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/rookieandroid/rookiemusicplayer/helpers/MediaBrowserHelperMotion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/bottomsheet_expansion.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/bottomsheet_expansion.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -316,10 +269,10 @@
       <screen x="0" y="0" width="2400" height="1600" />
     </state>
     <state x="744" y="627" width="862" height="196" key="com.intellij.ide.util.TipDialog/0.0.2400.1600@0.0.2400.1600" timestamp="1591219329237" />
-    <state width="594" height="211" key="javadoc.popup.new" timestamp="1591222237666">
+    <state width="594" height="211" key="javadoc.popup.new" timestamp="1591388757089">
       <screen x="0" y="0" width="2400" height="1600" />
     </state>
-    <state width="594" height="211" key="javadoc.popup.new/0.0.2400.1600@0.0.2400.1600" timestamp="1591222237666" />
+    <state width="594" height="211" key="javadoc.popup.new/0.0.2400.1600@0.0.2400.1600" timestamp="1591388757089" />
     <state x="785" y="409" width="827" height="679" key="search.everywhere.popup" timestamp="1590866396904">
       <screen x="0" y="0" width="2400" height="1600" />
     </state>

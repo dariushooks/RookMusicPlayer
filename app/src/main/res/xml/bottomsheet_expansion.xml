@@ -208,7 +208,7 @@
             motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet">
             <CustomAttribute
                 motion:attributeName="TextSize"
-                motion:customFloatValue="25"/>
+                motion:customFloatValue="23"/>
         </Constraint>
 
         <Constraint
@@ -223,7 +223,7 @@
             motion:layout_constraintTop_toBottomOf="@id/currentNameBottomSheet">
             <CustomAttribute
                 motion:attributeName="TextSize"
-                motion:customFloatValue="25"/>
+                motion:customFloatValue="23"/>
         </Constraint>
 
         <Constraint android:id="@+id/upNextButton">
@@ -245,6 +245,14 @@
         </Constraint>
 
         <Constraint android:id="@+id/upNextShuffleBackground">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextRepeat">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextRepeatBackground">
             <PropertySet android:alpha="0"/>
         </Constraint>
 
@@ -484,6 +492,14 @@
         </Constraint>
 
         <Constraint android:id="@+id/upNextShuffleBackground">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextRepeat">
+            <PropertySet android:alpha="0"/>
+        </Constraint>
+
+        <Constraint android:id="@+id/upNextRepeatBackground">
             <PropertySet android:alpha="0"/>
         </Constraint>
 

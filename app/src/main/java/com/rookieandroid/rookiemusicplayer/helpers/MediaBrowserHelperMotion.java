@@ -151,6 +151,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
     private ImageView upNextBackground;
     private ImageView upNextShuffle;
     private View upNextShuffleBackground;
+    private ImageView upNextRepeat;
+    private View upNextRepeatBackground;
     private boolean upNextIsShowing;
 
     //SAVING UI STATE
@@ -935,8 +937,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     //frameLayout.setClickable(false);
                     upNextShuffle.setAlpha(0f);
                     upNextShuffleBackground.setAlpha(0f);
-                    //upNextShuffle.setVisibility(View.INVISIBLE);
-                    //upNextShuffleBackground.setVisibility(View.INVISIBLE);
+                    upNextRepeat.setAlpha(0f);
+                    upNextRepeatBackground.setAlpha(0f);
                     nowPlayingArtHolder.animate().scaleX(1f);
                     nowPlayingArtHolder.animate().scaleY(1f);
                     nowPlayingArtHolder.setCardElevation(0f);
@@ -949,8 +951,16 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     {
                         upNextShuffle.setAlpha(1f);
                         upNextShuffleBackground.setAlpha(1f);
-                        //upNextShuffle.setVisibility(View.VISIBLE);
-                        //upNextShuffleBackground.setVisibility(View.VISIBLE);
+                    }
+
+                    if(repeat == PlaybackStateCompat.REPEAT_MODE_ALL || repeat == PlaybackStateCompat.REPEAT_MODE_ONE)
+                    {
+                        if(repeat == PlaybackStateCompat.REPEAT_MODE_ONE)
+                            upNextRepeat.setImageResource(R.drawable.ic_repeat_one);
+                        else
+                            upNextRepeat.setImageResource(R.drawable.ic_repeat);
+                        upNextRepeat.setAlpha(1f);
+                        upNextRepeatBackground.setAlpha(1f);
                     }
 
                     if(currentState == PlaybackStateCompat.STATE_PLAYING)
@@ -1172,9 +1182,11 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
         });
 
         upNextQueue = rootView.findViewById(R.id.upNextButton);
+        upNextBackground = rootView.findViewById(R.id.upNextBackground);
         upNextShuffle = rootView.findViewById(R.id.upNextShuffle);
         upNextShuffleBackground = rootView.findViewById(R.id.upNextShuffleBackground);
-        upNextBackground = rootView.findViewById(R.id.upNextBackground);
+        upNextRepeat = rootView.findViewById(R.id.upNextRepeat);
+        upNextRepeatBackground = rootView.findViewById(R.id.upNextRepeatBackground);
 
         //////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////

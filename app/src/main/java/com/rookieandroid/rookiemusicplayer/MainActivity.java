@@ -194,8 +194,8 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    Toast.makeText(this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
-                    LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+                    Toast.makeText(MainActivity.this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
+                    LoaderManager.getInstance(MainActivity.this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
                 }
 
                 break;
