@@ -82,7 +82,9 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private static final int REQUEST_CODE = 1;
 
     //PERMISSIONS
-    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    private String writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    private String readPermission = Manifest.permission.READ_EXTERNAL_STORAGE;
+    private String[] permissions = {writePermission, readPermission};
     private static final int PERMISSION_REQUEST_CODE = 1;
     private StateViewModel stateViewModel;
     private LibraryViewModel libraryViewModel;
@@ -101,14 +103,30 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         if(actionBar != null)
             actionBar.hide();
 
-        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         {
-            requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            if(checkSelfPermission(readPermission) != PackageManager.PERMISSION_GRANTED)
+            {
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+
+            else
+            {
+                LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+            }
         }
 
         else
         {
-            LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+            if(checkSelfPermission(writePermission) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(readPermission) != PackageManager.PERMISSION_GRANTED)
+            {
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+
+            else
+            {
+                LoaderManager.getInstance(this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+            }
         }
     }
 
@@ -126,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             public void onChanged(List<Songs> songs)
             {
                 savedSongs = (ArrayList<Songs>) songs;
-                Log.i(TAG, "RETRIEVED " + savedSongs.size() + " SONGS FROM SAVED QUEUE");
+                //Log.i(TAG, "RETRIEVED " + savedSongs.size() + " SONGS FROM SAVED QUEUE");
             }
         });
 
@@ -192,35 +210,72 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         switch (requestCode)
         {
             case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 {
-                    Toast.makeText(MainActivity.this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
-                    LoaderManager.getInstance(MainActivity.this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+                    if(grantResults.length > 0 && grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                    {
+                        Toast.makeText(MainActivity.this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
+                        LoaderManager.getInstance(MainActivity.this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+                    }
+
+                    else
+                    {
+                        Toast.makeText(this, "PERMISSIONS NOT GRANTED", Toast.LENGTH_LONG).show();
+                        if(shouldShowRequestPermissionRationale(readPermission))
+                        {
+                            new AlertDialog.Builder(MainActivity.this).setTitle("Permission Needed")
+                                    .setMessage("This permission is needed to allow access to the music stored on the device")
+                                    .setPositiveButton("ALLOW", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                                        }
+                                    })
+                                    .setNegativeButton("DENY", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .create().show();
+                        }
+                    }
                 }
 
-                break;
-
-            default:
-                Toast.makeText(this, "PERMISSIONS NOT GRANTED", Toast.LENGTH_LONG).show();
-                if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                else
                 {
-                    new AlertDialog.Builder(MainActivity.this).setTitle("Permission Needed")
-                            .setMessage("This permission is needed to allow access to the music stored on the device")
-                            .setPositiveButton("ALLOW", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                                }
-                            })
-                            .setNegativeButton("DENY", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .create().show();
+                    if(grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED))
+                    {
+                        Toast.makeText(MainActivity.this, "PERMISSIONS GRANTED", Toast.LENGTH_LONG).show();
+                        LoaderManager.getInstance(MainActivity.this).initLoader(READ_STORAGE_LOADER, null, loaderCallbacks);
+                    }
+
+                    else
+                    {
+                        Toast.makeText(this, "PERMISSIONS NOT GRANTED", Toast.LENGTH_LONG).show();
+                        if(shouldShowRequestPermissionRationale(writePermission))
+                        {
+                            new AlertDialog.Builder(MainActivity.this).setTitle("Permission Needed")
+                                    .setMessage("This permission is needed to allow access to the music stored on the device")
+                                    .setPositiveButton("ALLOW", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                                        }
+                                    })
+                                    .setNegativeButton("DENY", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .create().show();
+                        }
+                    }
                 }
                 break;
         }
