@@ -332,7 +332,10 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             if(resultCode == RESULT_OK)
             {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
                     MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
+                    Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
+                }
 
                 else
                 {
@@ -346,10 +349,9 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                             String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
                             getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
                         }
+                        Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-                Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
             }
 
             else
