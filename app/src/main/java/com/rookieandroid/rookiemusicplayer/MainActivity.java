@@ -79,7 +79,7 @@ import static com.rookieandroid.rookiemusicplayer.App.songs;
 public class MainActivity extends AppCompatActivity implements SongsFragment.NowPlayingLibrary, AlbumsFragment.NowPlayingAlbum, ArtistsFragment.NowPlayingArtist, PlaylistsFragment.NowPlayingPlaylist, GoToDialog.GoTo, LibraryFragment.Query, MediaControlDialog.UpdateLibrary
 {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int REQUEST_CODE = 1;
+    private static final int DELETE_REQUEST_CODE = 1;
 
     //PERMISSIONS
     private String writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private LibraryViewModel libraryViewModel;
     private ArrayList<Uri> deleteUris = new ArrayList<>();
     private ArrayList<Songs> deleteSongs;
+    private int deleteCount;
     private String mediaName;
 
     @Override
@@ -326,28 +327,34 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK)
+        if(requestCode == DELETE_REQUEST_CODE)
         {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
-
-            else
+            if(resultCode == RESULT_OK)
             {
-                String selectionSongs = MediaStore.Audio.Media._ID + "=?";
-                for(int i = 0; i < deleteSongs.size(); i++)
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
+
+                else
                 {
-                    long songId = Long.parseLong(deleteSongs.get(i).getId());
-                    Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
-                    String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
-                    getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+                    if(deleteCount == deleteSongs.size())
+                    {
+                        String selectionSongs = MediaStore.Audio.Media._ID + "=?";
+                        for(int i = 0; i < deleteSongs.size(); i++)
+                        {
+                            long songId = Long.parseLong(deleteSongs.get(i).getId());
+                            Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
+                            String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
+                            getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+                        }
+                    }
                 }
+
+                Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
             }
 
-            Toast.makeText(this, mediaName + " DELETED", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "ACCESS DENIED", Toast.LENGTH_SHORT).show();
         }
-
-        else
-            Toast.makeText(this, "ACCESS DENIED", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -462,15 +469,18 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     private void delete(ArrayList<Songs> deleteSongs)
     {
         this.deleteSongs = deleteSongs;
+        deleteCount = 0;
         String selectionSongs = MediaStore.Audio.Media._ID + "=?";
         for(int i = 0; i < deleteSongs.size(); i++)
         {
+            deleteCount++;
             long songId = Long.parseLong(deleteSongs.get(i).getId());
             Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
-            String[] selectionArgsArtistSongs = {deleteSongs.get(i).getId()};
+            String[] selectionArgsSongs = {deleteSongs.get(i).getId()};
+            //getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, selectionSongs, selectionArgsSongs);
             try
             {
-                getContentResolver().delete(songsUri, selectionSongs, selectionArgsArtistSongs);
+                getContentResolver().delete(songsUri, selectionSongs, selectionArgsSongs);
             }
 
             catch (SecurityException securityException)
@@ -484,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
                         throw new RuntimeException(securityException.getMessage(), securityException);
                     IntentSender intentSender = recoverableSecurityException.getUserAction().getActionIntent().getIntentSender();
                     try {
-                        startIntentSenderForResult(intentSender, REQUEST_CODE, null, 0, 0, 0, null);
+                        startIntentSenderForResult(intentSender, DELETE_REQUEST_CODE, null, 0, 0, 0, null);
                     } catch (IntentSender.SendIntentException e) { e.printStackTrace(); }
                 }
 
@@ -499,6 +509,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
     {
         long songId;
         Uri songsUri;
+        deleteUris.clear();
         for(int i = 0; i < deleteSongs.size(); i++)
         {
             songId = Long.parseLong(deleteSongs.get(i).getId());
@@ -509,7 +520,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         PendingIntent pendingIntent = MediaStore.createDeleteRequest(getContentResolver(), deleteUris);
         try
         {
-            startIntentSenderForResult(pendingIntent.getIntentSender(), REQUEST_CODE, null, 0, 0, 0);
+            startIntentSenderForResult(pendingIntent.getIntentSender(), DELETE_REQUEST_CODE, null, 0, 0, 0);
         } catch (IntentSender.SendIntentException e) { e.printStackTrace();}
         /*try
         {
