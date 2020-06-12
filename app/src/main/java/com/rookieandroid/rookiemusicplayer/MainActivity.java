@@ -339,6 +339,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
 
                 else
                 {
+                    deleteCount++;
                     if(deleteCount == deleteSongs.size())
                     {
                         String selectionSongs = MediaStore.Audio.Media._ID + "=?";
@@ -475,7 +476,6 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
         String selectionSongs = MediaStore.Audio.Media._ID + "=?";
         for(int i = 0; i < deleteSongs.size(); i++)
         {
-            deleteCount++;
             long songId = Long.parseLong(deleteSongs.get(i).getId());
             Uri songsUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
             String[] selectionArgsSongs = {deleteSongs.get(i).getId()};
