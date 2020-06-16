@@ -35,9 +35,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nowPlayingAnimation"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/darkGray"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -134,12 +135,12 @@
         android:id="@+id/currentSeekBottomSheet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:alpha="0"
         android:progressBackgroundTint="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/currentArtBottomSheetHolder"
+        app:layout_constraintTop_toBottomOf="@id/currentArtistAlbumBottomSheet"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"/>
 
@@ -148,11 +149,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/currentSeekBottomSheet"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:alpha="0"
         android:text="@string/duration"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
+        app:layout_constraintStart_toStartOf="@id/currentSeekBottomSheet"
         app:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet" />
 
     <TextView
@@ -160,18 +161,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/currentSeekBottomSheet"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:alpha="0"
         android:text="@string/duration"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingAnimation"
+        app:layout_constraintEnd_toEndOf="@id/currentSeekBottomSheet"
         app:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet" />
 
     <TextView
         android:id="@+id/currentNameBottomSheet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="10dp"
         android:alpha="0"
@@ -185,7 +186,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/upNextButton"
         app:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-        app:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet" />
+        app:layout_constraintTop_toBottomOf="@id/currentArtBottomSheetHolder" />
 
     <TextView
         android:id="@+id/currentArtistAlbumBottomSheet"
@@ -385,13 +386,13 @@
         android:id="@+id/volumeControlSeek"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="30dp"
         android:alpha="0"
         android:progressBackgroundTint="@color/white"
         android:thumb="@drawable/seekbar_thumb"
         app:layout_constraintStart_toEndOf="@id/volumeDown"
         app:layout_constraintEnd_toStartOf="@id/volumeUp"
-        app:layout_constraintBottom_toBottomOf="@id/currentPlayBottomSheet"/>
+        app:layout_constraintTop_toBottomOf="@id/currentPlayBottomSheet"/>
 
     <ImageView
         android:id="@+id/volumeUp"

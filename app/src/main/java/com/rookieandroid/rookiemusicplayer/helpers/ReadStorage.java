@@ -5,6 +5,8 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -94,13 +96,17 @@ public class ReadStorage extends AsyncTaskLoader
         ContentResolver contentResolver = getContext().getContentResolver();
         Uri albumUri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ALBUM_ID, MediaStore.Audio.Albums.ALBUM_KEY, MediaStore.Audio.Albums.ARTIST};
-        Cursor cursor = contentResolver.query(albumUri, projection, null, null, MediaStore.Audio.Albums.ALBUM + " ASC");
+        Cursor cursor = contentResolver.query(albumUri, null, null, null, MediaStore.Audio.Albums.ALBUM + " ASC");
         if(cursor != null && cursor.moveToFirst())
         {
             Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
             int id = cursor.getColumnIndex(MediaStore.Audio.Albums._ID);
             int album = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM);
-            int albumID = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID);
+            int albumID;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                albumID = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID);
+            else
+                albumID = cursor.getColumnIndex(BaseColumns._ID);
             int albumKey = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_KEY);
             int artist = cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST);
 

@@ -143,7 +143,7 @@ public class App extends Application
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            NotificationChannel channel_1 = new NotificationChannel(CHANNEL_1, "Now Playing", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel_1 = new NotificationChannel(CHANNEL_1, "Now Playing", NotificationManager.IMPORTANCE_LOW);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if(notificationManager != null)
                 notificationManager.createNotificationChannel(channel_1);

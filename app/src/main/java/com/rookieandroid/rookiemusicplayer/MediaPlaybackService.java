@@ -686,7 +686,7 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.noalbumart));
 
         builder.setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         if(currentState == PlaybackStateCompat.STATE_PLAYING)

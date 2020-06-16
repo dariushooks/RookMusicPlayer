@@ -5,6 +5,8 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -294,17 +296,19 @@ public class GetMedia extends AsyncTaskLoader<ArrayList>
         Cursor cursor = contentResolver.query(albumUri, null, null, null, MediaStore.Audio.Artists.Albums.ALBUM + " ASC");
         if(cursor != null && cursor.moveToFirst())
         {
-            int id = cursor.getColumnIndex(MediaStore.Audio.Albums._ID);
             int album = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM);
-            int albumID = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ID);
+            int albumID;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                  albumID  = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_ID);
+            else
+                albumID = cursor.getColumnIndex(BaseColumns._ID);
             int albumKey = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ALBUM_KEY);
             int artist = cursor.getColumnIndex(MediaStore.Audio.Artists.Albums.ARTIST);
 
             do
             {
-                //String row = cursor.getString(id);
                 String currentAlbum = cursor.getString(album);
-                long currentAlbumID = cursor.getLong(albumID);
+                int currentAlbumID = cursor.getInt(albumID);
                 String currentAlbumKey = cursor.getString(albumKey);
                 String currentArtist = cursor.getString(artist);
                 String currentArt = ContentUris.withAppendedId(albumArtUri, currentAlbumID).toString();

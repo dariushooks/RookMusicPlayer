@@ -40,7 +40,7 @@
 
         <Constraint
             android:id="@+id/nowPlayingAnimation"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="67dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
@@ -151,7 +151,7 @@
 
         <Constraint
             android:id="@+id/nowPlayingAnimation"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toBottomOf="parent"
@@ -182,16 +182,16 @@
             android:id="@id/currentPlayBottomSheet"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginBottom="60dp"
             motion:layout_constraintEnd_toStartOf="@id/nowPlayingAnimation"
             motion:layout_constraintStart_toEndOf="@id/nowPlayingAnimation"
+            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet"
             motion:layout_constraintBottom_toTopOf="@id/volumeControlSeek"/>
 
         <Constraint
             android:id="@+id/volumeControlSeek"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="30dp"
             motion:layout_constraintStart_toEndOf="@id/volumeDown"
             motion:layout_constraintEnd_toStartOf="@+id/volumeUp"
             motion:layout_constraintBottom_toBottomOf="@id/nowPlayingAnimation"/>
@@ -200,12 +200,12 @@
             android:id="@+id/currentNameBottomSheet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="60dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="10dp"
             motion:layout_constraintEnd_toStartOf="@id/upNextButton"
             motion:layout_constraintStart_toStartOf="@id/nowPlayingAnimation"
-            motion:layout_constraintTop_toBottomOf="@id/currentSeekBottomSheet">
+            motion:layout_constraintTop_toBottomOf="@id/currentArtBottomSheetHolder">
             <CustomAttribute
                 motion:attributeName="TextSize"
                 motion:customFloatValue="23"/>
@@ -402,7 +402,7 @@
 
         <Constraint
             android:id="@+id/nowPlayingAnimation"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toBottomOf="parent"
@@ -453,7 +453,7 @@
             android:id="@+id/volumeControlSeek"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="30dp"
             motion:layout_constraintStart_toEndOf="@id/volumeDown"
             motion:layout_constraintEnd_toStartOf="@+id/volumeUp"
             motion:layout_constraintBottom_toBottomOf="@id/nowPlayingAnimation"/>
