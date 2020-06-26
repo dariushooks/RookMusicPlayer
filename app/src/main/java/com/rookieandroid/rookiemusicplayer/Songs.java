@@ -3,6 +3,7 @@ package com.rookieandroid.rookiemusicplayer;
 import android.os.Parcelable;
 import android.os.Parcel;
 
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

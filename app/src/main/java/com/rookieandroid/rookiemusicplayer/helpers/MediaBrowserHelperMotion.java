@@ -58,6 +58,7 @@ import static com.rookieandroid.rookiemusicplayer.App.ACTIVITY_RESTORE;
 import static com.rookieandroid.rookiemusicplayer.App.ADD_ALBUM_ARTIST_PLAYLIST;
 import static com.rookieandroid.rookiemusicplayer.App.ADD_SONG;
 import static com.rookieandroid.rookiemusicplayer.App.CLEAR;
+import static com.rookieandroid.rookiemusicplayer.App.FROM_LIBRARY;
 import static com.rookieandroid.rookiemusicplayer.App.GET_ALBUM_SONGS;
 import static com.rookieandroid.rookiemusicplayer.App.GET_ARTIST_SONGS;
 import static com.rookieandroid.rookiemusicplayer.App.GET_CURRENT_POSITION;
@@ -66,6 +67,7 @@ import static com.rookieandroid.rookiemusicplayer.App.GET_PLAYLIST_SONGS;
 import static com.rookieandroid.rookiemusicplayer.App.GET_QUEUE_POSITION;
 import static com.rookieandroid.rookiemusicplayer.App.INITIALIZE_QUEUE_CHANGE;
 import static com.rookieandroid.rookiemusicplayer.App.PLAYLIST_MEDIA_LOADER;
+import static com.rookieandroid.rookiemusicplayer.App.PLAY_BUTTON_START;
 import static com.rookieandroid.rookiemusicplayer.App.QUEUE_CLICK;
 import static com.rookieandroid.rookiemusicplayer.App.QUEUE_END;
 import static com.rookieandroid.rookiemusicplayer.App.BROWSER_MEDIA_LOADER;
@@ -78,6 +80,7 @@ import static com.rookieandroid.rookiemusicplayer.App.SAVE_QUEUE;
 import static com.rookieandroid.rookiemusicplayer.App.SET_ELAPSED_TIME;
 import static com.rookieandroid.rookiemusicplayer.App.SET_FROM;
 import static com.rookieandroid.rookiemusicplayer.App.SET_POSITION;
+import static com.rookieandroid.rookiemusicplayer.App.SET_QUEUE_LIBRARY;
 import static com.rookieandroid.rookiemusicplayer.App.SET_UP_NEXT;
 import static com.rookieandroid.rookiemusicplayer.App.addToQueue;
 import static com.rookieandroid.rookiemusicplayer.App.currentState;
@@ -444,9 +447,9 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                             timeHandler.post(updateTime);
                             nowPlayingNameExpanded.setSelected(true);
                             nowPlayingArtistAlbumExpanded.setSelected(true);
-                            nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
+                            nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_pause));
                             nowPlayingForward.setVisibility(View.VISIBLE);
-                            nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_pause));
+                            nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_pause));
                             if(motionLayout.getCurrentState() == R.id.end)
                             {
                                 nowPlayingArtHolder.animate().scaleX(1.35f);
@@ -459,8 +462,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                             currentState = PlaybackStateCompat.STATE_PAUSED;
                             nowPlayingNameExpanded.setSelected(false);
                             nowPlayingArtistAlbumExpanded.setSelected(false);
-                            nowPlayingButton.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
-                            nowPlayingButtonExpanded.setBackground(context.getResources().getDrawable(R.drawable.ic_play));
+                            nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
+                            nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                             if(motionLayout.getCurrentState() == R.id.end)
                             {
                                 nowPlayingArtHolder.animate().scaleX(1f);
@@ -902,15 +905,11 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             {
                 if((motionLayout.getStartState() == R.id.end || motionLayout.getStartState() == R.id.start) && upNextIsShowing)
                 {
-                    //upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.darkGray)));
-                    //upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
                     upNextIsShowing = false;
                 }
 
                 else if(motionLayout.getEndState() == R.id.endQueue && !upNextIsShowing)
                 {
-                    //upNextBackground.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.colorAccent)));
-                    //upNextQueue.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.white)));
                     upNextIsShowing = true;
                 }
             }
@@ -926,7 +925,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
             {
                 if(motionLayout.getCurrentState() == R.id.start)
                 {
-                    //frameLayout.setClickable(true);
                     nowPlayingArtHolder.animate().scaleX(1f);
                     nowPlayingArtHolder.animate().scaleY(1f);
                     nowPlayingArtHolder.setCardElevation(0f);
@@ -934,7 +932,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
                 else if(motionLayout.getCurrentState() == R.id.endQueue)
                 {
-                    //frameLayout.setClickable(false);
                     upNextShuffle.setAlpha(0f);
                     upNextShuffleBackground.setAlpha(0f);
                     upNextRepeat.setAlpha(0f);
@@ -946,7 +943,6 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
                 else
                 {
-                    //frameLayout.setClickable(false);
                     if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
                     {
                         upNextShuffle.setAlpha(1f);
@@ -1001,16 +997,26 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     if(currentState == PlaybackStateCompat.STATE_PLAYING)
                     {
                         mediaControllerCompat.getTransportControls().pause();
-                        nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
-                        nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                     }
 
                     else
                     {
                         mediaControllerCompat.getTransportControls().play();
-                        nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_pause));
-                        nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_pause));
                     }
+                }
+
+                else
+                {
+                    getMediaController().getTransportControls().sendCustomAction(CLEAR, null);
+                    Bundle queue = new Bundle();
+                    queue.putInt("CURRENT_QUEUE_POSITION", 0);
+                    queue.putInt("FROM", FROM_LIBRARY);
+                    getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
+                    getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_LIBRARY, queue);
+                    nowPlayingFrom = "Now playing from Library";
+                    getMediaController().getTransportControls().sendCustomAction(PLAY_BUTTON_START, null);
+                    getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
+                    setBottomSheetQueue();
                 }
             }
         });
@@ -1051,21 +1057,27 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                     {
                         mediaControllerCompat.getTransportControls().pause();
                         nowPlayingArtHolder.setCardElevation(0f);
-                        nowPlayingNameExpanded.setSelected(false);
-                        nowPlayingArtistAlbumExpanded.setSelected(false);
-                        nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
-                        nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                     }
 
                     else
                     {
                         mediaControllerCompat.getTransportControls().play();
                         nowPlayingArtHolder.setCardElevation(30f);
-                        nowPlayingNameExpanded.setSelected(true);
-                        nowPlayingArtistAlbumExpanded.setSelected(true);
-                        nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_pause));
-                        nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_pause));
                     }
+                }
+
+                else
+                {
+                    getMediaController().getTransportControls().sendCustomAction(CLEAR, null);
+                    Bundle queue = new Bundle();
+                    queue.putInt("CURRENT_QUEUE_POSITION", 0);
+                    queue.putInt("FROM", FROM_LIBRARY);
+                    getMediaController().getTransportControls().sendCustomAction(SET_POSITION, queue);
+                    getMediaController().getTransportControls().sendCustomAction(SET_QUEUE_LIBRARY, queue);
+                    nowPlayingFrom = "Now playing from Library";
+                    getMediaController().getTransportControls().sendCustomAction(PLAY_BUTTON_START, null);
+                    getMediaController().getTransportControls().sendCustomAction(SET_UP_NEXT, null);
+                    setBottomSheetQueue();
                 }
             }
         });

@@ -76,6 +76,7 @@ public class App extends Application
     public static ArrayList<Songs> queueDisplay = new ArrayList<>();
     public static QueueAdapter queueAdapter;
     public static String nowPlayingFrom;
+    public static ArrayList<Songs> deleteFromQueue = new ArrayList<>();
 
     //FAST SCROLLING
     public static ArrayList<Integer> sectionsSongs = new ArrayList<>();
@@ -131,6 +132,8 @@ public class App extends Application
     public static final String INITIALIZE_QUEUE_CHANGE = "17";
     public static final String SET_ELAPSED_TIME = "18";
     public static final String SET_FROM = "19";
+    public static final String PLAY_BUTTON_START = "20";
+    public static final String MEDIA_DELETED = "21";
 
     @Override
     public void onCreate()

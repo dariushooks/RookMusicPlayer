@@ -31,6 +31,8 @@ import java.util.List;
 
 import static com.rookieandroid.rookiemusicplayer.App.FROM_ARTIST;
 import static com.rookieandroid.rookiemusicplayer.App.FROM_LIBRARY;
+import static com.rookieandroid.rookiemusicplayer.App.MEDIA_DELETED;
+import static com.rookieandroid.rookiemusicplayer.App.mediaBrowserHelper;
 
 public class LibraryFragment extends Fragment //implements LoaderManager.LoaderCallbacks<ArrayList>
 {
@@ -104,6 +106,23 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
 
     public interface Query { void search(ImageView sharedImage); }
 
+    public void deleteSingleSongFromLibrary(Songs song)
+    {
+        for(int i = 0; i < songs.size(); i++)
+        {
+            if(songs.get(i).getTitle().equals(song.getTitle()))
+            {
+                songs.remove(songs.get(i));
+                App.songs.remove(songs.get(i));
+            }
+        }
+
+        musicPagerAdapter.notifyDataSetChanged();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("DELETE_SONG", song);
+        mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(MEDIA_DELETED, bundle);
+    }
+
     public void deleteSongFromLibrary(Songs song)
     {
         for(int i = 0; i < songs.size(); i++)
@@ -114,21 +133,14 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
                 App.songs.remove(songs.get(i));
             }
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("DELETE_SONG", song);
+        mediaBrowserHelper.getMediaController().getTransportControls().sendCustomAction(MEDIA_DELETED, bundle);
     }
 
     public void deleteAlbumFromLibrary(Albums album, ArrayList<Songs> albumSongs, int from)
     {
-        /*SectionContent sectionContent = new SectionContent(album, albumsSections);
-        AlbumsSections section = sectionContent.getSection();
-        ArrayList<Albums> albums = section.getSectionedAlbums();
-        for(int j = 0; j < albums.size(); j++)
-        {
-            if(albums.get(j).getAlbum().equals(album.getAlbum()))
-            {
-                albums.remove(albums.get(j));
-                App.albums.remove(albums.get(j));
-            }
-        }*/
         if(from == FROM_ARTIST)
             for(int i = 0; i < albums.size(); i++)
             {
@@ -149,14 +161,14 @@ public class LibraryFragment extends Fragment //implements LoaderManager.LoaderC
 
     public void deleteArtistFromLibrary(Artists artist, ArrayList<Songs> artistSongs)
     {
-        /*for(int i = 0; i < artists.size(); i++)
+        for(int i = 0; i < albums.size(); i++)
         {
-            if(artists.get(i).getArtist().equals(artist.getArtist()))
+            if(albums.get(i).getArtist().equals(artist.getArtist()))
             {
-                boolean r1 = artists.remove(artists.get(i));
-                boolean r2 = App.artists.remove(artists.get(i));
+                albums.remove(albums.get(i));
+                App.albums.remove(albums.get(i));
             }
-        }*/
+        }
 
         for(int i = 0; i < artistSongs.size(); i++)
         {

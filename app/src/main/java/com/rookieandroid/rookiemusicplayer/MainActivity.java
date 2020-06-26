@@ -68,6 +68,7 @@ import static com.rookieandroid.rookiemusicplayer.App.TO_ARTIST;
 import static com.rookieandroid.rookiemusicplayer.App.albums;
 import static com.rookieandroid.rookiemusicplayer.App.artistSongs;
 import static com.rookieandroid.rookiemusicplayer.App.artists;
+import static com.rookieandroid.rookiemusicplayer.App.deleteFromQueue;
 import static com.rookieandroid.rookiemusicplayer.App.mediaBrowserHelper;
 import static com.rookieandroid.rookiemusicplayer.App.nowPlayingFrom;
 import static com.rookieandroid.rookiemusicplayer.App.playlists;
@@ -294,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements SongsFragment.Now
             delete(list);
         LibraryFragment fragment = (LibraryFragment) getSupportFragmentManager().findFragmentByTag("Main Library");
         if(fragment != null)
-            fragment.deleteSongFromLibrary(song);
+            fragment.deleteSingleSongFromLibrary(song);
     }
 
     @Override

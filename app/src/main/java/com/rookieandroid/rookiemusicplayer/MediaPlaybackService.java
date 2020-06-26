@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +57,8 @@ import static com.rookieandroid.rookiemusicplayer.App.GET_CURRENT_POSITION;
 import static com.rookieandroid.rookiemusicplayer.App.GET_PLAYBACKSTATE;
 import static com.rookieandroid.rookiemusicplayer.App.GET_QUEUE_POSITION;
 import static com.rookieandroid.rookiemusicplayer.App.INITIALIZE_QUEUE_CHANGE;
+import static com.rookieandroid.rookiemusicplayer.App.MEDIA_DELETED;
+import static com.rookieandroid.rookiemusicplayer.App.PLAY_BUTTON_START;
 import static com.rookieandroid.rookiemusicplayer.App.QUEUE_CLICK;
 import static com.rookieandroid.rookiemusicplayer.App.QUEUE_END;
 import static com.rookieandroid.rookiemusicplayer.App.QUEUE_NEXT;
@@ -82,6 +85,7 @@ import static com.rookieandroid.rookiemusicplayer.App.SKIP_PREVIOUS;
 import static com.rookieandroid.rookiemusicplayer.App.addToQueue;
 import static com.rookieandroid.rookiemusicplayer.App.albumSongs;
 import static com.rookieandroid.rookiemusicplayer.App.artistSongs;
+import static com.rookieandroid.rookiemusicplayer.App.deleteFromQueue;
 import static com.rookieandroid.rookiemusicplayer.App.librarySongs;
 import static com.rookieandroid.rookiemusicplayer.App.nowPlayingFrom;
 import static com.rookieandroid.rookiemusicplayer.App.playlistSongs;
@@ -337,6 +341,8 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                 case INITIALIZE_QUEUE_CHANGE: queueAdapter.initializeQueueChange(MediaPlaybackService.this); break;
                 case SET_ELAPSED_TIME: elapsed = extras.getInt("CURRENT_ELAPSED_TIME"); setSong(queue.get(position).getId()); break;
                 case SET_FROM: from = extras.getInt("CURRENT_FROM"); break;
+                case PLAY_BUTTON_START: playButtonStart(); break;
+                case MEDIA_DELETED: mediaDeleted(extras.getParcelable("DELETE_SONG")); break;
             }
         }
 
@@ -770,6 +776,42 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     ///////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////*/
 
+    private void mediaDeleted(Songs deleteSong)
+    {
+        deleteFromQueue.clear();
+
+        for(int i = 0; i < queue.size(); i++)
+            if(queue.get(i).getTitle().equals(deleteSong.getTitle()))
+                deleteFromQueue.add(queue.get(i));
+
+        queue.removeAll(deleteFromQueue);
+        setQueueDisplay();
+    }
+
+    private void playButtonStart()
+    {
+        if(successfullyRetrievedAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+        {
+            startForegroundService(new Intent(MediaPlaybackService.this, MediaPlaybackService.class));
+            mediaSession.setActive(true);
+            if(shuffle == PlaybackStateCompat.SHUFFLE_MODE_ALL)
+                Collections.shuffle(queue);
+            playSong(queue.get(position).getId());
+            buildMetadata(queue.get(position));
+
+            //SET PLAYBACK STATE
+            currentState = PlaybackStateCompat.STATE_PLAYING;
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, mediaPlayer.getCurrentPosition(), 1);
+            stateBuilder.setActions(PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                    PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+            mediaSession.setPlaybackState(stateBuilder.build());
+
+            //SHOW PLAY NOTIFICATION
+            buildNotification(MediaPlaybackService.this, queue.get(position));
+            handler.post(updateQueueState);
+        }
+    }
+
     private void setQueueDisplay()
     {
         queueDisplay.clear();
@@ -935,11 +977,14 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
                     position++;
             }
 
-            String mediaId = queue.get(position).getId();
-            playSong(mediaId);
-            buildMetadata(queue.get(position));
-            updateQueueDisplay(SKIP_NEXT);
-            buildNotification(MediaPlaybackService.this, queue.get(position));
+            if(!queue.isEmpty() && position < queue.size() - 1)
+            {
+                String mediaId = queue.get(position).getId();
+                playSong(mediaId);
+                buildMetadata(queue.get(position));
+                updateQueueDisplay(SKIP_NEXT);
+                buildNotification(MediaPlaybackService.this, queue.get(position));
+            }
         }
     }
 
@@ -955,7 +1000,19 @@ public class MediaPlaybackService extends MediaBrowserServiceCompat implements A
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1)
     {
-        mediaPlayer.reset();
+        if(!queue.isEmpty() && position < queue.size() - 1)
+        {
+            String mediaId = queue.get(position).getId();
+            playSong(mediaId);
+            buildMetadata(queue.get(position));
+            updateQueueDisplay(SKIP_NEXT);
+            buildNotification(MediaPlaybackService.this, queue.get(position));
+        }
+
+        else
+        {
+
+        }
         return false;
     }
 

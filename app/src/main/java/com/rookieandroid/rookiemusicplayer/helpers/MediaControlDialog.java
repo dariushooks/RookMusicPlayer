@@ -275,7 +275,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
                 break;
         }
 
-        switch (code)
+        /*switch (code)
         {
             case FROM_LIBRARY:
                 //Log.i(TAG, "DIALOG FROM LIBRARY");
@@ -292,7 +292,7 @@ public class MediaControlDialog extends AlertDialog implements PlaylistDialogAda
             case FROM_PLAYLIST:
                 //Log.i(TAG, "DIALOG FROM PLAYLIST");
                 break;
-        }
+        }*/
 
         alertDialog.setView(alertLayout);
         new Dialog(context);

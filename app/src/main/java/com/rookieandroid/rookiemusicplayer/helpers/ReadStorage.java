@@ -65,6 +65,7 @@ public class ReadStorage extends AsyncTaskLoader
             int path = cursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int id = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int music = cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
             int album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
             int albumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
             int albumKey = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY);
@@ -74,17 +75,20 @@ public class ReadStorage extends AsyncTaskLoader
 
             do
             {
-                String currentID = cursor.getString(id);
-                String currentTitle = cursor.getString(title);
-                String currentAlbum = cursor.getString(album);
-                long currentAlbumId = cursor.getLong(albumId);
-                String currentAlbumKey = cursor.getString(albumKey);
-                String currentArt = ContentUris.withAppendedId(albumArtUri, currentAlbumId).toString();
-                String currentArtist = cursor.getString(artist);
-                String currentArtistKey = cursor.getString(artistKey);
-                String currentPath = cursor.getString(path);
-                long currentDuration = cursor.getLong(duration);
-                songs.add(new Songs(currentID, currentTitle, currentAlbum, currentAlbumKey, currentArt, currentArtist, currentArtistKey, currentDuration, currentPath, -1));
+                if(cursor.getString(music).equals("1"))
+                {
+                    String currentID = cursor.getString(id);
+                    String currentTitle = cursor.getString(title);
+                    String currentAlbum = cursor.getString(album);
+                    long currentAlbumId = cursor.getLong(albumId);
+                    String currentAlbumKey = cursor.getString(albumKey);
+                    String currentArt = ContentUris.withAppendedId(albumArtUri, currentAlbumId).toString();
+                    String currentArtist = cursor.getString(artist);
+                    String currentArtistKey = cursor.getString(artistKey);
+                    String currentPath = cursor.getString(path);
+                    long currentDuration = cursor.getLong(duration);
+                    songs.add(new Songs(currentID, currentTitle, currentAlbum, currentAlbumKey, currentArt, currentArtist, currentArtistKey, currentDuration, currentPath, -1));
+                }
             }while(cursor.moveToNext());
             libraryViewModel.setSongs(songs);
             cursor.close();
