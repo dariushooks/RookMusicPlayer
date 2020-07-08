@@ -39,8 +39,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/playlistArtHolder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginStart="10dp"
             app:cardCornerRadius="10dp"
             app:cardBackgroundColor="@android:color/transparent"
@@ -50,8 +50,8 @@
 
             <ImageView
                 android:id="@+id/playlistArt"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:tint="@color/white"
                 android:src="@drawable/ic_playlist_add"/>
@@ -101,8 +101,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/recentPlaylistArtHolder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginStart="10dp"
             app:cardCornerRadius="10dp"
             app:cardBackgroundColor="@android:color/transparent"
@@ -112,10 +112,11 @@
 
             <ImageView
                 android:id="@+id/recentPlaylistArt"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@drawable/playlistart"/>
+                android:tint="@color/white"
+                android:src="@drawable/playlistcover"/>
 
         </androidx.cardview.widget.CardView>
 

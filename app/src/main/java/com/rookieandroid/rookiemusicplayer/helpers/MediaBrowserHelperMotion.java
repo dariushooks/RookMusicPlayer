@@ -445,8 +445,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
                         case PlaybackStateCompat.STATE_PLAYING:
                             currentState = PlaybackStateCompat.STATE_PLAYING;
                             timeHandler.post(updateTime);
-                            nowPlayingNameExpanded.setSelected(true);
-                            nowPlayingArtistAlbumExpanded.setSelected(true);
+                            //nowPlayingNameExpanded.setSelected(true);
+                            //nowPlayingArtistAlbumExpanded.setSelected(true);
                             nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_pause));
                             nowPlayingForward.setVisibility(View.VISIBLE);
                             nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_pause));
@@ -460,8 +460,8 @@ public class MediaBrowserHelperMotion implements QueueAdapter.ListItemClickListe
 
                         case PlaybackStateCompat.STATE_PAUSED:
                             currentState = PlaybackStateCompat.STATE_PAUSED;
-                            nowPlayingNameExpanded.setSelected(false);
-                            nowPlayingArtistAlbumExpanded.setSelected(false);
+                            //nowPlayingNameExpanded.setSelected(false);
+                            //nowPlayingArtistAlbumExpanded.setSelected(false);
                             nowPlayingButton.setBackground(context.getDrawable(R.drawable.ic_play));
                             nowPlayingButtonExpanded.setBackground(context.getDrawable(R.drawable.ic_play));
                             if(motionLayout.getCurrentState() == R.id.end)
